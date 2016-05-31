@@ -6,11 +6,14 @@
     "start": "nw"
   },
   "window": {
+    "frame": false,
     "toolbar": true,
     "width": 1024,
     "height": 800
   },
   "dependencies": {
-    "nedb": "^1.8.0"
+    "jsonfile": "^2.3.0",
+    "nedb": "^1.8.0",
+    "tosource": "^1.0.0"
   }
 }

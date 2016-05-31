@@ -2,10 +2,10 @@
 {"_id":"node2","parentID":"rootNode","processName":"DNA Extract"}
 {"_id":"rootNode","parentID":null,"processName":"rootProcess"}
 {"_id":"rootProcess","attributeNames":["mass (mg)"]}
-{"_id":{"nodeID":"node2","sampleID":"2"},"attributes":["12/3","Qiagen","160","18",""]}
+{"_id":{"nodeID":"node2","sampleID":"3"},"attributes":["12/3","Qiagen","80","10","Second elution failed, so only 80mL"]}
 {"_id":{"nodeID":"rootNode","sampleID":"1"},"attributes":["50"]}
 {"_id":{"nodeID":"rootNode","sampleID":"2"},"attributes":["55"]}
 {"_id":{"nodeID":"rootNode","sampleID":"3"},"attributes":["80"]}
 {"_id":{"nodeID":"rootNode","sampleID":"4"},"attributes":["60"]}
 {"_id":{"nodeID":"node2","sampleID":"1"},"attributes":["12/3","Qiagen","160","12",""]}
-{"_id":{"nodeID":"node2","sampleID":"3"},"attributes":["12/3","Qiagen","80","10","Second elution failed, so only 80mL"]}
+{"_id":{"nodeID":"node2","sampleID":"2"},"attributes":["12/3","Qiagen","160","18",""]}
