@@ -1,198 +1,186 @@
+<!doctype html>
 <html>
 <head>
-	<title>RSMS</title>
+    <title>Research Sample Management System</title>
 
-	<link rel='stylesheet' href='css/reset.css'>
-	<link rel='stylesheet' href='css/style.css'>
-	<link rel="stylesheet" href="css/Treant.css">
-	<link rel="stylesheet" href="css/main.css">
-	<link rel="stylesheet" href="css/tabulator.css">
-	<link rel="stylesheet" href="css/jquery.contextMenu.min.css">
-	<script src="js/raphael.js"></script>
+    <link rel='stylesheet' href='css/reset.css'>
+    <link rel='stylesheet' href='css/style.css'>
+    <link rel="stylesheet" href="css/Treant.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/tabulator.css">
+    <link rel="stylesheet" href="css/jquery.contextMenu.min.css">
+    
+    <style>
+	    div {
+		    width: fit-content;
+		    /*height: fit-content;*/
+	    }
+    </style>
+
+    <script src="js/raphael.js"></script>
     <script src="js/Treant.js"></script>
+    
+    <script>
+        // Is this script needed? It's giving an error. I don't know if it's
+        // because I did something wrong. The same code is run at the start of
+        // the body script.
+	    /*
+	    var nw = require('nw.gui'),
+	    var win = nw.Window.get();
+	    win.isMaximized = false;
+	    */
+    </script>
+</head>
 
-	<style>
-		div{
-			width: fit-content;
-			/* To adjust the height as well */
-			/*height: fit-content;*/
-		}
+<body>
+    <header>
+	    <ul>
+		    <li><a href='#' title='Minimize' id='windowControlMinimize'></a></li>
+		    <li><a href='#' title='Maximize' id='windowControlMaximize'></a></li>
+		    <li><a href='#' title='Close'    id='windowControlClose'   ></a></li>
+	    </ul>
+    </header>
 
-	</style>
+    <div class="chart" id="tree"></div>
+    <button id="save_table">Save</button>
+	<div id="samples-table"></div>
+	
+	<script src="js/jquery-2.2.4.min.js" type="text/javascript"></script>
+	<script src="js/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="js/jquery.contextMenu.min.js" type="text/javascript"></script>
+	<script src="js/tabulator.js" type="text/javascript"></script>
+	<script src="databaseFunctions.js" type="text/javascript"></script>
+
 	<script>
+        var fs = require('fs'),
+            nw = require('nw.gui'),
+            tosource = require('tosource'),
+	        win = nw.Window.get();
+    
+	    win.isMaximized = false;
 
-		var nw = require('nw.gui');
-		var win = nw.Window.get();
-		win.isMaximized = false;
+	    // min
+	    document.getElementById('windowControlMinimize').onclick = function() {
+		    win.minimize();
+	    };
 
+	    // close
+	    document.getElementById('windowControlClose').onclick = function() {
+		    win.close();
+	    };
 
-	</script>
-	</head>
+	    // max
+	    document.getElementById('windowControlMaximize').onclick = function() {
+		    if (win.isMaximized)
+			    win.unmaximize();
+		    else
+			    win.maximize();
+	    };
 
-	<body>
-	<header>
-		<ul>
-			<li><a href='#' title='Minimize' id='windowControlMinimize'></a></li>
-			<li><a href='#' title='Maximize' id='windowControlMaximize'></a></li>
-			<li><a href='#' title='Close'    id='windowControlClose'   ></a></li>
-		</ul>
-	</header>
-	<script>
+	    win.on('maximize', function() {
+		    win.isMaximized = true;
+	    });
 
-		var nw = require('nw.gui');
-		var win = nw.Window.get();
-		win.isMaximized = false;
-
-		// Min
-		document.getElementById('windowControlMinimize').onclick = function()
-		{
-			win.minimize();
-		};
-
-		// Close
-		document.getElementById('windowControlClose').onclick = function()
-		{
-			win.close();
-		};
-
-		// Max
-		document.getElementById('windowControlMaximize').onclick = function()
-		{
-			if (win.isMaximized)
-				win.unmaximize();
-			else
-				win.maximize();
-		};
-
-		win.on('maximize', function(){
-			win.isMaximized = true;
-		});
-
-		win.on('unmaximize', function(){
-			win.isMaximized = false;
-		});
-
-
-	</script>
-
-	<div class="chart" id="tree"></div>
-	<button id="save_table">Save</button>
-		<div id="samples-table"></div>
-		<script src="js/jquery-2.2.4.min.js" type="text/javascript"></script>
-		<script src="js/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
-		<script src="js/jquery.contextMenu.min.js" type="text/javascript"></script>
-		<script src="js/tabulator.js" type="text/javascript"></script>
-		<script src="databaseFunctions.js" type="text/javascript"></script>
-
-
-		<script>
-
-			var tosource = require('tosource')
-
-		// load up required modules
-
-		createDummyDatastore(); // for testing
-
-		// initialise tree structure
-		getNode("rootNode", function (rootNode) {
-		    getChildNodes(rootNode._id, function(childNodes) {
+	    win.on('unmaximize', function() {
+		    win.isMaximized = false;
+	    });
+	    
+	    createTestData2(); // for testing
+	    
+	    getNode("rootNode", function (rootNode) {
+	        getNonRootNodes(rootNode._id, function(childNodes) {
+                
+                // initialise Treant config
+                var chart_config = [
+			        { container: "#tree" }
+		        ];
 		        
-		        // define root node's children
-		        var children = [];
-		        for (i=0; i<childNodes.length; i++) {
-		            var child = {
-			            text: { name: childNodes[i]._id },
-			            HTMLid: childNodes[i]._id,
-			            HTMLclass: "sampleset"
-		            }
-		            children.push(child);
-		        }
-		        
-		        // define tree (only trees of depth 2 for now)
-		        var chart_config = {
-			        chart: {
-				        container: "#tree"
-			        },
-			        nodeStructure: {
-			            text: { name: rootNode._id },
-			            HTMLid: rootNode._id,
-			            children: children
-			        }
-		        };
+		        // define rootNode
+                chart_config.push({
+                    text: { name: rootNode._id },
+                    HTMLid: rootNode._id
+                });
+                
+                // define other nodes
+                for (i=0; i<childNodes.length; i++) {
+				    // search chart_config for childNodes[i]'s parent
+				    for (j=1; j<chart_config.length; j++) {
+					    if (childNodes[i].parentID == chart_config[j].HTMLid) {
+						    chart_config.push({
+							    parent: chart_config[j],
+							    text: { name: childNodes[i]._id },
+							    HTMLid: childNodes[i]._id,
+							    HTMLclass: "sampleset"
+						    });
+					    }
+				    }
+			    }
 
-		        // do our logic stuff here
-		        $(document).ready(function() {
-			        console.log("ready!");
-			        new Treant( chart_config );
+                $(document).ready(function() {
+                    console.log("ready!");
+                    new Treant(chart_config);
 
-			        // initialise the context menu for clicks on the tree
-			        $.contextMenu({
-				        // define which elements trigger this menu
-				        selector: ".node",
-				        trigger: 'left',
-				        // define the elements of the menu
-				        items: {
-					        view: {name: "view samples", callback: function(key, opt) {
-						        console.log("view! " + opt.$trigger.attr("id"));
-						        // set table data (I know! Very nested. Will reorganise)
-						        getAllNodes(function(nodes) {
-						            for (i=0; i<nodes.length; i++) {
-						                if (opt.$trigger.attr("id") == nodes[i]._id) {
-						                    getNodeSamples(nodes[i]._id, function(samples) {
-							                    $("#samples-table").tabulator("setData", samples);
-							                });
-							            }
-							        }
-							    });
-					        }},
-					        edit: {name: "edit", icon: "edit", callback: function(key, opt){
-						        console.log("edit!");
-					        }}
-				        },
-				        callback: function(itemKey, opt) {
-					        // this is the default callback if there is no 'item' callback
-					        alert("Clicked on " + itemKey + " on element " + opt.$trigger.attr("id"));
-				        }
-			        });
+                    // define the context menu for clicks on the tree
+                    $.contextMenu({
+	                    // define which elements trigger this menu
+	                    selector: ".node",
+	                    trigger: 'left',
+	                    // define the elements of the menu
+	                    items: {
+		                    view: { name: "view samples", callback: function(key, opt) {
+			                    console.log("view! " + opt.$trigger.attr("id"));
+			                    // set table data
+			                    getNodeSamples(opt.$trigger.attr("id"), function(samples) {
+					                $("#samples-table").tabulator("setData", samples);
+				                });
+		                    }},
+		                    edit: {name: "edit", icon: "edit", callback: function(key, opt){
+			                    console.log("edit!");
+		                    }}
+	                    },
+	                    callback: function(itemKey, opt) {
+		                    // this is the default callback if there is no 'item' callback
+		                    alert("Clicked on " + itemKey + " on element " + opt.$trigger.attr("id"));
+	                    }
+                    });
                     
                     // initialise the samples table columns (only id for now)
                     getProcessAttributeNames("rootNode", function(attributeNames) {
-			            $("#samples-table").tabulator({
-//				            height:"320px", // set height of table (optional)
-				            fitColumns:true, //fit columns to width of table (optional)
-				            columns:[ //Define Table Columns
-					            {title:"Id", field: "id", editable:true,sorter:"string", height: 100,width:150},
-								{title:"Attributes", field:"processName", editable:true,sortable:true, sorter:"String", align:"right", formatter:"progress"}
-				            ],
-							rowEdit:function(id, data, row){
-								//id - the id of the row
-								//data - the data for the row
-								//row - the DOM element of the row
-								$(window).resize(function(){
-									$("#samples-table").tabulator("redraw");
-								});
+                        $("#samples-table").tabulator({
+                            //height:"320px",
+	                        fitColumns: true,
+	                        columns: [
+		                        { title: "Id", field: "id", editable: true, sorter: "string" },
+		                        
+	                        ],
+				            rowEdit:function(id, data, row){
+					            // id - the id of the row
+					            // data - the data for the row
+					            // row - the DOM element of the row
+					            $(window).resize(function(){
+						            $("#samples-table").tabulator("redraw");
+					            });
 
-								var thisdata = $("#samples-table").tabulator("getData");
-								console.log(tosource(thisdata));
-								console.log("thisdata");
-								tabledata = thisdata;
+					            var thisdata = $("#samples-table").tabulator("getData");
+					            console.log(tosource(thisdata));
+					            console.log("thisdata");
+					            tabledata = thisdata;
 
-								//clear the table
-								$("#samples-table").tabulator("clear");
+					            // clear the table
+					            $("#samples-table").tabulator("clear");
 
-								$("#samples-table").tabulator("setData", tabledata);
+					            $("#samples-table").tabulator("setData", tabledata);
 
-								//alert("Data is "+tabledata.toSource());
-							}
-			            });
-			        });
-		        });
+					            //alert("Data is "+tabledata.toSource());
+				            }
+                        });
+                    });
+                });
             });
         });
-
-		var fs = require('fs');
-		$("#save_table").click(function(){
-			var content = tosource(tabledata);
+	    
+	    $("#save_table").click(function(){
+		    var content = tosource(tabledata);
 //			var mkdirp = require('mkdirp');
 //
 //			// Create a folder, recursively
@@ -200,26 +188,23 @@
 //				if (err)
 //					alert('Error creating directories');
 //			});
-			//var content = JSON.stringify(tabledata);
-			console.log(content);
-			fs.writeFile('saved.txt',content,function(err){
-				if(err)
-					alert('Error writing file');
-				else
-				{
-					fs.readFile('./save.txt',function(err,fileContent){
-						if(err)
-							document.write('Error reading file');
-						else
-							document.write(fileContent.toString().replace(new RegExp(os.EOL,'g'),'<br>'))
-					})
-				}
-			});
-		})
-	    </script>
-
-
-
-	</body>
-
+		    //var content = JSON.stringify(tabledata);
+		    console.log(content);
+		    fs.writeFile('saved.txt',content,function(err){
+			    if(err)
+				    alert('Error writing file');
+			    else
+			    {
+				    fs.readFile('./save.txt',function(err,fileContent){
+					    if(err)
+						    document.write('Error reading file');
+					    else
+						    document.write(fileContent.toString().replace(new RegExp(os.EOL,'g'),'<br>'))
+				    })
+			    }
+		    });
+	    })
+    </script>
+</body>
 </html>
+
