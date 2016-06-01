@@ -72,24 +72,62 @@ function getNonRootNodes(nodeID, callback) {
     });
 }
 
-// return all attribute names from the process of nodeID as an array
+function getTreeConfig(callback) {
+    getNode("rootNode", function (rootNode) {
+        getNonRootNodes(rootNode._id, function(childNodes) {
+            var chart_config = [
+		        { container: "#tree" }
+	        ];
+	        
+	        // define rootNode
+            chart_config.push({
+                text: { name: rootNode._id },
+                HTMLid: rootNode._id
+            });
+            
+            // define other nodes
+            for (i=0; i<childNodes.length; i++) {
+			    // search chart_config for childNodes[i]'s parent
+			    for (j=1; j<chart_config.length; j++) {
+				    if (childNodes[i].parentID == chart_config[j].HTMLid) {
+					    chart_config.push({
+						    parent: chart_config[j],
+						    text: { name: childNodes[i]._id },
+						    HTMLid: childNodes[i]._id,
+						    HTMLclass: "sampleset"
+					    });
+				    }
+			    }
+		    }
+		    
+		    callback(chart_config);
+	    });
+    });
+}
+
+// return all attributeNames of a nodeID's process in a tabulator array structure
 function getProcessAttributeNames(nodeID, callback) {
     db.findOne({ _id: nodeID }, function(err, node) {
         db.findOne({ _id: node.processName }, function(err, process) {
-            callback(process.attributeNames);
+            var columns = [{ title: "Id", field: "id", editable: true, sorter: "string" }];
+            for (i=0; i<process.attributeNames.length; i++) {
+                columns.push({ title: process.attributeNames[i], field: process.attributeNames[i], editable: true, sorter: "string" });
+            }
+            callback(columns);
         });
     });
 }
 
-// return all samples with nodeID in tabulator structure (only returns ids for now)
+// return all samples with nodeID in a tabulator array structure
 function getNodeSamples(nodeID, callback) {
     db.find({ "_id.nodeID": nodeID }, function(err, samples) {
         db.findOne({ _id: nodeID }, function(err, node) {
             db.findOne({ _id: node.processName }, function(err, process) {
                 var sampleData = [];
                 for (i=0; i<samples.length; i++) {
-                    var sample = {
-                        id: samples[i]._id.sampleID
+                    var sample = { id: samples[i]._id.sampleID }
+                    for (j=0; j<process.attributeNames.length; j++) {
+                        sample[process.attributeNames[j]] = samples[i].attributeData[j];
                     }
                     sampleData.push(sample);
                 }
@@ -97,5 +135,9 @@ function getNodeSamples(nodeID, callback) {
             });
         });
     });
+}
+
+function updateNodeSamples(nodeID, sampleData) {
+
 }
 

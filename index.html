@@ -86,99 +86,75 @@
 	    });
 	    
 	    createTestData2(); // for testing
-	    
-	    getNode("rootNode", function (rootNode) {
-	        getNonRootNodes(rootNode._id, function(childNodes) {
-                
-                // initialise Treant config
-                var chart_config = [
-			        { container: "#tree" }
-		        ];
-		        
-		        // define rootNode
-                chart_config.push({
-                    text: { name: rootNode._id },
-                    HTMLid: rootNode._id
+
+        $(document).ready(function() {
+            getTreeConfig(function(chart_config) {
+                new Treant(chart_config);
+
+                // define the context menu for clicks on the tree
+                $.contextMenu({
+                    // define which elements trigger this menu
+                    selector: ".node",
+                    trigger: 'left',
+                    // define the elements of the menu
+                    items: {
+                        view: {
+                            name: "view samples",
+                            callback: function(key, opt) {
+	                            
+	                            // update columns
+	                            getProcessAttributeNames(opt.$trigger.attr("id"), function(columns) {  
+                                    $("#samples-table").tabulator("setColumns", columns , false);
+		                        });
+	                            
+	                            // update table data
+	                            getNodeSamples(opt.$trigger.attr("id"), function(samples) {
+                                    $("#samples-table").tabulator("setData", samples);
+                                });
+                            }
+                        },
+                        edit: {
+                            name: "edit",
+                            icon: "edit",
+                            callback: function(key, opt) {
+	                            console.log("edit!");
+                            }
+                        }
+                    },
+                    callback: function(itemKey, opt) {
+                        // this is the default callback if there is no 'item' callback
+                        alert("Clicked on " + itemKey + " on element " + opt.$trigger.attr("id"));
+                    }
                 });
                 
-                // define other nodes
-                for (i=0; i<childNodes.length; i++) {
-				    // search chart_config for childNodes[i]'s parent
-				    for (j=1; j<chart_config.length; j++) {
-					    if (childNodes[i].parentID == chart_config[j].HTMLid) {
-						    chart_config.push({
-							    parent: chart_config[j],
-							    text: { name: childNodes[i]._id },
-							    HTMLid: childNodes[i]._id,
-							    HTMLclass: "sampleset"
-						    });
-					    }
-				    }
-			    }
-
-                $(document).ready(function() {
-                    console.log("ready!");
-                    new Treant(chart_config);
-
-                    // define the context menu for clicks on the tree
-                    $.contextMenu({
-	                    // define which elements trigger this menu
-	                    selector: ".node",
-	                    trigger: 'left',
-	                    // define the elements of the menu
-	                    items: {
-		                    view: { name: "view samples", callback: function(key, opt) {
-			                    console.log("view! " + opt.$trigger.attr("id"));
-			                    // set table data
-			                    getNodeSamples(opt.$trigger.attr("id"), function(samples) {
-					                $("#samples-table").tabulator("setData", samples);
-				                });
-		                    }},
-		                    edit: {name: "edit", icon: "edit", callback: function(key, opt){
-			                    console.log("edit!");
-		                    }}
-	                    },
-	                    callback: function(itemKey, opt) {
-		                    // this is the default callback if there is no 'item' callback
-		                    alert("Clicked on " + itemKey + " on element " + opt.$trigger.attr("id"));
-	                    }
-                    });
-                    
-                    // initialise the samples table columns (only id for now)
-                    getProcessAttributeNames("rootNode", function(attributeNames) {
-                        $("#samples-table").tabulator({
-                            //height:"320px",
-	                        fitColumns: true,
-	                        columns: [
-		                        { title: "Id", field: "id", editable: true, sorter: "string" },
-		                        
-	                        ],
-				            rowEdit:function(id, data, row){
-					            // id - the id of the row
-					            // data - the data for the row
-					            // row - the DOM element of the row
-					            $(window).resize(function(){
-						            $("#samples-table").tabulator("redraw");
-					            });
-
-					            var thisdata = $("#samples-table").tabulator("getData");
-					            console.log(tosource(thisdata));
-					            console.log("thisdata");
-					            tabledata = thisdata;
-
-					            // clear the table
-					            $("#samples-table").tabulator("clear");
-
-					            $("#samples-table").tabulator("setData", tabledata);
-
-					            //alert("Data is "+tabledata.toSource());
-				            }
+                // define table
+                $("#samples-table").tabulator({
+                    fitColumns: true,
+                    columns: [],
+                    rowEdit: function(id, data, row) {
+                        // id - the id of the row
+                        // data - the data for the row
+                        // row - the DOM element of the row
+                        $(window).resize(function(){
+                            $("#samples-table").tabulator("redraw");
                         });
-                    });
+
+                        var thisdata = $("#samples-table").tabulator("getData");
+                        console.log(tosource(thisdata));
+                        console.log("thisdata");
+                        tabledata = thisdata;
+
+                        // clear the table
+                        $("#samples-table").tabulator("clear");
+
+                        $("#samples-table").tabulator("setData", tabledata);
+
+                        //alert("Data is "+tabledata.toSource());
+                    }
                 });
             });
         });
-	    
+        
 	    $("#save_table").click(function(){
 		    var content = tosource(tabledata);
 //			var mkdirp = require('mkdirp');
