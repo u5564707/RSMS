@@ -111,13 +111,33 @@
 	                            getNodeSamples(opt.$trigger.attr("id"), function(samples) {
                                     $("#samples-table").tabulator("setData", samples);
                                 });
+
+
                             }
                         },
                         edit: {
-                            name: "edit",
+                            name: "save",
                             icon: "edit",
                             callback: function(key, opt) {
-	                            console.log("edit!");
+	                            console.log("save!");
+
+                                //get the table data
+                                var thisdata = $("#samples-table").tabulator("getData");
+                                tabledata = thisdata;
+                                var content = tosource(tabledata);
+                                fs.writeFile('saved.txt',content,function(err){
+                                    if(err)
+                                        alert('Error writing file');
+                                    else
+                                    {
+                                        fs.readFile('./saved.txt',function(err,fileContent){
+                                            if(err)
+                                                document.write('Error reading file');
+                                            else
+                                                document.write(fileContent.toString().replace(new RegExp(os.EOL,'g'),'<br>'))
+                                        })
+                                    }
+                                });
                             }
                         }
                     },
@@ -131,6 +151,8 @@
                 $("#samples-table").tabulator({
                     fitColumns: true,
                     columns: [],
+
+                    //when edited save the changes
                     rowEdit: function(id, data, row) {
                         // id - the id of the row
                         // data - the data for the row
@@ -149,6 +171,7 @@
 
                         $("#samples-table").tabulator("setData", tabledata);
 
+                       // updateNodeSamples(tabledata);
                         //alert("Data is "+tabledata.toSource());
                     }
                 });
@@ -171,7 +194,7 @@
 				    alert('Error writing file');
 			    else
 			    {
-				    fs.readFile('./save.txt',function(err,fileContent){
+				    fs.readFile('./saved.txt',function(err,fileContent){
 					    if(err)
 						    document.write('Error reading file');
 					    else
