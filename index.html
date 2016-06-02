@@ -43,6 +43,11 @@
 
     <div class="chart" id="tree"></div>
     <button id="save_table">Save</button>
+    <button id="add_table">Add new row</button>
+    <button id="delete_table">Delete</button>
+    <form id='form1'>
+        <input type="text" id="txt_name" name="delete_row" placeholder="Enter the row">
+    </form>
 	<div id="samples-table"></div>
 	
 	<script src="js/jquery-2.2.4.min.js" type="text/javascript"></script>
@@ -52,6 +57,10 @@
 	<script src="databaseFunctions.js" type="text/javascript"></script>
 
 	<script>
+        $("#delete_table").hide();
+        $("#save_table").hide();
+        $("#add_table").hide();
+        $("#form1").hide();
         var fs = require('fs'),
             nw = require('nw.gui'),
             tosource = require('tosource'),
@@ -112,7 +121,10 @@
                                     $("#samples-table").tabulator("setData", samples);
                                 });
 
-
+                                $("#delete_table").show();
+                                $("#save_table").show();
+                                $("#add_table").show();
+                                $("#form1").show();
                             }
                         },
                         edit: {
@@ -177,8 +189,24 @@
                 });
             });
         });
-        
-	    $("#save_table").click(function(){
+
+
+        //Add/Del Rows Example
+        $("#add_table").click(function(){
+            $("#samples-table").tabulator("addRow");
+        })
+
+
+        //there is an error when get the input's value, I am emailed the owner for the details
+        $("#delete_table").click(function(){
+            var bla = $("#txt_name").val();
+            $("#samples-table").tabulator("deleteRow",1);
+            console.log(bla);
+        })
+
+
+
+        $("#save_table").click(function(){
 		    var content = tosource(tabledata);
 //			var mkdirp = require('mkdirp');
 //
