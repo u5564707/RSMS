@@ -133,10 +133,36 @@
                             callback: function(key, opt) {
 	                            console.log("save!");
 
+
+                                //get the column
+                                var colDefs = $("#samples-table").tabulator("getColumns");
+                                console.log(tosource(colDefs));
+
                                 //get the table data
                                 var thisdata = $("#samples-table").tabulator("getData");
                                 tabledata = thisdata;
                                 var content = tosource(tabledata);
+                                var mydata = tosource(tabledata);
+
+                                console.log("my data is: ");
+                                console.log(mydata);
+
+                                console.log("my datatostring is: ");
+                                console.log(mydata.toString());
+
+                                $.each(eval(mydata), function(i, v) {
+
+                                    $.each(v, function(ii, vv) {
+
+
+                                            console.log(vv)
+
+                                    })
+
+                                });
+
+                                console.log("start save file");
+
                                 fs.writeFile('saved.txt',content,function(err){
                                     if(err)
                                         alert('Error writing file');
@@ -183,6 +209,8 @@
 
                         $("#samples-table").tabulator("setData", tabledata);
 
+
+
                        // updateNodeSamples(tabledata);
                         //alert("Data is "+tabledata.toSource());
                     }
@@ -205,9 +233,11 @@
         })
 
 
-
+        //click the save button
         $("#save_table").click(function(){
 		    var content = tosource(tabledata);
+
+            //make new directory
 //			var mkdirp = require('mkdirp');
 //
 //			// Create a folder, recursively
@@ -217,6 +247,8 @@
 //			});
 		    //var content = JSON.stringify(tabledata);
 		    console.log(content);
+
+
 		    fs.writeFile('saved.txt',content,function(err){
 			    if(err)
 				    alert('Error writing file');

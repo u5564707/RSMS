@@ -137,10 +137,7 @@ function getNodeSamples(nodeID, callback) {
     });
 }
 
-//function updateNodeSamples(nodeID, sampleData) {
-//
-//}
+function updateNodeSamples(nodeID, sampleData) {
 
-function updateNodeSamples(sampleData) {
-//db.insert(sampleData);
 }
+
