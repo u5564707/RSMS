@@ -5,6 +5,9 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * Full Documentation & Demos can be found at: http://olifolkerd.github.io/tabulator/
+ *
  */
 
  (function(){
@@ -38,7 +41,6 @@
 
 	//setup options
 	options: {
-
 		colMinWidth:"40px", //minimum global width for a column
 		colResizable:true, //resizable columns
 
@@ -62,6 +64,7 @@
 		progressiveRenderMargin:200, //disance in px before end of scroll before progressive render is triggered
 
 		tooltips: false, //Tool tip value
+		tooltipsHeader: false, //Tool tip for headers
 
 		columns:[],//store for colum header info
 		data:false, //store for initial table data if set at construction
@@ -98,16 +101,16 @@
 		rowEdit:function(){}, //do action on row edit
 		rowDelete:function(){}, //do action on row delete
 		rowContext:function(){}, //context menu action
-		dataLoaded:function(){},  //callback for when data has been Loaded
-		rowMoved:function(){},  //callback for when row has moved
-		colMoved:function(){},  //callback for when column has moved
+		dataLoaded:function(){}, //callback for when data has been Loaded
+		rowMoved:function(){}, //callback for when row has moved
+		colMoved:function(){}, //callback for when column has moved
 		pageLoaded:function(){}, //calback for when a page is loaded
 	},
 
 	////////////////// Element Construction //////////////////
 
 	//constructor
-	_create: function() {
+	_create: function(){
 		var self = this;
 		var element = self.element;
 
@@ -166,7 +169,6 @@
 			}
 		}
 
-
 		//iterate through table rows and build data set
 		$("tbody tr", element).each(function(rowIndex){
 			var item = {};
@@ -191,8 +193,8 @@
 		var attributes = element.prop("attributes");
 
 		// loop through attributes and apply them on div
-		$.each(attributes, function() {
-		    newElement.attr(this.name, this.value);
+		$.each(attributes, function(){
+			newElement.attr(this.name, this.value);
 		});
 
 		// replace table with div element
@@ -204,7 +206,7 @@
 	},
 
 	//build tabulator element
-	_buildElement: function() {
+	_buildElement: function(){
 		var self = this;
 		var options = self.options;
 		var element = self.element;
@@ -275,20 +277,19 @@
 		}else{
 			self._colLayout();
 		}
-
 	},
 
 	//set options
-	_setOption: function(option, value) {
+	_setOption: function(option, value){
 		var self = this;
 
 		//block update if option cannot be updated this way
 		if(["columns"].indexOf(option) > -1){
-			return false
+			return false;
 		}
 
 		//set option to value
-		$.Widget.prototype._setOption.apply( this, arguments );
+		$.Widget.prototype._setOption.apply(this, arguments);
 
 		//trigger appropriate table response
 
@@ -345,7 +346,7 @@
 			$(".tabulator-loader-msg", self.loaderDiv).css({"margin-top":(self.element.innerHeight() / 2) - ($(".tabulator-loader-msg", self.loaderDiv).outerHeight()/2)})
 		}
 
-		//trigger ro restyle
+		//trigger row restyle
 		self._styleRows(true);
 
 		if(fullRedraw){
@@ -371,7 +372,7 @@
 		//create array of column styles only
 		var columnStyles = [];
 
-		$.each(self.options.columns, function(i, column) {
+		$.each(self.options.columns, function(i, column){
 
 			var style = {
 				field: column.field,
@@ -412,13 +413,12 @@
 				cookie = cookie.substr(0, end);
 			}
 
-			cookie = cookie.replace(cookieID+"=", "")
+			cookie = cookie.replace(cookieID+"=", "");
 
 			self.setColumns(JSON.parse(cookie), true);
 		}else{
 			self._colLayout();
 		}
-
 	},
 
 	//set tabulator columns
@@ -426,57 +426,60 @@
 		var self = this;
 		var oldColumns = self.options.columns;
 
-		//if updateing columns work through exisiting column data
-		if(update){
+		if(Array.isArray(columns)){
 
-			var newColumns = [];
+			//if updateing columns work through exisiting column data
+			if(update){
 
-			//iterate through each of the new columns
-			$.each(columns, function(i, column) {
+				var newColumns = [];
 
-				//find a match in the original column array
-				var find = column.field;
-				//var find = column.field == "" ? column : column.field;
+				//iterate through each of the new columns
+				$.each(columns, function(i, column){
 
-				$.each(self.options.columns, function(i, origColumn) {
+					//find a match in the original column array
+					//var find = column.field;
+					var find = column.field == "" ? column : column.field;
 
-					var match = typeof(find) == "object" ? origColumn == find : origColumn.field == find;
+					$.each(self.options.columns, function(i, origColumn){
 
-					//if matching, update layout data and add to new column array
-					if(match){
+						var match = typeof(find) == "object" ? origColumn == find : origColumn.field == find;
 
-						var result = self.options.columns.splice(i, 1)[0];
+						//if matching, update layout data and add to new column array
+						if(match){
 
-						result.width = column.width;
-						result.visible = column.visible;
+							var result = self.options.columns.splice(i, 1)[0];
 
-						newColumns.push(result);
+							result.width = column.width;
+							result.visible = column.visible;
 
-						return false;
-					}
+							newColumns.push(result);
+
+							return false;
+						}
+
+					});
 
 				});
 
-			});
+				//if any aditional columns left add them to the end of the table
+				if(self.options.columns.length > 0){
+					newColumns.concat(self.options.columns);
+				}
 
-			//if any aditional columns left add them to the end of the table
-			if(self.options.columns.length > 0){
-				newColumns.concat(self.options.columns);
+				//replace old columns with new
+				self.options.columns = newColumns;
+
+			}else{
+				// if replaceing columns, replace columns array with new
+				self.options.columns = columns;
 			}
 
-			//replace old columns with new
-			self.options.columns = newColumns;
-
 			//Trigger Redraw
 			self._colLayout();
 
-		}else{
-
-			// if replaceing columns, replace columns array with new
-			self.options.columns = columns;
-
-			//Trigger Redraw
-			self._colLayout();
+			if(self.options.columnLayoutCookie){
+				self._setColCookie();
+			}
 		}
 	},
 
@@ -491,9 +494,9 @@
 	_findColumn:function(field){
 		var self = this;
 
-		var result = false
+		var result = false;
 
-		$.each(self.options.columns, function(i, column) {
+		$.each(self.options.columns, function(i, column){
 			if(typeof(field) == "object"){
 				if(column == field){
 					result = column;
@@ -516,7 +519,7 @@
 		var self = this;
 		var column = false;
 
-		$.each(self.options.columns, function(i, item) {
+		$.each(self.options.columns, function(i, item){
 			if(item.field == field){
 				column = i;
 				return false;
@@ -543,7 +546,7 @@
 		var self = this;
 		var column = false;
 
-		$.each(self.options.columns, function(i, item) {
+		$.each(self.options.columns, function(i, item){
 			if(item.field == field){
 				column = i;
 				return false;
@@ -569,7 +572,7 @@
 		var self = this;
 		var column = false;
 
-		$.each(self.options.columns, function(i, item) {
+		$.each(self.options.columns, function(i, item){
 			if(item.field == field){
 				column = i;
 				return false;
@@ -601,79 +604,81 @@
 	deleteRow: function(item){
 		var self = this;
 
-		var id = typeof(item) == "number" ? item : item.data("data")[self.options.index]
+		var id = !isNaN(item) ? item : item.data("data")[self.options.index];
 
-		var row = typeof(item) == "number" ? $("[data-id=" + item + "]", self.element) :  item;
+		var row = !isNaN(item) ? $("[data-id=" + item + "]", self.element) : item;
 
-		var rowData = row.data("data");
-		rowData.tabulator_delete_row = true;
+		if(row.length){
+			var rowData = row.data("data");
+			rowData.tabulator_delete_row = true;
 
-		//remove from data
-		var line = self.data.find(function(rowData){
-			return item.tabulator_delete_row;
-		});
+			//remove from data
+			var line = self.data.find(function(rowData){
+				return item.tabulator_delete_row;
+			});
 
-		if(line){
-			line = self.data.indexOf(line);
+			if(line){
+				line = self.data.indexOf(line);
 
-			if(line > -1){
-				//remove row from data
-				self.data.splice(line, 1);
+				if(line > -1){
+					//remove row from data
+					self.data.splice(line, 1);
+				}
 			}
-		}
 
-		//remove from active data
-		line = self.activeData.find(function(item){
-			return item.tabulator_delete_row;
-		});
+			//remove from active data
+			line = self.activeData.find(function(item){
+				return item.tabulator_delete_row;
+			});
 
-		if(line){
-			line = self.activeData.indexOf(line);
+			if(line){
+				line = self.activeData.indexOf(line);
 
-			if(line > -1){
-				//remove row from data
-				self.activeData.splice(line, 1);
+				if(line > -1){
+					//remove row from data
+					self.activeData.splice(line, 1);
+				}
 			}
-		}
 
-		var group = row.closest(".tabulator-group");
+			var group = row.closest(".tabulator-group");
 
-		row.remove();
+			row.remove();
 
-		if(self.options.groupBy){
+			if(self.options.groupBy){
 
-			var length = $(".tabulator-row", group).length;
+				var length = $(".tabulator-row", group).length;
 
-			if(length){
+				if(length){
 
-				var data = [];
+					var data = [];
 
-				$(".tabulator-row", group).each(function(){
-					data.push($(this).data("data"));
-				});
+					$(".tabulator-row", group).each(function(){
+						data.push($(this).data("data"));
+					});
 
-				var header = $(".tabulator-group-header", group)
-				var arrow = $(".tabulator-arrow", header).clone(true,true);
+					var header = $(".tabulator-group-header", group);
+					var arrow = $(".tabulator-arrow", header).clone(true,true);
 
-				header.empty()
+					header.empty();
 
-				header.append(arrow).append(self.options.groupHeader(group.data("value"), $(".tabulator-row", group).length, data));
-			}else{
-				group.remove();
+					header.append(arrow).append(self.options.groupHeader(group.data("value"), $(".tabulator-row", group).length, data));
+				}else{
+					group.remove();
+				}
 			}
+
+
+			//style table rows
+			self._styleRows();
+
+			//align column widths
+			self._colRender(!self.firstRender);
+			self._trigger("renderComplete");
+
+			self.options.rowDelete(id);
+
+			self._trigger("dataEdited");
 		}
-
-
-		//style table rows
-		self._styleRows();
-
-		//align column widths
-		self._colRender(!self.firstRender);
-		self._trigger("renderComplete");
-
-		self.options.rowDelete(id);
-
-		self._trigger("dataEdited");
 	},
 
 	//add blank row to table
@@ -681,13 +686,10 @@
 		var self = this;
 
 		if(item){
-			item[self.options.index] = item[self.options.index]? item[self.options.index]: 0;
+			item[self.options.index] = item[self.options.index] ? item[self.options.index] : 0;
 		}else{
-			item = {id:0}
+			item = {id:0};
 		}
-
-		//add item to
-		//self.data.push(item);
 
 		//create blank row
 		var row = self._renderRow(item);
@@ -712,7 +714,6 @@
 		self.options.rowAdded(item);
 
 		self._trigger("dataEdited");
-
 	},
 
 	////////////////// Data Manipulation //////////////////
@@ -725,13 +726,12 @@
 
 	//load data
 	setData:function(data, params){
-
 		this._trigger("dataLoading");
 
 		params = params ? params : {};
 
 		//show loader if needed
-		this._showLoader(this, this.options.loader)
+		this._showLoader(this, this.options.loader);
 
 		if(typeof(data) === "string"){
 			if (data.indexOf("{") == 0 || data.indexOf("[") == 0){
@@ -767,7 +767,6 @@
 
 	//get json data via ajax
 	_getAjaxData:function(url, params){
-
 		var self = this;
 		var options = self.options;
 
@@ -776,11 +775,11 @@
 			type: "GET",
 			data:params,
 			async: true,
-			dataType:'json',
-			success: function (data) {
+			dataType:"json",
+			success: function (data){
 				self._parseData(data);
 			},
-			error: function (xhr, ajaxOptions, thrownError) {
+			error: function (xhr, ajaxOptions, thrownError){
 				console.log("Tablulator ERROR (ajax get): " + xhr.status + " - " + thrownError);
 				self._trigger("dataLoadError", xhr, thrownError);
 
@@ -793,29 +792,32 @@
 	_parseData:function(data){
 		var self = this;
 
-		var newData = [];
+		if(Array.isArray(data)){
+			var newData = [];
 
-		if(data.length){
-			if(typeof(data[0][self.options.index]) == "undefined"){
-				self.options.index = "_index";
-				$.each(data, function(i, item) {
-					newData[i] = item;
-					newData[i]["_index"] = i;
-				});
+			if(data.length){
+				if(typeof(data[0][self.options.index]) == "undefined"){
+					self.options.index = "_index";
+					$.each(data, function(i, item){
+						newData[i] = item;
+						newData[i]["_index"] = i;
+					});
 
-			}else{
-				$.each(data, function(i, item) {
-					newData.push(item);
-				});
+				}else{
+					$.each(data, function(i, item){
+						newData.push(item);
+					});
+				}
 			}
+
+			self.data = newData;
+
+			self.options.dataLoaded(data);
+
+			//filter incomming data
+			self._filterData();
 		}
 
-		self.data = newData;
-
-		self.options.dataLoaded(data);
-
-		//filter incomming data
-		self._filterData();
 	},
 
 	////////////////// Data Filtering //////////////////
@@ -879,7 +881,7 @@
 		var self = this;
 
 		//filter data set
-		if(self.filterField ){
+		if(self.filterField){
 			self.activeData = self.data.filter(function(row){
 				return self._filterRow(row);
 			});
@@ -896,7 +898,6 @@
 		if(self.sortCurCol){
 			self.sort(self.sortCurCol, self.sortCurDir);
 		}else{
-
 			//determine pagination information / render table
 			if(self.options.pagination){
 				self.setPage(1);
@@ -949,7 +950,11 @@
 					break;
 
 					case "like": //text like
-					return value.toLowerCase().indexOf(term.toLowerCase()) > -1 ? true : false;
+						if(value === null){
+							return term === value ? true : false;
+						}else{
+							return value.toLowerCase().indexOf(term.toLowerCase()) > -1 ? true : false;
+						}
 					break;
 
 					default:
@@ -986,11 +991,11 @@
 			sortList = [{field: sortList, dir:dir}];
 		}
 
-		$.each(sortList, function(i, item) {
+		$.each(sortList, function(i, item){
 
 			//convert colmun name to column object
 			if(typeof(item.field) == "string"){
-				$.each(options.columns, function(i, col) {
+				$.each(options.columns, function(i, col){
 					if(col.field == item.field){
 						item.field = col;
 						return false;
@@ -1000,7 +1005,7 @@
 
 			//reset all column sorts
 			$(".tabulator-col[data-sortable=true][data-field!=" + item.field.field + "]", self.header).data("sortdir", "desc");
-			$(".tabulator-col .tabulator-arrow", self.header).removeClass("asc desc")
+			$(".tabulator-col .tabulator-arrow", self.header).removeClass("asc desc");
 
 			var element = $(".tabulator-col[data-field='" + item.field.field + "']", header);
 
@@ -1022,12 +1027,10 @@
 		}else{
 			self._renderTable();
 		}
-
 	},
 
 	//sort table
 	_sorter: function(column, dir, sortList, i){
-
 		var self = this;
 		var table = self.table;
 		var options = self.options;
@@ -1062,7 +1065,6 @@
 
 			return result;
 		})
-
 	},
 
 	//process individual sort functions on active data
@@ -1091,13 +1093,11 @@
 	//get current page number
 	getPage:function(){
 		var self = this;
-
 		return self.options.pagination ? self.paginationCurrentPage : false;
 	},
 
 	//set current paginated page
 	setPage:function(page){
-
 		var self = this;
 
 		if(Number.isInteger(page) && page > 0 && page <= self.paginationMaxPage){
@@ -1135,8 +1135,10 @@
 	setPageSize:function(size){
 		var self = this;
 
-		self.options.paginationSize = size;
-		self._filterData();
+		if(Number.isInteger(size) && size > 0){
+			self.options.paginationSize = parseInt(size);
+			self._filterData();
+		}
 	},
 
 
@@ -1183,7 +1185,6 @@
 
 		$(".tabulator-page", self.paginator).removeClass("disabled");
 
-
 		if(self.paginationCurrentPage == 1){
 			$(".tabulator-page[data-page=first], .tabulator-page[data-page=prev]", self.paginator).addClass("disabled");
 		}
@@ -1191,7 +1192,6 @@
 		if(self.paginationCurrentPage == self.paginationMaxPage){
 			$(".tabulator-page[data-page=next], .tabulator-page[data-page=last]", self.paginator).addClass("disabled");
 		}
-
 	},
 
 	////////////////// Render Data to Table //////////////////
@@ -1199,19 +1199,16 @@
 	//render active data to table rows
 	_renderTable:function(progressiveRender){
 		var self = this;
-		var options = self.options
+		var options = self.options;
 
 		this._trigger("renderStarted");
 
 		//show loader if needed
-		self._showLoader(self, self.options.loader)
+		self._showLoader(self, self.options.loader);
 
 		if(!progressiveRender){
 
 			clearTimeout(self.progressiveRenderTimer);
-
-			//hide table while building
-			// self.table.hide();
 
 			//clear data from table before loading new
 			self.table.empty();
@@ -1229,7 +1226,7 @@
 		var renderData = options.pagination || options.progressiveRender ? self.activeData.slice((self.paginationCurrentPage-1) * self.options.paginationSize, ((self.paginationCurrentPage-1) * self.options.paginationSize) + self.options.paginationSize) : self.activeData;
 
 		//build rows of table
-		renderData.forEach( function(item, i) {
+		renderData.forEach(function(item, i){
 
 			var row = self._renderRow(item);
 
@@ -1257,12 +1254,12 @@
 		});
 
 
-
 		//enable movable rows
 		if(options.movableRows){
 
 			var moveBackground ="";
 			var moveBorder ="";
+
 			//sorter options
 			var config = {
 				handle:".tabulator-row-handle",
@@ -1284,13 +1281,13 @@
 						"background":moveBackground,
 					});
 				},
-				update: function(event, ui) {
+				update: function(event, ui){
 					//restyle rows
 					self._styleRows();
 
 					//clear sorter arrows
 					$(".tabulator-col[data-sortable=true]", self.header).data("sortdir", "desc");
-					$(".tabulator-col .tabulator-arrow", self.header).removeClass("asc desc")
+					$(".tabulator-col .tabulator-arrow", self.header).removeClass("asc desc");
 					self.activeData = [];
 
 					//update active data to mach rows
@@ -1329,37 +1326,34 @@
 		//style table rows
 		self._styleRows();
 
-		//show table once loading complete
-		// self.table.show();
-
-		//hide loader div
-		self._hideLoader(self);
-
-		self._trigger("renderComplete");
-
-		if(self.filterField){
-			self._trigger("filterComplete");
-		}
-
-		if(self.options.pagination){
-			self.options.pageLoaded(self.paginationCurrentPage);
-		}
-
-		//trigger progressive render
 		if(progressiveRender && self.paginationCurrentPage < self.paginationMaxPage && self.tableHolder[0].scrollHeight <= self.tableHolder.innerHeight()){
+				//trigger progressive render to fill element
 				self.paginationCurrentPage++;
 				self._renderTable(true);
+			}else{
+
+			//hide loader div
+			self._hideLoader(self);
+
+			//trigger callbacks
+			self._trigger("renderComplete");
+
+			if(self.filterField){
+				self._trigger("filterComplete");
+			}
+
+			if(self.options.pagination){
+				self.options.pageLoaded(self.paginationCurrentPage);
+			}
 		}
 
 		self.firstRender = false;
-
 	},
 
 	//render individual rows
 	_renderRow:function(item){
-
 		var self = this;
-		var row = $('<div class="tabulator-row" data-id="' + item[self.options.index] + '"></div>');
+		var row = $("<div class='tabulator-row' data-id='" + item[self.options.index] + "'></div>");
 
 		//bind row data to row
 		row.data("data", item);
@@ -1376,18 +1370,18 @@
 			row.append(handle);
 		}
 
-		$.each(self.options.columns, function(i, column) {
+		$.each(self.options.columns, function(i, column){
 			//deal with values that arnt declared
 
-			var value = typeof(item[column.field]) == 'undefined' ? "" : item[column.field];
+			var value = typeof(item[column.field]) == "undefined" ? "" : item[column.field];
 
 			// set empty values to not break search
-			if(typeof(item[column.field]) == 'undefined'){
+			if(typeof(item[column.field]) == "undefined"){
 				item[column.field] = "";
 			}
 
 			//set column text alignment
-			var align = typeof(column.align) == 'undefined' ? "left" : column.align;
+			var align = typeof(column.align) == "undefined" ? "left" : column.align;
 
 			//allow tabbing on editable cells
 			var tabbable = column.editable || column.editor ? "tabindex='0'" : "";
@@ -1463,7 +1457,7 @@
 
 	//render group element
 	_renderGroup:function(value){
-		var group =  $("<div class='tabulator-group show' data-value='" + value + "'><div class='tabulator-group-header'></div><div class='tabulator-group-body'></div></div>");
+		var group = $("<div class='tabulator-group show' data-value='" + value + "'><div class='tabulator-group-header'></div><div class='tabulator-group-body'></div></div>");
 
 		return group;
 	},
@@ -1494,7 +1488,7 @@
 	_showLoader:function(self, msg){
 		if(self.options.showLoader){
 			$(".tabulator-loader-msg", self.loaderDiv).empty().append(msg);
-			$(".tabulator-loader-msg", self.loaderDiv).css({"margin-top":(self.element.innerHeight() / 2) - ($(".tabulator-loader-msg", self.loaderDiv).outerHeight()/2)})
+			$(".tabulator-loader-msg", self.loaderDiv).css({"margin-top":(self.element.innerHeight() / 2) - ($(".tabulator-loader-msg", self.loaderDiv).outerHeight()/2)});
 			self.element.append(self.loaderDiv);
 		}
 	},
@@ -1530,12 +1524,32 @@
 	_resizeCol:function(index, width){
 		var self = this;
 
-		$(".tabulator-cell[data-index=" + index + "], .tabulator-col[data-index=" + index + "]",this.element).css({width:width})
+		$(".tabulator-cell[data-index=" + index + "], .tabulator-col[data-index=" + index + "]",this.element).css({width:width});
 
 		//reinstate right edge on table if fitted columns resized
 		if(self.options.fitColumns){
 			$(".tabulator-row .tabulator-cell:last-of-type",self.element).css("border-right","");
 			$(".tabulator-col:last",self.element).css("border-right","");
+		}
+
+		self._vertAlignColHeaders();
+	},
+
+	//set all headers to the same height
+	_vertAlignColHeaders:function(){
+		var self = this;
+
+		if(self.header){
+			var headerHeight = self.header.outerHeight();
+
+			$(".tabulator-col, .tabulator-col-row-handle", self.header).css({"height":""}).css({"height":self.header.innerHeight() + "px"});
+
+			if(self.options.height && headerHeight != self.header.outerHeight()){
+				self.tableHolder.css({
+					"min-height":"calc(100% - " + self.header.outerHeight() + "px)",
+					"max-height":"calc(100% - " + self.header.outerHeight() + "px)",
+				});
+			}
 		}
 	},
 
@@ -1552,7 +1566,7 @@
 
 		//add column for row handle if movable rows enabled
 		if(options.movableRows){
-			var handle = $('<div class="tabulator-col-row-handle">&nbsp</div>');
+			var handle = $("<div class='tabulator-col-row-handle'>&nbsp</div>");
 			self.header.append(handle);
 		}
 
@@ -1561,7 +1575,7 @@
 			self.header.sortable({
 				axis: "x",
 				opacity:1,
-				cancel:".tabulator-col-row-handle, .tabulator-col[data-field=''],  .tabulator-col[data-field=undefined]",
+				cancel:".tabulator-col-row-handle, .tabulator-col[data-field=''], .tabulator-col[data-field=undefined]",
 				start: function(event, ui){
 					ui.placeholder.css({"display":"inline-block", "width":ui.item.outerWidth()});
 				},
@@ -1569,34 +1583,34 @@
 					ui.placeholder.css({"display":"inline-block", "width":ui.item.outerWidth()});
 
 					var field = ui.item.data("field");
-					var newPos = ui.placeholder.next(".tabulator-col").data("field")
+					var newPos = ui.placeholder.next(".tabulator-col").data("field");
 
 					//cover situation where user moves back to original position
 					if(newPos == field){
-						newPos = ui.placeholder.next(".tabulator-col").next(".tabulator-col").data("field")
+						newPos = ui.placeholder.next(".tabulator-col").next(".tabulator-col").data("field");
 					}
 
 					$(".tabulator-row", self.table).each(function(){
 
 						if(newPos){
-							$(".tabulator-cell[data-field=" + field + "]", $(this)).insertBefore($(".tabulator-cell[data-field=" + newPos + "]", $(this)))
+							$(".tabulator-cell[data-field=" + field + "]", $(this)).insertBefore($(".tabulator-cell[data-field=" + newPos + "]", $(this)));
 						}else{
-							$(this).append($(".tabulator-cell[data-field=" + field + "]", $(this)))
+							$(this).append($(".tabulator-cell[data-field=" + field + "]", $(this)));
 						}
 
 
 					})
 				},
-				update: function(event, ui) {
+				update: function(event, ui){
 
 					//update columns array with new positional data
-					var fromField =  ui.item.data("field")
-					var toField =  ui.item.next(".tabulator-col").data("field")
+					var fromField = ui.item.data("field");
+					var toField = ui.item.next(".tabulator-col").data("field");
 
 					var from = null;
 					var to = toField ? null : options.columns.length;
 
-					$.each(options.columns, function(i, column) {
+					$.each(options.columns, function(i, column){
 
 						if(column.field && column.field == fromField){
 							from = i;
@@ -1610,7 +1624,7 @@
 
 					var columns = options.columns.splice(from, 1)[0]
 
-					$.each(options.columns, function(i, column) {
+					$.each(options.columns, function(i, column){
 
 						if(column.field && column.field == toField){
 							to = i;
@@ -1635,7 +1649,7 @@
 
 
 
-		$.each(options.columns, function(i, column) {
+		$.each(options.columns, function(i, column){
 
 			column.index = i;
 
@@ -1659,6 +1673,10 @@
 			var visibility = column.visible ? "inline-block" : "none";
 
 			var col = $('<div class="tabulator-col ' + column.cssClass + '" style="display:' + visibility + '" data-index="' + i + '" data-field="' + column.field + '" data-sortable=' + column.sortable + sortdir + ' >' + title + '</div>');
+
+			if(options.tooltipsHeader){
+				col.attr("title", title);
+			}
 
 			if(typeof(column.width) != "undefined"){
 				column.width = isNaN(column.width) ? column.width : column.width + "px"; //format number
@@ -1686,7 +1704,7 @@
 		if(self.options.colResizable){
 			//create resize handle
 			var handle = $("<div class='tabulator-handle'></div>");
-			var prevHandle = $("<div class='tabulator-handle prev'></div>")
+			var prevHandle = $("<div class='tabulator-handle prev'></div>");
 
 			$(".tabulator-col", self.header).append(handle);
 			$(".tabulator-col", self.header).append(prevHandle);
@@ -1712,9 +1730,7 @@
 				}
 			})
 
-
 			var endColMove = function(e){
-
 				if(self.mouseDrag){
 					e.stopPropagation();
 					e.stopImmediatePropagation();
@@ -1726,7 +1742,7 @@
 					self._resizeCol(self.mouseDragElement.data("index"), self.mouseDragElement.outerWidth());
 
 
-					$.each(self.options.columns, function(i, item) {
+					$.each(self.options.columns, function(i, item){
 						if(item.field == self.mouseDragElement.data("field")){
 							item.width = self.mouseDragElement.outerWidth();
 						}
@@ -1751,7 +1767,6 @@
 
 		//add pagination footer if needed
 		if(self.footer){
-
 			element.append(self.footer);
 
 			var footerHeight = self.header.outerHeight() + self.footer.outerHeight();
@@ -1761,20 +1776,18 @@
 				"max-height":"calc(100% - " + footerHeight + "px)",
 			});
 		}else{
-
 			if(self.options.height){
 				self.tableHolder.css({
 					"min-height":"calc(100% - " + self.header.outerHeight() + "px)",
 					"max-height":"calc(100% - " + self.header.outerHeight() + "px)",
 				});
 			}
-
 		}
 
 		//set paginationSize if pagination enabled, height is set but no pagination number set, else set to ten;
 		if(self.options.pagination && !self.options.paginationSize){
 			if(self.options.height){
-				self.options.paginationSize = Math.floor(self.tableHolder.outerHeight() / (self.header.outerHeight() - 1))
+				self.options.paginationSize = Math.floor(self.tableHolder.outerHeight() / (self.header.outerHeight() - 1));
 			}else{
 				self.options.paginationSize = 10;
 			}
@@ -1783,11 +1796,11 @@
 		element.on("editval", ".tabulator-cell", function(e, value){
 			if($(this).is(":focus")){$(this).blur()}
 				self._cellDataChange($(this), value);
-		})
+		});
 
 		element.on("editcancel", ".tabulator-cell", function(e, value){
 			self._cellDataChange($(this), $(this).data("value"));
-		})
+		});
 
 		//append sortable arrows to sortable headers
 		$(".tabulator-col[data-sortable=true]", self.header)
@@ -1801,7 +1814,6 @@
 			// self.firstRender = false;
 			self._parseData(self.options.data);
 		}
-
 	},
 
 	//layout coluns on first render
@@ -1814,7 +1826,7 @@
 
 		if(fixedwidth || !options.fitColumns){ //it columns have been resized and now data needs to match them
 			//free sized table
-			$.each(options.columns, function(i, column) {
+			$.each(options.columns, function(i, column){
 				colWidth = $(".tabulator-col[data-index=" + i + "]", element).outerWidth();
 				var col = $(".tabulator-cell[data-index=" + i + "]", element);
 				col.css({width:colWidth});
@@ -1830,7 +1842,7 @@
 				if(self.options.fitColumns){
 					$(".tabulator-row", self.table).css({
 						"width":"100%",
-					})
+					});
 				}
 
 				var totWidth = options.movableRows ? self.element.innerWidth() - 30 : self.element.innerWidth();
@@ -1840,7 +1852,7 @@
 				var widthIdealCount = 0;
 				var lastVariableCol = "";
 
-				$.each(options.columns, function(i, column) {
+				$.each(options.columns, function(i, column){
 					if(column.visible){
 
 						colCount++;
@@ -1859,7 +1871,7 @@
 
 				var colWidth = totWidth / colCount;
 
-				var proposedWidth = Math.floor((totWidth - widthIdeal) / (colCount - widthIdealCount))
+				var proposedWidth = Math.floor((totWidth - widthIdeal) / (colCount - widthIdealCount));
 
 				//prevent underflow on non integer width tables
 				var gapFill = totWidth - widthIdeal - (proposedWidth * (colCount - widthIdealCount));
@@ -1867,7 +1879,7 @@
 
 				if(proposedWidth >= parseInt(options.colMinWidth)){
 
-					$.each(options.columns, function(i, column) {
+					$.each(options.columns, function(i, column){
 						if(column.visible){
 							var newWidth = column.width ? column.width : proposedWidth;
 
@@ -1890,9 +1902,9 @@
 			}else{
 
 				//free sized table
-				$.each(options.columns, function(i, column) {
+				$.each(options.columns, function(i, column){
 
-					var col = $(".tabulator-cell[data-index=" + i + "], .tabulator-col[data-index=" + i+ "]",element)
+					var col = $(".tabulator-cell[data-index=" + i + "], .tabulator-col[data-index=" + i+ "]",element);
 
 					if(column.width){
 						//reseize to match specified column width
@@ -1903,7 +1915,7 @@
 						var max = 0;
 
 						col.each(function(){
-							max = $(this).outerWidth() > max ? $(this).outerWidth() : max
+							max = $(this).outerWidth() > max ? $(this).outerWidth() : max;
 						});
 
 						if(options.colMinWidth){
@@ -1916,13 +1928,14 @@
 			}//
 		}
 
+		//vertically align headers
+		self._vertAlignColHeaders();
 	},
 
 	////////////////// Row Styling //////////////////
 
 	//style rows of the table
 	_styleRows:function(minimal){
-
 		var self = this;
 
 		if(!minimal){
@@ -1940,27 +1953,18 @@
 					var newRow = self.options.rowFormatter($(this), $(this).data("data"));
 
 					if(newRow){
-						$(this).html(newRow)
+						$(this).html(newRow);
 					}
 				});
 			}
 		}
 
-		if(!self.options.height){
-			var height = self.tableHolder.outerHeight() + self.header.outerHeight();
-
-			if(self.footer){
-				height += self.footer.outerHeight() + 1;
-			}
-
-			self.element.css({height:height})
-		}
-
 		//resize cells vertically to fit row contents
-		$(".tabulator-row", self.table).each(function(){
-			$(".tabulator-cell, .tabulator-row-handle", $(this)).css({"height":$(this).outerHeight() + "px"});
-		})
-
+		if(self.element.is(":visible")){
+			$(".tabulator-row", self.table).each(function(){
+				$(".tabulator-cell, .tabulator-row-handle", $(this)).css({"height":$(this).outerHeight() + "px"});
+			});
+		}
 	},
 
 	//format cell contents
@@ -1986,17 +1990,15 @@
 
 	//carry out action on cell click
 	_cellClick: function(e, cell){
-
-		var column = this.options.columns.filter(function(column) {
+		var column = this.options.columns.filter(function(column){
 			return column.index == cell.data("index");
 		});
 
-		column[0].onClick(e, cell, cell.data("value"), cell.closest(".tabulator-row").data("data") );
+		column[0].onClick(e, cell, cell.data("value"), cell.closest(".tabulator-row").data("data"));
 	},
 
 	//handle cell data change
 	_cellDataChange: function(cell, value){
-
 		var self = this;
 		var row = cell.closest(".tabulator-row");
 
@@ -2006,7 +2008,7 @@
 		cell.data("value", value);
 
 		//update row data
-		var rowData =  row.data("data");
+		var rowData = row.data("data");
 		var hasChanged = rowData[cell.data("field")] != value;
 		rowData[cell.data("field")] = value;
 		row.data("data", rowData);
@@ -2023,7 +2025,6 @@
 		self._styleRows();
 
 		self._trigger("dataEdited");
-
 	},
 
 	////////////////// Formatter/Sorter Helpers //////////////////
@@ -2035,7 +2036,7 @@
 
 	//format date for date comparison
 	_formatDate:function(dateString){
-		var format = this.options.dateFormat
+		var format = this.options.dateFormat;
 
 		var ypos = format.indexOf("yyyy");
 		var mpos = format.indexOf("mm");
@@ -2044,7 +2045,7 @@
 		if(dateString){
 			var formattedString = dateString.substring(ypos, ypos+4) + "-" + dateString.substring(mpos, mpos+2) + "-" + dateString.substring(dpos, dpos+2);
 
-			var newDate = Date.parse(formattedString)
+			var newDate = Date.parse(formattedString);
 		}else{
 			var newDate = 0;
 		}
@@ -2069,29 +2070,29 @@
 			var el1 = a === true || a === "true" || a === "True" || a === 1 ? 1 : 0;
 			var el2 = b === true || b === "true" || b === "True" || b === 1 ? 1 : 0;
 
-			return el1 - el2
+			return el1 - el2;
 		},
-		alphanum:function(as, bs) {
-			var a, b, a1, b1, i= 0, L, rx=  /(\d+)|(\D+)/g, rd=  /\d/;
+		alphanum:function(as, bs){
+			var a, b, a1, b1, i= 0, L, rx = /(\d+)|(\D+)/g, rd = /\d/;
 
 			if(isFinite(as) && isFinite(bs)) return as - bs;
-			a= String(as).toLowerCase();
-			b= String(bs).toLowerCase();
-			if(a=== b) return 0;
-			if(!(rd.test(a) && rd.test(b))) return a> b? 1: -1;
-			a= a.match(rx);
-			b= b.match(rx);
-			L= a.length> b.length? b.length: a.length;
+			a = String(as).toLowerCase();
+			b = String(bs).toLowerCase();
+			if(a === b) return 0;
+			if(!(rd.test(a) && rd.test(b))) return a > b ? 1 : -1;
+			a = a.match(rx);
+			b = b.match(rx);
+			L = a.length > b.length ? b.length : a.length;
 			while(i < L){
 				a1= a[i];
 				b1= b[i++];
-				if(a1!== b1){
+				if(a1 !== b1){
 					if(isFinite(a1) && isFinite(b1)){
-						if(a1.charAt(0)=== "0") a1= "." + a1;
-						if(b1.charAt(0)=== "0") b1= "." + b1;
+						if(a1.charAt(0) === "0") a1 = "." + a1;
+						if(b1.charAt(0) === "0") b1 = "." + b1;
 						return a1 - b1;
 					}
-					else return a1> b1? 1: -1;
+					else return a1 > b1 ? 1 : -1;
 				}
 			}
 			return a.length > b.length;
@@ -2101,22 +2102,20 @@
 	//custom data formatters
 	formatters:{
 		plaintext:function(value, data, cell, row, options, formatterParams){ //plain text value
-			return  value;
+			return value;
 		},
 		money:function(value, data, cell, row, options, formatterParams){
-			var number =  parseFloat(value).toFixed(2);
+			var number = parseFloat(value).toFixed(2);
 
-			var number = number.split('.');
+			var number = number.split(".");
 
 			var integer = number[0];
-			var decimal = number.length > 1 ? '.' + number[1] : '';
+			var decimal = number.length > 1 ? "." + number[1] : "";
 
 			var rgx = /(\d+)(\d{3})/;
 
-			while (rgx.test(integer)) {
-
-				integer = integer.replace(rgx, '$1' + ',' + '$2');
-
+			while (rgx.test(integer)){
+				integer = integer.replace(rgx, "$1" + "," + "$2");
 			}
 
 			return integer + decimal;
@@ -2128,19 +2127,19 @@
 			return "<a href='" + value + "'>" + value + "</a>";
 		},
 		tick:function(value, data, cell, row, options, formatterParams){
-			var tick = '<svg enable-background="new 0 0 24 24" height="14" width="14"  viewBox="0 0 24 24" xml:space="preserve" ><path fill="#2DC214" clip-rule="evenodd" d="M21.652,3.211c-0.293-0.295-0.77-0.295-1.061,0L9.41,14.34  c-0.293,0.297-0.771,0.297-1.062,0L3.449,9.351C3.304,9.203,3.114,9.13,2.923,9.129C2.73,9.128,2.534,9.201,2.387,9.351  l-2.165,1.946C0.078,11.445,0,11.63,0,11.823c0,0.194,0.078,0.397,0.223,0.544l4.94,5.184c0.292,0.296,0.771,0.776,1.062,1.07  l2.124,2.141c0.292,0.293,0.769,0.293,1.062,0l14.366-14.34c0.293-0.294,0.293-0.777,0-1.071L21.652,3.211z" fill-rule="evenodd"/></svg>';
+			var tick = '<svg enable-background="new 0 0 24 24" height="14" width="14" viewBox="0 0 24 24" xml:space="preserve" ><path fill="#2DC214" clip-rule="evenodd" d="M21.652,3.211c-0.293-0.295-0.77-0.295-1.061,0L9.41,14.34  c-0.293,0.297-0.771,0.297-1.062,0L3.449,9.351C3.304,9.203,3.114,9.13,2.923,9.129C2.73,9.128,2.534,9.201,2.387,9.351  l-2.165,1.946C0.078,11.445,0,11.63,0,11.823c0,0.194,0.078,0.397,0.223,0.544l4.94,5.184c0.292,0.296,0.771,0.776,1.062,1.07  l2.124,2.141c0.292,0.293,0.769,0.293,1.062,0l14.366-14.34c0.293-0.294,0.293-0.777,0-1.071L21.652,3.211z" fill-rule="evenodd"/></svg>';
 
-			if(value === true || value === 'true' || value === 'True' || value === 1){
+			if(value === true || value === "true" || value === "True" || value === 1){
 				return tick;
 			}else{
 				return "";
 			}
 		},
 		tickCross:function(value, data, cell, row, options, formatterParams){
-			var tick = '<svg enable-background="new 0 0 24 24" height="14" width="14"  viewBox="0 0 24 24" xml:space="preserve" ><path fill="#2DC214" clip-rule="evenodd" d="M21.652,3.211c-0.293-0.295-0.77-0.295-1.061,0L9.41,14.34  c-0.293,0.297-0.771,0.297-1.062,0L3.449,9.351C3.304,9.203,3.114,9.13,2.923,9.129C2.73,9.128,2.534,9.201,2.387,9.351  l-2.165,1.946C0.078,11.445,0,11.63,0,11.823c0,0.194,0.078,0.397,0.223,0.544l4.94,5.184c0.292,0.296,0.771,0.776,1.062,1.07  l2.124,2.141c0.292,0.293,0.769,0.293,1.062,0l14.366-14.34c0.293-0.294,0.293-0.777,0-1.071L21.652,3.211z" fill-rule="evenodd"/></svg>';
+			var tick = '<svg enable-background="new 0 0 24 24" height="14" width="14" viewBox="0 0 24 24" xml:space="preserve" ><path fill="#2DC214" clip-rule="evenodd" d="M21.652,3.211c-0.293-0.295-0.77-0.295-1.061,0L9.41,14.34  c-0.293,0.297-0.771,0.297-1.062,0L3.449,9.351C3.304,9.203,3.114,9.13,2.923,9.129C2.73,9.128,2.534,9.201,2.387,9.351  l-2.165,1.946C0.078,11.445,0,11.63,0,11.823c0,0.194,0.078,0.397,0.223,0.544l4.94,5.184c0.292,0.296,0.771,0.776,1.062,1.07  l2.124,2.141c0.292,0.293,0.769,0.293,1.062,0l14.366-14.34c0.293-0.294,0.293-0.777,0-1.071L21.652,3.211z" fill-rule="evenodd"/></svg>';
 			var cross = '<svg enable-background="new 0 0 24 24" height="14" width="14"  viewBox="0 0 24 24" xml:space="preserve" ><path fill="#CE1515" d="M22.245,4.015c0.313,0.313,0.313,0.826,0,1.139l-6.276,6.27c-0.313,0.312-0.313,0.826,0,1.14l6.273,6.272  c0.313,0.313,0.313,0.826,0,1.14l-2.285,2.277c-0.314,0.312-0.828,0.312-1.142,0l-6.271-6.271c-0.313-0.313-0.828-0.313-1.141,0  l-6.276,6.267c-0.313,0.313-0.828,0.313-1.141,0l-2.282-2.28c-0.313-0.313-0.313-0.826,0-1.14l6.278-6.269  c0.313-0.312,0.313-0.826,0-1.14L1.709,5.147c-0.314-0.313-0.314-0.827,0-1.14l2.284-2.278C4.308,1.417,4.821,1.417,5.135,1.73  L11.405,8c0.314,0.314,0.828,0.314,1.141,0.001l6.276-6.267c0.312-0.312,0.826-0.312,1.141,0L22.245,4.015z"/></svg>';
 
-			if(value === true || value === 'true' || value === 'True' || value === 1){
+			if(value === true || value === "true" || value === "True" || value === 1){
 				return tick;
 			}else{
 				return cross;
@@ -2166,12 +2165,11 @@
 				"white-space": "nowrap",
 				"overflow": "hidden",
 				"text-overflow": "ellipsis",
-			})
+			});
 
 			return stars.html();
 		},
 		progress:function(value, data, cell, row, options, formatterParams){ //progress bar
-
 			//set default parameters
 			var max = formatterParams && formatterParams.max ? formatterParams.max : 100;
 			var min = formatterParams && formatterParams.min ? formatterParams.min : 0;
@@ -2191,25 +2189,23 @@
 				"position":"relative",
 			});
 
-			return "<div style='position:absolute; top:8px; bottom:8px; left:4px; right:" + value + "%; margin-right:4px; background-color:" + color + "; display:inline-block;' data-max='" + max + "' data-min='" + min + "'></div>"
+			return "<div style='position:absolute; top:8px; bottom:8px; left:4px; right:" + value + "%; margin-right:4px; background-color:" + color + "; display:inline-block;' data-max='" + max + "' data-min='" + min + "'></div>";
 		},
 		color:function(value, data, cell, row, options, formatterParams){
 			cell.css({"background-color":value});
 			return "";
 		},
 		buttonTick:function(value, data, cell, row, options, formatterParams){
-			return '<svg enable-background="new 0 0 24 24" height="14" width="14"  viewBox="0 0 24 24" xml:space="preserve" ><path fill="#2DC214" clip-rule="evenodd" d="M21.652,3.211c-0.293-0.295-0.77-0.295-1.061,0L9.41,14.34  c-0.293,0.297-0.771,0.297-1.062,0L3.449,9.351C3.304,9.203,3.114,9.13,2.923,9.129C2.73,9.128,2.534,9.201,2.387,9.351  l-2.165,1.946C0.078,11.445,0,11.63,0,11.823c0,0.194,0.078,0.397,0.223,0.544l4.94,5.184c0.292,0.296,0.771,0.776,1.062,1.07  l2.124,2.141c0.292,0.293,0.769,0.293,1.062,0l14.366-14.34c0.293-0.294,0.293-0.777,0-1.071L21.652,3.211z" fill-rule="evenodd"/></svg>';
+			return '<svg enable-background="new 0 0 24 24" height="14" width="14" viewBox="0 0 24 24" xml:space="preserve" ><path fill="#2DC214" clip-rule="evenodd" d="M21.652,3.211c-0.293-0.295-0.77-0.295-1.061,0L9.41,14.34  c-0.293,0.297-0.771,0.297-1.062,0L3.449,9.351C3.304,9.203,3.114,9.13,2.923,9.129C2.73,9.128,2.534,9.201,2.387,9.351  l-2.165,1.946C0.078,11.445,0,11.63,0,11.823c0,0.194,0.078,0.397,0.223,0.544l4.94,5.184c0.292,0.296,0.771,0.776,1.062,1.07  l2.124,2.141c0.292,0.293,0.769,0.293,1.062,0l14.366-14.34c0.293-0.294,0.293-0.777,0-1.071L21.652,3.211z" fill-rule="evenodd"/></svg>';
 		},
 		buttonCross:function(value, data, cell, row, options, formatterParams){
-			return '<svg enable-background="new 0 0 24 24" height="14" width="14"  viewBox="0 0 24 24" xml:space="preserve" ><path fill="#CE1515" d="M22.245,4.015c0.313,0.313,0.313,0.826,0,1.139l-6.276,6.27c-0.313,0.312-0.313,0.826,0,1.14l6.273,6.272  c0.313,0.313,0.313,0.826,0,1.14l-2.285,2.277c-0.314,0.312-0.828,0.312-1.142,0l-6.271-6.271c-0.313-0.313-0.828-0.313-1.141,0  l-6.276,6.267c-0.313,0.313-0.828,0.313-1.141,0l-2.282-2.28c-0.313-0.313-0.313-0.826,0-1.14l6.278-6.269  c0.313-0.312,0.313-0.826,0-1.14L1.709,5.147c-0.314-0.313-0.314-0.827,0-1.14l2.284-2.278C4.308,1.417,4.821,1.417,5.135,1.73  L11.405,8c0.314,0.314,0.828,0.314,1.141,0.001l6.276-6.267c0.312-0.312,0.826-0.312,1.141,0L22.245,4.015z"/></svg>';
+			return '<svg enable-background="new 0 0 24 24" height="14" width="14" viewBox="0 0 24 24" xml:space="preserve" ><path fill="#CE1515" d="M22.245,4.015c0.313,0.313,0.313,0.826,0,1.139l-6.276,6.27c-0.313,0.312-0.313,0.826,0,1.14l6.273,6.272  c0.313,0.313,0.313,0.826,0,1.14l-2.285,2.277c-0.314,0.312-0.828,0.312-1.142,0l-6.271-6.271c-0.313-0.313-0.828-0.313-1.141,0  l-6.276,6.267c-0.313,0.313-0.828,0.313-1.141,0l-2.282-2.28c-0.313-0.313-0.313-0.826,0-1.14l6.278-6.269  c0.313-0.312,0.313-0.826,0-1.14L1.709,5.147c-0.314-0.313-0.314-0.827,0-1.14l2.284-2.278C4.308,1.417,4.821,1.417,5.135,1.73  L11.405,8c0.314,0.314,0.828,0.314,1.141,0.001l6.276-6.267c0.312-0.312,0.826-0.312,1.141,0L22.245,4.015z"/></svg>';
 		},
-
 	},
 
 	//custom data editors
 	editors:{
 		input:function(cell, value){
-
 			//create and style input
 			var input = $("<input type='text'/>");
 			input.css({
@@ -2223,7 +2219,7 @@
 
 			setTimeout(function(){
 				input.focus();
-			},100)
+			},100);
 
 			//submit new value on blur
 			input.on("change blur", function(e){
@@ -2238,10 +2234,8 @@
 			});
 
 			return input;
-
 		},
 		number:function(cell, value){
-
 			//create and style input
 			var input = $("<input type='number'/>");
 			input.css({
@@ -2255,7 +2249,7 @@
 
 			setTimeout(function(){
 				input.focus();
-			},100)
+			},100);
 
 			//submit new value on blur
 			input.on("blur", function(e){
@@ -2270,7 +2264,6 @@
 			});
 
 			return input;
-
 		},
 		star:function(cell, value){
 			var maxStars = $("svg", cell).length;
@@ -2280,7 +2273,7 @@
 			value = parseInt(value) < maxStars ? parseInt(value) : maxStars;
 
 			var starActive = $('<svg width="' + size + '" height="' + size + '" class="tabulator-star-active" viewBox="0 0 512 512" xml:space="preserve" style="padding:0 1px;"><polygon fill="#488CE9" stroke="#014AAE" stroke-width="37.6152" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="259.216,29.942 330.27,173.919 489.16,197.007 374.185,309.08 401.33,467.31 259.216,392.612 117.104,467.31 144.25,309.08 29.274,197.007 188.165,173.919 "/></svg>');
-			var starInactive = $('<svg width="' + size + '" height="' + size + '" class="tabulator-star-inactive"  viewBox="0 0 512 512" xml:space="preserve" style="padding:0 1px;"><polygon fill="#010155" stroke="#686868" stroke-width="37.6152" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="259.216,29.942 330.27,173.919 489.16,197.007 374.185,309.08 401.33,467.31 259.216,392.612 117.104,467.31 144.25,309.08 29.274,197.007 188.165,173.919 "/></svg>');
+			var starInactive = $('<svg width="' + size + '" height="' + size + '" class="tabulator-star-inactive" viewBox="0 0 512 512" xml:space="preserve" style="padding:0 1px;"><polygon fill="#010155" stroke="#686868" stroke-width="37.6152" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="259.216,29.942 330.27,173.919 489.16,197.007 374.185,309.08 401.33,467.31 259.216,392.612 117.104,467.31 144.25,309.08 29.274,197.007 188.165,173.919 "/></svg>');
 
 			for(var i=1;i<= maxStars;i++){
 
@@ -2300,7 +2293,7 @@
 			stars.on("mouseover", "svg", function(e){
 				e.stopPropagation();
 				starChange($(this));
-			})
+			});
 
 			stars.on("mouseover", function(e){
 				$("svg", $(this)).replaceWith(starInactive.clone());
@@ -2319,7 +2312,7 @@
 				"white-space": "nowrap",
 				"overflow": "hidden",
 				"text-overflow": "ellipsis",
-			})
+			});
 
 			cell.on("blur", function(){
 				$(this).trigger("editcancel");
@@ -2329,14 +2322,14 @@
 			cell.on("keydown", function(e){
 				switch(e.keyCode){
 					case 39: //right arrow
-					starChange($(".tabulator-star-inactive:first", stars))
+					starChange($(".tabulator-star-inactive:first", stars));
 					break;
 
 					case 37: //left arrow
-					var prevstar = $(".tabulator-star-active:last", stars).prev("svg")
+					var prevstar = $(".tabulator-star-active:last", stars).prev("svg");
 
 					if(prevstar.length){
-						starChange(prevstar)
+						starChange(prevstar);
 					}else{
 						$("svg", stars).replaceWith(starInactive.clone());
 					}
@@ -2382,15 +2375,15 @@
 			handle.on("mousedown", function(e){
 				bar.data("mouseDrag", e.screenX);
 				bar.data("mouseDragWidth", bar.outerWidth());
-			})
+			});
 
-			handle.on("mouseover", function(){$(this).css({cursor:"ew-resize"})})
+			handle.on("mouseover", function(){$(this).css({cursor:"ew-resize"})});
 
 			cell.on("mousemove", function(e){
 				if(bar.data("mouseDrag")){
 					bar.css({width: bar.data("mouseDragWidth") + (e.screenX - bar.data("mouseDrag"))})
 				}
-			})
+			});
 
 			cell.on("mouseup", function(e){
 				if(bar.data("mouseDrag")){
@@ -2405,7 +2398,6 @@
 
 				}
 			});
-
 
 			//allow key based navigation
 			cell.on("keydown", function(e){
@@ -2446,12 +2438,12 @@
 
 			setTimeout(function(){
 				input.focus();
-			},100)
+			},100);
 
-			if(value === true || value === 'true' || value === 'True' || value === 1){
-				input.prop("checked", true)
+			if(value === true || value === "true" || value === "True" || value === 1){
+				input.prop("checked", true);
 			}else{
-				input.prop("checked", false)
+				input.prop("checked", false);
 			}
 
 			//submit new value on blur
@@ -2482,12 +2474,12 @@
 
 			setTimeout(function(){
 				input.focus();
-			},100)
+			},100);
 
-			if(value === true || value === 'true' || value === 'True' || value === 1){
-				input.prop("checked", true)
+			if(value === true || value === "true" || value === "True" || value === 1){
+				input.prop("checked", true);
 			}else{
-				input.prop("checked", false)
+				input.prop("checked", false);
 			}
 
 			//submit new value on blur
@@ -2509,7 +2501,7 @@
 	////////////////// Tabulator Desconstructor //////////////////
 
 	//deconstructor
-	_destroy: function() {
+	_destroy: function(){
 		var self = this;
 		var element = self.element;
 

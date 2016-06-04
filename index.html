@@ -42,7 +42,7 @@
     </header>
 
     <div class="chart" id="tree"></div>
-    <button id="save_table">Save</button>
+    <!--<button id="save_table">Save</button>-->
     <button id="add_table">Add new row</button>
     <button id="delete_table">Delete</button>
     <form id='form1'>
@@ -147,9 +147,9 @@
                                 console.log("my data is: ");
                                 console.log(mydata);
 
-                                console.log("my datatostring is: ");
-                                console.log(mydata.toString());
 
+
+                                //get the attributes without name, have not attached the node id
                                 $.each(eval(mydata), function(i, v) {
 
                                     $.each(v, function(ii, vv) {
@@ -200,8 +200,7 @@
                         });
 
                         var thisdata = $("#samples-table").tabulator("getData");
-                        console.log(tosource(thisdata));
-                        console.log("thisdata");
+
                         tabledata = thisdata;
 
                         // clear the table
@@ -211,8 +210,7 @@
 
 
 
-                       // updateNodeSamples(tabledata);
-                        //alert("Data is "+tabledata.toSource());
+
                     }
                 });
             });
@@ -228,41 +226,28 @@
         //there is an error when get the input's value, I am emailed the owner for the details
         $("#delete_table").click(function(){
             var bla = $("#txt_name").val();
-            $("#samples-table").tabulator("deleteRow",1);
-            console.log(bla);
-        })
+            $("#samples-table").tabulator("deleteRow",bla);
+        });
 
 
         //click the save button
-        $("#save_table").click(function(){
-		    var content = tosource(tabledata);
-
-            //make new directory
-//			var mkdirp = require('mkdirp');
+//        $("#save_table").click(function(){
+//		    var content = tosource(tabledata);
 //
-//			// Create a folder, recursively
-//			mkdirp('./a/sub/dir', function(err){
-//				if (err)
-//					alert('Error creating directories');
-//			});
-		    //var content = JSON.stringify(tabledata);
-		    console.log(content);
-
-
-		    fs.writeFile('saved.txt',content,function(err){
-			    if(err)
-				    alert('Error writing file');
-			    else
-			    {
-				    fs.readFile('./saved.txt',function(err,fileContent){
-					    if(err)
-						    document.write('Error reading file');
-					    else
-						    document.write(fileContent.toString().replace(new RegExp(os.EOL,'g'),'<br>'))
-				    })
-			    }
-		    });
-	    })
+//		    fs.writeFile('saved.txt',content,function(err){
+//			    if(err)
+//				    alert('Error writing file');
+//			    else
+//			    {
+//				    fs.readFile('./saved.txt',function(err,fileContent){
+//					    if(err)
+//						    document.write('Error reading file');
+//					    else
+//						    document.write(fileContent.toString().replace(new RegExp(os.EOL,'g'),'<br>'))
+//				    })
+//			    }
+//		    });
+//	    })
     </script>
 </body>
 </html>
