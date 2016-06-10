@@ -55,14 +55,9 @@ function getTreeConfig(callback) {
   getNode("rootNode", function (rootNode) {
     getNonRootNodes(rootNode._id, function(childNodes) {
       var chart_config = [
-        { container: "#tree" }
+        { container: "#tree" },
+        { text: { name: rootNode._id }, HTMLid: rootNode._id }
       ];
-
-      // define rootNode
-      chart_config.push({
-        text: { name: rootNode._id },
-        HTMLid: rootNode._id
-      });
 
       // define other nodes
       for (i=0; i<childNodes.length; i++) {
@@ -131,4 +126,14 @@ function updateNodeSamples(nodeID, tableData) {
     }
     db.insert(sample);
   }
+}
+
+function processSamples(processName, parentID, samplesString) {
+  db.insert({ _id: processName, attributeNames: [] });
+  db.insert({ parentID: parentID, processName: processName }, function(err, newNode) {
+    var sampleIDs = samplesString.split(',');
+    for (i=0; i<sampleIDs.length; i++) {
+      db.insert({ _id: { nodeID: newNode._id, sampleID: sampleIDs[i] } });
+    }
+  });
 }

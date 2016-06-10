@@ -130,6 +130,23 @@
                 $("#add_table").show();
                 $("#form1").show();
               }
+            },
+            processSamples: {
+              name: "process samples",
+              callback: function(key, opt) {
+                var processName = prompt("Process name:");
+                var samplesString = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
+
+                if (processName!=null && samplesString!=null) {
+                  processSamples(processName, opt.$trigger.attr("id"), samplesString);
+                }
+
+                // update tree
+                $("#tree").empty();
+                getTreeConfig(function(config) {
+                  new Treant(config);
+                });
+              }
             }/*,
             save: {
               name: "save",
