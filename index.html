@@ -105,209 +105,121 @@
     $(document).ready(function() {
       getTreeConfig(function(chart_config) {
         new Treant(chart_config);
+      });
+      // define the context menu for clicks on the tree
+      $.contextMenu({
+        // define which elements trigger this menu
+        selector: ".node",
+        trigger: 'left',
+        // define the elements of the menu
+        items: {
+          view: {
+            name: "view samples",
+            callback: function(key, opt) {
+              // $("#samples-table").tabulator("clear");
+              // update columns
+              $("#samples-table").show();
+              getProcessAttributeNames(opt.$trigger.attr("id"), function(columns) {
+                $("#samples-table").tabulator("setColumns", columns , false);
+              });
 
-        // define the context menu for clicks on the tree
-        $.contextMenu({
-          // define which elements trigger this menu
-          selector: ".node",
-          trigger: 'left',
-          // define the elements of the menu
-          items: {
-            view: {
-              name: "view samples",
-              callback: function(key, opt) {
-               // $("#samples-table").tabulator("clear");
-                // update columns
-                $("#samples-table").show();
-                getProcessAttributeNames(opt.$trigger.attr("id"), function(columns) {
-                  $("#samples-table").tabulator("setColumns", columns , false);
-                });
-
-                // save table then update data
-                getNodeSamples(opt.$trigger.attr("id"), function(samples) {
-
-                  getLastClickedNode(function(nodeID) {
-                    isTableEdited(function(edited) {
-                      if (nodeID != undefined && edited && confirm('Save data?')) {
-                        updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
-                      }
-                    });
+              // save table then update data
+              getNodeSamples(opt.$trigger.attr("id"), function(samples) {
+                getLastClickedNode(function(nodeID) {
+                  isTableEdited(function(edited) {
+                    if (nodeID != undefined && edited && confirm('Save data?')) {
+                      updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
+                    }
                   });
-                  setLastClickedNode(opt.$trigger.attr("id"));
-                  $("#samples-table").tabulator("setData", samples);
-
-
-                  setTableEdited(false);
                 });
-                $("#samples-table").tabulator("redraw");
-                $("#samples-table").tabulator("setPageSize", 5); // show 50 rows per page
-                // show table operations
-                $("#delete_table").show();
-                $("#save_table").show();
-                $("#add_table").show();
-                $("#form1").show();
-                $("#form2").show();
-                $("#add_col").show();
-                $("#form3").show();
-                $("#delete_col").show();
-              }
-            },
-            processSamples: {
-              name: "process samples",
-              callback: function(key, opt) {
-                var processName = prompt("Process name:");
-                var samplesString = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
+                setLastClickedNode(opt.$trigger.attr("id"));
+                $("#samples-table").tabulator("setData", samples);
+                setTableEdited(false);
+              });
 
-                if (processName!=null && samplesString!=null) {
-                  processSamples(processName, opt.$trigger.attr("id"), samplesString);
-                }
-
-                // update tree
-                $("#tree").empty();
-                getTreeConfig(function(config) {
-                  new Treant(config);
-                });
-              }
-            }/*,
-            save: {
-              name: "save",
-              callback: function(key, opt) {
-                console.log("save!");
-
-                // get the column
-                var colDefs = $("#samples-table").tabulator("getColumns");
-                console.log(tosource(colDefs));
-
-                // get the table data
-                var thisdata = $("#samples-table").tabulator("getData");
-                tabledata = thisdata;
-                var content = tosource(tabledata);
-                var mydata = tosource(tabledata);
-
-                console.log("my data is: ");
-                console.log(mydata);
-
-                // get the attributes without name, have not attached the node id
-                $.each(eval(mydata), function(i, v) {
-                  $.each(v, function(ii, vv) {
-                    console.log(vv)
-                  })
-                });
-
-                console.log("start save file");
-
-                fs.writeFile('saved.txt',content,function(err){
-                  if(err)
-                    alert('Error writing file');
-                  else {
-                    fs.readFile('./saved.txt',function(err,fileContent){
-                      if(err)
-                        document.write('Error reading file');
-                      else
-                        document.write(fileContent.toString().replace(new RegExp(os.EOL,'g'),'<br>'))
-                    })
-                  }
-                });
-              }
-            }*/
-          }
-        });
-
-
-
-        // define table
-        $("#samples-table").tabulator({
-          fitColumns: true,
-          columns: [],
-
-          //add pagination
-          pagination:true, // this option takes a boolean value (default = false)
-
-          rowEdit: function(id, data, row) {
-            setTableEdited(true);
-            /*// id - the id of the row
-            // data - the data for the row
-            // row - the DOM element of the row
-            $(window).resize(function() {
               $("#samples-table").tabulator("redraw");
-            });
+              $("#samples-table").tabulator("setPageSize", 5); // show 50 rows per page
 
-            var thisdata = $("#samples-table").tabulator("getData");
+              // show table operations
+              $("#delete_table").show();
+              $("#save_table").show();
+              $("#add_table").show();
+              $("#form1").show();
+              $("#form2").show();
+              $("#add_col").show();
+              $("#form3").show();
+              $("#delete_col").show();
+            }
+          },
+          processSamples: {
+            name: "process samples",
+            callback: function(key, opt) {
+              var processName = prompt("Process name:");
+              var samplesString = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
 
-            tabledata = thisdata;
+              if (processName!=null && samplesString!=null) {
+                processSamples(processName, opt.$trigger.attr("id"), samplesString);
+              }
 
-            // clear the table
-            $("#samples-table").tabulator("clear");
-
-            $("#samples-table").tabulator("setData", tabledata);*/
+              // update tree
+              $("#tree").empty();
+              getTreeConfig(function(config) {
+                new Treant(config);
+              });
+            }
           }
-        });
+        }
+      });
+
+      // define table
+      $("#samples-table").tabulator({
+        fitColumns: true,
+        columns: [],
+        pagination: true, // this option takes a boolean value (default = false)
+
+        rowEdit: function(id, data, row) {
+          setTableEdited(true);
+        }
+      });
+
+      //delete a column
+      $("#delete_col").click(function(){
+        var columns = $("#samples-table").tabulator('getColumns');
+
+        var delCol = $("#col_delete").val();
+        if (delCol > -1) {
+          var newcol = columns.splice(delCol, 1);
+        }
+
+        $('#samples-table').tabulator('setColumns', newcol);
+      });
+
+      // add/del rows
+      $("#add_table").click(function(){
+        $("#samples-table").tabulator("addRow");
+      });
+
+      // add columns
+      $("#add_col").click(function(){
+        var columns = $("#samples-table").tabulator('getColumns');
+
+        var newCol = $("#col_name").val();
+
+        columns.push({ title: newCol, fitColumns:true,editable: true, sorter: "string" });
+
+
+        var temp = $("#samples-table").tabulator("getData");
+
+        //manipulate columns definition array
+        $('#samples-table').tabulator('setColumns', columns);
+      });
+
+      // delete row
+      $("#delete_table").click(function(){
+        var bla = $("#txt_name").val();
+        $("#samples-table").tabulator("deleteRow",bla);
       });
     });
-
-    //delete the column
-    $("#delete_col").click(function(){
-      var columns = $("#samples-table").tabulator('getColumns');
-
-      var delCol = $("#col_delete").val();
-      if (delCol > -1) {
-        var newcol = columns.splice(delCol, 1);
-      }
-
-      $('#samples-table').tabulator('setColumns', newcol);
-
-    });
-
-
-    // Add/Del Rows Example
-    $("#add_table").click(function(){
-      $("#samples-table").tabulator("addRow");
-    });
-
-    //add column function
-    $("#add_col").click(function(){
-      var columns = $("#samples-table").tabulator('getColumns');
-
-      var newCol = $("#col_name").val();
-
-      columns.push({ title: newCol, fitColumns:true,editable: true, sorter: "string" });
-
-
-      var temp = $("#samples-table").tabulator("getData");
-
-    //write a function on add new empty/simple attribute for each element
-
-      // add the new colomun as new process with current node
-
-
-      //manipulate columns definition array
-      $('#samples-table').tabulator('setColumns', columns);
-    });
-
-    // delete row
-    $("#delete_table").click(function(){
-      var bla = $("#txt_name").val();
-      $("#samples-table").tabulator("deleteRow",bla);
-    });
-
-    //click the save button
-//        $("#save_table").click(function(){
-//		    var content = tosource(tabledata);
-//
-//		    fs.writeFile('saved.txt',content,function(err){
-//			    if(err)
-//				    alert('Error writing file');
-//			    else
-//			    {
-//				    fs.readFile('./saved.txt',function(err,fileContent){
-//					    if(err)
-//						    document.write('Error reading file');
-//					    else
-//						    document.write(fileContent.toString().replace(new RegExp(os.EOL,'g'),'<br>'))
-//				    })
-//			    }
-//		    });
-//	    })
   </script>
 </body>
 </html>
