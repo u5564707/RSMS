@@ -5,7 +5,7 @@
 */
 
 var Datastore = require('nedb'),
-    db
+    db;
 
 function createTestData() {
   db = new Datastore({ filename: 'testData', autoload: true });
@@ -85,7 +85,7 @@ function getProcessAttributeNames(nodeID, callback) {
     db.findOne({ _id: node.processName }, function(err, process) {
       var columns = [{ title: "Id", field: "id", editable: true, sorter: "string" }];
       for (i=0; i<process.attributeNames.length; i++) {
-        columns.push({ title: process.attributeNames[i], field: process.attributeNames[i], editable: true, sorter: "string" });
+        columns.push({ title: process.attributeNames[i], field: process.attributeNames[i], fitColumns:true,editable: true, sorter: "string" });
       }
       callback(columns);
     });

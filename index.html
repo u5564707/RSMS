@@ -13,7 +13,7 @@
   <style>
     div {
 	    width: fit-content;
-	    height: fit-content;
+	    /*height: fit-content;*/
     }
   </style>
 
@@ -35,9 +35,17 @@
 
   <!--<button id="save_table">Save</button>-->
   <button id="add_table">Add new row</button>
-  <button id="delete_table">Delete</button>
+  <button id="delete_table">Delete Row</button>
+  <button id="add_col">Add new column</button>
+  <button id="delete_col">Delete column</button>
   <form id='form1'>
-    <input type="text" id="txt_name" name="delete_row" placeholder="Enter the row">
+    <input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
+  </form>
+  <form id='form2'>
+    <input type="text" id="col_name" name="add_col" placeholder="new column name">
+  </form>
+  <form id='form3'>
+    <input type="text" id="col_delete" name="delet_col" placeholder="column number">
   </form>
 
   <div id="samples-table"></div>
@@ -50,11 +58,15 @@
   <script src="otherFunctions.js" type="text/javascript"></script>
 
   <script>
-    $("#delete_table").hide();
     $("#save_table").hide();
     $("#add_table").hide();
     $("#form1").hide();
-
+    $("#delete_table").hide();
+    $("#add_col").hide();
+    $("#form2").hide();
+    $("#form3").hide();
+    $("#delete_col").hide();
+    $("#samples-table").hide();
     var fs = require('fs'),
         nw = require('nw.gui'),
         tosource = require('tosource'),
@@ -104,14 +116,16 @@
             view: {
               name: "view samples",
               callback: function(key, opt) {
-
+               // $("#samples-table").tabulator("clear");
                 // update columns
+                $("#samples-table").show();
                 getProcessAttributeNames(opt.$trigger.attr("id"), function(columns) {
                   $("#samples-table").tabulator("setColumns", columns , false);
                 });
 
                 // save table then update data
                 getNodeSamples(opt.$trigger.attr("id"), function(samples) {
+
                   getLastClickedNode(function(nodeID) {
                     isTableEdited(function(edited) {
                       if (nodeID != undefined && edited && confirm('Save data?')) {
@@ -121,14 +135,21 @@
                   });
                   setLastClickedNode(opt.$trigger.attr("id"));
                   $("#samples-table").tabulator("setData", samples);
+
+
                   setTableEdited(false);
                 });
-
+                $("#samples-table").tabulator("redraw");
+                $("#samples-table").tabulator("setPageSize", 5); // show 50 rows per page
                 // show table operations
                 $("#delete_table").show();
                 $("#save_table").show();
                 $("#add_table").show();
                 $("#form1").show();
+                $("#form2").show();
+                $("#add_col").show();
+                $("#form3").show();
+                $("#delete_col").show();
               }
             },
             processSamples: {
@@ -192,10 +213,15 @@
           }
         });
 
+
+
         // define table
         $("#samples-table").tabulator({
           fitColumns: true,
           columns: [],
+
+          //add pagination
+          pagination:true, // this option takes a boolean value (default = false)
 
           rowEdit: function(id, data, row) {
             setTableEdited(true);
@@ -219,12 +245,46 @@
       });
     });
 
+    //delete the column
+    $("#delete_col").click(function(){
+      var columns = $("#samples-table").tabulator('getColumns');
+
+      var delCol = $("#col_delete").val();
+      if (delCol > -1) {
+        var newcol = columns.splice(delCol, 1);
+      }
+
+      $('#samples-table').tabulator('setColumns', newcol);
+
+    });
+
+
     // Add/Del Rows Example
     $("#add_table").click(function(){
       $("#samples-table").tabulator("addRow");
-    })
+    });
 
-    // there is an error when get the input's value, I am emailed the owner for the details
+    //add column function
+    $("#add_col").click(function(){
+      var columns = $("#samples-table").tabulator('getColumns');
+
+      var newCol = $("#col_name").val();
+
+      columns.push({ title: newCol, fitColumns:true,editable: true, sorter: "string" });
+
+
+      var temp = $("#samples-table").tabulator("getData");
+
+    //write a function on add new empty/simple attribute for each element
+
+      // add the new colomun as new process with current node
+
+
+      //manipulate columns definition array
+      $('#samples-table').tabulator('setColumns', columns);
+    });
+
+    // delete row
     $("#delete_table").click(function(){
       var bla = $("#txt_name").val();
       $("#samples-table").tabulator("deleteRow",bla);
