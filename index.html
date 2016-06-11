@@ -242,6 +242,15 @@
       $("#delete_table").click(function(){
         var bla = $("#txt_name").val();
         $("#samples-table").tabulator("deleteRow",bla);
+
+        getLastClickedNode(function(nodeID) {
+          db.remove({ _id: { nodeID: nodeID, sampleID: bla }}, { multi: true });
+
+        });
+
+        var x = $("#samples-table").tabulator("getData");
+        $("#samples-table").tabulator("setData", x);
+        console.log(tosource(x));
       });
     });
   </script>
