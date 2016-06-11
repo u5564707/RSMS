@@ -44,38 +44,50 @@ function getNode(nodeID, callback) {
   });
 }
 
-// return all child nodes of nodeID as an array of documents
-function getNonRootNodes(nodeID, callback) {
-  db.find({ parentID: { $exists: true }, _id: { $ne: "rootNode" } }, function(err, nodes) {
-    callback(nodes);
+// return the child nodes of nodeID as an array of documents
+function getChildNodes(nodeID, callback) {
+  db.find({ parentID: nodeID }, function(err, nodes) {
+    children = [];
+    for (i=0; i<nodes.length; i++) {
+      children.push({
+        text: { name: nodes[i]._id },
+        HTMLid: nodes[i]._id
+      });
+    }
+    callback(children);
   });
 }
 
 function getTreeConfig(callback) {
-  getNode("rootNode", function (rootNode) {
-    getNonRootNodes(rootNode._id, function(childNodes) {
-      var chart_config = [
-        { container: "#tree" },
-        { text: { name: rootNode._id }, HTMLid: rootNode._id }
-      ];
+  var chart_config = {
+    chart: {
+      container: "#tree"
+    },
+    nodeStructure: {
+      text: { name: "rootNode" },
+      HTMLid: "rootNode"
+    }
+  };
 
-      // define other nodes
-      for (i=0; i<childNodes.length; i++) {
-        // search chart_config for childNodes[i]'s parent
-        for (j=1; j<chart_config.length; j++) {
-          if (childNodes[i].parentID == chart_config[j].HTMLid) {
-            chart_config.push({
-              parent: chart_config[j],
-              text: { name: childNodes[i]._id },
-              HTMLid: childNodes[i]._id,
-              HTMLclass: "sampleset"
-            });
-          }
+  getChildNodes("rootNode", function(childNodes) {
+    chart_config.nodeStructure.children = childNodes;
+
+    /*// define other nodes
+    for (i=0; i<childNodes.length; i++) {
+      // search chart_config for childNodes[i]'s parent
+      for (j=1; j<chart_config.length; j++) {
+        if (childNodes[i].parentID == chart_config[j].HTMLid) {
+          chart_config.push({
+            parent: chart_config[j],
+            text: { name: childNodes[i]._id },
+            HTMLid: childNodes[i]._id,
+            HTMLclass: "sampleset"
+          });
         }
       }
-
-      callback(chart_config);
-    });
+    }*/
+    
+    callback(chart_config);
   });
 }
 
