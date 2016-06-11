@@ -37,16 +37,16 @@
   <button id="add_table">Add new row</button>
   <button id="delete_table">Delete Row</button>
   <button id="add_col">Add new column</button>
-  <button id="delete_col">Delete column</button>
+  <!--<button id="delete_col">Delete column</button>-->
   <form id='form1'>
     <input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
   </form>
   <form id='form2'>
     <input type="text" id="col_name" name="add_col" placeholder="new column name">
   </form>
-  <form id='form3'>
-    <input type="text" id="col_delete" name="delet_col" placeholder="column number">
-  </form>
+  <!--<form id='form3'>-->
+    <!--<input type="text" id="col_delete" name="delet_col" placeholder="column number">-->
+  <!--</form>-->
 
   <div id="samples-table"></div>
 
@@ -202,16 +202,16 @@
       });
 
       //delete a column
-      $("#delete_col").click(function(){
-        var columns = $("#samples-table").tabulator('getColumns');
-
-        var delCol = $("#col_delete").val();
-        if (delCol > -1) {
-          var newcol = columns.splice(delCol, 1);
-        }
-
-        $('#samples-table').tabulator('setColumns', newcol);
-      });
+//      $("#delete_col").click(function(){
+//        var columns = $("#samples-table").tabulator('getColumns');
+//
+//        var delCol = $("#col_delete").val();
+//        if (delCol > -1) {
+//          var newcol = columns.splice(delCol, 1);
+//        }
+//
+//        $('#samples-table').tabulator('setColumns', newcol);
+//      });
 
       // add/del rows
       $("#add_table").click(function(){
