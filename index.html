@@ -37,16 +37,16 @@
   <button id="add_table">Add new row</button>
   <button id="delete_table">Delete Row</button>
   <button id="add_col">Add new column</button>
-  <button id="delete_col">Delete column</button>
+  <!--<button id="delete_col">Delete column</button>-->
   <form id='form1'>
     <input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
   </form>
   <form id='form2'>
     <input type="text" id="col_name" name="add_col" placeholder="new column name">
   </form>
-  <form id='form3'>
-    <input type="text" id="col_delete" name="delet_col" placeholder="column number">
-  </form>
+  <!--<form id='form3'>-->
+    <!--<input type="text" id="col_delete" name="delet_col" placeholder="column number">-->
+  <!--</form>-->
 
   <div id="samples-table"></div>
 
@@ -147,10 +147,29 @@
               $("#form1").show();
               $("#form2").show();
               $("#add_col").show();
-              $("#form3").show();
-              $("#delete_col").show();
+//              $("#form3").show();
+//              $("#delete_col").show();
             }
           },
+//          Save: {
+//            name: "Save",
+//            callback: function(key, opt) {
+//              getNodeSamples(opt.$trigger.attr("id"), function(samples) {
+//                getLastClickedNode(function(nodeID) {
+//                  var tempGetData = $("#samples-table").tabulator("getData");
+//                  var tempGetCol = $("#samples-table").tabulator("getColumn");
+//                  updateNodeSamples(nodeID, tempGetData);
+//                  $("#samples-table").tabulator("setData",tempGetData);
+//                  $("#samples-table").tabulator("setColumns",tempGetCol);
+//                });
+//                setLastClickedNode(opt.$trigger.attr("id"));
+//               // $("#samples-table").tabulator("setData", samples);
+//                setTableEdited(false);
+//
+//              });
+//
+//            }
+//          },
           processSamples: {
             name: "process samples",
             callback: function(key, opt) {
@@ -183,16 +202,16 @@
       });
 
       //delete a column
-      $("#delete_col").click(function(){
-        var columns = $("#samples-table").tabulator('getColumns');
-
-        var delCol = $("#col_delete").val();
-        if (delCol > -1) {
-          var newcol = columns.splice(delCol, 1);
-        }
-
-        $('#samples-table').tabulator('setColumns', newcol);
-      });
+//      $("#delete_col").click(function(){
+//        var columns = $("#samples-table").tabulator('getColumns');
+//
+//        var delCol = $("#col_delete").val();
+//        if (delCol > -1) {
+//          var newcol = columns.splice(delCol, 1);
+//        }
+//
+//        $('#samples-table').tabulator('setColumns', newcol);
+//      });
 
       // add/del rows
       $("#add_table").click(function(){
@@ -201,23 +220,37 @@
 
       // add columns
       $("#add_col").click(function(){
-        var columns = $("#samples-table").tabulator('getColumns');
-
+        var thiscolumns = $("#samples-table").tabulator('getColumns');
+        var temp1 = $("#samples-table").tabulator("getData");
         var newCol = $("#col_name").val();
 
-        columns.push({ title: newCol, fitColumns:true,editable: true, sorter: "string" });
+        thiscolumns.push({ title: ""+newCol,field:""+newCol, fitColumns:true,editable: true, sorter: "string" });
 
 
-        var temp = $("#samples-table").tabulator("getData");
+        db.update({ _id: "DNA Extract" }, { $push: { attributeNames:""+newCol } });
 
         //manipulate columns definition array
-        $('#samples-table').tabulator('setColumns', columns);
+        $('#samples-table').tabulator('setColumns', thiscolumns);
+        $("#samples-table").tabulator("setData", temp1);
+        newCol='';
+
       });
+
+
 
       // delete row
       $("#delete_table").click(function(){
         var bla = $("#txt_name").val();
         $("#samples-table").tabulator("deleteRow",bla);
+
+        getLastClickedNode(function(nodeID) {
+          db.remove({ _id: { nodeID: nodeID, sampleID: bla }}, { multi: true });
+
+        });
+
+        var x = $("#samples-table").tabulator("getData");
+        $("#samples-table").tabulator("setData", x);
+        console.log(tosource(x));
       });
     });
   </script>
