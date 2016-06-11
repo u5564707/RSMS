@@ -13,7 +13,7 @@ function createTestData() {
 
   // insert processes
   db.insert({ _id: "rootProcess", attributeNames: ["mass (mg)"] });
-  db.insert({ _id: "DNA Extract", attributeNames: ["Date Extracted", "Kit", "Elution mL", "DNA ng", "Notes"] });
+  db.insert({ _id: "DNA Extract", attributeNames: ["Date Extracted", "Kit", "Elution mL", "DNA mg", "Notes"] });
 
   // insert nodes
   db.insert({ _id: "rootNode", parentID: null, processName: "rootProcess" });
