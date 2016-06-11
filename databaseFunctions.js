@@ -50,8 +50,13 @@ function getChildNodes(nodeID, callback) {
     children = [];
     for (i=0; i<nodes.length; i++) {
       children.push({
-        text: { name: nodes[i]._id },
+        text: { name: nodes[i].processName },
         HTMLid: nodes[i]._id
+      });
+      getChildNodes(nodes[i]._id, function(grandChildren) {
+        children.push({
+          children: grandChildren
+        });
       });
     }
     callback(children);
@@ -64,29 +69,13 @@ function getTreeConfig(callback) {
       container: "#tree"
     },
     nodeStructure: {
-      text: { name: "rootNode" },
+      text: { name: "rootProcess" },
       HTMLid: "rootNode"
     }
   };
 
   getChildNodes("rootNode", function(childNodes) {
     chart_config.nodeStructure.children = childNodes;
-
-    /*// define other nodes
-    for (i=0; i<childNodes.length; i++) {
-      // search chart_config for childNodes[i]'s parent
-      for (j=1; j<chart_config.length; j++) {
-        if (childNodes[i].parentID == chart_config[j].HTMLid) {
-          chart_config.push({
-            parent: chart_config[j],
-            text: { name: childNodes[i]._id },
-            HTMLid: childNodes[i]._id,
-            HTMLclass: "sampleset"
-          });
-        }
-      }
-    }*/
-    
     callback(chart_config);
   });
 }
