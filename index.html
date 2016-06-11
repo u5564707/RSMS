@@ -133,7 +133,9 @@
                   });
                 });
                 setLastClickedNode(opt.$trigger.attr("id"));
-                $("#samples-table").tabulator("setData", samples);
+                setTimeout(function() {
+                  $("#samples-table").tabulator("setData", samples);
+                }, 10);
                 setTableEdited(false);
               });
 
