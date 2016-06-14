@@ -7,6 +7,15 @@
 var Datastore = require('nedb'),
     db;
 
+// creates first node
+function createRootNode() {
+  db = new Datastore({ filename: 'userData', autoload: true });
+
+  db.insert({ _id: "rootProcess", attributeNames: [] });
+  db.insert({ _id: "rootNode", parentID: null, processName: "rootProcess" });
+}
+
+// creates dummy datastore for testing
 function createTestData() {
   db = new Datastore({ filename: 'testData', autoload: true });
   db.remove({}, { multi: true });
@@ -26,15 +35,24 @@ function createTestData() {
   db.insert({ _id: { nodeID: "rootNode", sampleID: "2" }, "mass (mg)": "55" });
   db.insert({ _id: { nodeID: "rootNode", sampleID: "3" }, "mass (mg)": "80" });
   db.insert({ _id: { nodeID: "rootNode", sampleID: "4" }, "mass (mg)": "60" });
-  db.insert({ _id: { nodeID: "node2", sampleID: "1" }, "Date Extracted": "12/3", Kit: "Qiagen", "Elution mL": "160", "DNA mg": "12", Notes: "" });
-  db.insert({ _id: { nodeID: "node2", sampleID: "2" }, "Date Extracted": "12/3", Kit: "Qiagen", "Elution mL": "160", "DNA mg": "18", Notes: "" });
-  db.insert({ _id: { nodeID: "node2", sampleID: "3" }, "Date Extracted": "12/3", Kit: "Qiagen", "Elution mL": "80", "DNA mg": "10", Notes: "Second elution failed, so only 80mL" });
-  db.insert({ _id: { nodeID: "node3", sampleID: "1" }, "Date Extracted": "12/3", Kit: "Qiagen", "Elution mL": "160", "DNA mg": "12", Notes: "" });
-  db.insert({ _id: { nodeID: "node3", sampleID: "2" }, "Date Extracted": "12/3", Kit: "Qiagen", "Elution mL": "160", "DNA mg": "18", Notes: "" });
-  db.insert({ _id: { nodeID: "node3", sampleID: "3" }, "Date Extracted": "12/3", Kit: "Qiagen", "Elution mL": "80", "DNA mg": "10", Notes: "Second elution failed, so only 80mL" });
-  db.insert({ _id: { nodeID: "node4", sampleID: "1" }, "Date Extracted": "12/3", Kit: "Qiagen", "Elution mL": "160", "DNA mg": "12", Notes: "" });
-  db.insert({ _id: { nodeID: "node4", sampleID: "2" }, "Date Extracted": "12/3", Kit: "Qiagen", "Elution mL": "160", "DNA mg": "18", Notes: "" });
-  db.insert({ _id: { nodeID: "node4", sampleID: "3" }, "Date Extracted": "12/3", Kit: "Qiagen", "Elution mL": "80", "DNA mg": "10", Notes: "Second elution failed, so only 80mL" });
+  db.insert({ _id: { nodeID: "node2", sampleID: "1" }, "Date Extracted": "12/3",
+              Kit: "Qiagen", "Elution mL": "160", "DNA mg": "12", Notes: "" });
+  db.insert({ _id: { nodeID: "node2", sampleID: "2" }, "Date Extracted": "12/3",
+              Kit: "Qiagen", "Elution mL": "160", "DNA mg": "18", Notes: "" });
+  db.insert({ _id: { nodeID: "node2", sampleID: "3" }, "Date Extracted": "12/3",
+              Kit: "Qiagen", "Elution mL": "80", "DNA mg": "10", Notes: "Second elution failed, so only 80mL" });
+  db.insert({ _id: { nodeID: "node3", sampleID: "1" }, "Date Extracted": "12/3",
+              Kit: "Qiagen", "Elution mL": "160", "DNA mg": "12", Notes: "" });
+  db.insert({ _id: { nodeID: "node3", sampleID: "2" }, "Date Extracted": "12/3",
+              Kit: "Qiagen", "Elution mL": "160", "DNA mg": "18", Notes: "" });
+  db.insert({ _id: { nodeID: "node3", sampleID: "3" }, "Date Extracted": "12/3",
+              Kit: "Qiagen", "Elution mL": "80", "DNA mg": "10", Notes: "Second elution failed, so only 80mL" });
+  db.insert({ _id: { nodeID: "node4", sampleID: "1" }, "Date Extracted": "12/3",
+              Kit: "Qiagen", "Elution mL": "160", "DNA mg": "12", Notes: "" });
+  db.insert({ _id: { nodeID: "node4", sampleID: "2" }, "Date Extracted": "12/3",
+              Kit: "Qiagen", "Elution mL": "160", "DNA mg": "18", Notes: "" });
+  db.insert({ _id: { nodeID: "node4", sampleID: "3" }, "Date Extracted": "12/3",
+              Kit: "Qiagen", "Elution mL": "80", "DNA mg": "10", Notes: "Second elution failed, so only 80mL" });
 }
 
 // return the node with nodeID as a document
@@ -84,9 +102,17 @@ function getTreeConfig(callback) {
 function getProcessAttributeNames(nodeID, callback) {
   db.findOne({ _id: nodeID }, function(err, node) {
     db.findOne({ _id: node.processName }, function(err, process) {
-      var columns = [{ title: "Id", field: "id", editable: true, sorter: "string" }];
+      var columns = [];
+      if (nodeID == "rootNode") {
+        columns.push({ title: "Id", field: "id", sortable: true, sorter: "string",
+                       fitColumns: true, editable: true });
+      } else {
+        columns.push({ title: "Id", field: "id", sortable: true, sorter: "string",
+                       fitColumns: true, editable: false });
+      }
       for (i=0; i<process.attributeNames.length; i++) {
-        columns.push({ title: process.attributeNames[i], field: process.attributeNames[i], fitColumns:true,editable: true, sorter: "string" });
+        columns.push({ title: process.attributeNames[i], field: process.attributeNames[i],
+                       sortable: true, sorter: "string", fitColumns: true, editable: true });
       }
       callback(columns);
     });
@@ -108,6 +134,17 @@ function getNodeSamples(nodeID, callback) {
       tableData.push(sample);
     }
     callback(tableData);
+  });
+}
+
+// update the process of nodeID given tabulator tableColumns
+function updateProcess(nodeID, tableColumns) {
+  var columns = [];
+  for (i=1; i<tableColumns.length; i++) {
+    columns.push(tableColumns[i].title);
+  }
+  db.findOne({ _id: nodeID }, function(err, node) {
+    db.update({ _id: node.processName }, { attributeNames: columns }, {});
   });
 }
 

@@ -13,7 +13,6 @@
   <style>
     div {
 	    width: fit-content;
-	    /*height: fit-content;*/
     }
   </style>
 
@@ -33,7 +32,7 @@
 
   <div class="chart" id="tree"></div>
 
-  <!--<button id="save_table">Save</button>-->
+  <button id="save_table">Save</button>
   <button id="add_table">Add new row</button>
   <button id="delete_table">Delete Row</button>
   <button id="add_col">Add new column</button>
@@ -56,6 +55,7 @@
   <script src="js/tabulator.js" type="text/javascript"></script>
   <script src="js/databaseFunctions.js" type="text/javascript"></script>
   <script src="js/otherFunctions.js" type="text/javascript"></script>
+  <script src="tests/unit.js" type="text/javascript"></script>
 
   <script>
     $("#save_table").hide();
@@ -100,7 +100,8 @@
 	    win.isMaximized = false;
     });
 
-    createTestData(); // for testing
+    createRootNode();
+    //createTestData(); // for testing
 
     $(document).ready(function() {
       getTreeConfig(function(chart_config) {
@@ -117,10 +118,11 @@
             name: "view samples",
             callback: function(key, opt) {
               // $("#samples-table").tabulator("clear");
+
               // update columns
               $("#samples-table").show();
               getProcessAttributeNames(opt.$trigger.attr("id"), function(columns) {
-                $("#samples-table").tabulator("setColumns", columns , false);
+                $("#samples-table").tabulator("setColumns", columns, false);
               });
 
               // save table then update data
@@ -128,14 +130,18 @@
                 getLastClickedNode(function(nodeID) {
                   isTableEdited(function(edited) {
                     if (nodeID != undefined && edited && confirm('Save data?')) {
+                      updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
                       updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
                     }
                   });
                 });
-                setLastClickedNode(opt.$trigger.attr("id"));
+
+                // temporary fix for data loading issue
                 setTimeout(function() {
                   $("#samples-table").tabulator("setData", samples);
                 }, 10);
+
+                setLastClickedNode(opt.$trigger.attr("id"));
                 setTableEdited(false);
               });
 
@@ -143,9 +149,13 @@
               $("#samples-table").tabulator("setPageSize", 5); // show 50 rows per page
 
               // show table operations
+              if (opt.$trigger.attr("id") == "rootNode") {
+                $("#add_table").show();
+              } else {
+                $("#add_table").hide();
+              }
               $("#delete_table").show();
               $("#save_table").show();
-              $("#add_table").show();
               $("#form1").show();
               $("#form2").show();
               $("#add_col").show();
@@ -167,9 +177,7 @@
 //                setLastClickedNode(opt.$trigger.attr("id"));
 //               // $("#samples-table").tabulator("setData", samples);
 //                setTableEdited(false);
-//
 //              });
-//
 //            }
 //          },
           processSamples: {
@@ -196,14 +204,24 @@
       $("#samples-table").tabulator({
         fitColumns: true,
         columns: [],
-        pagination: true, // this option takes a boolean value (default = false)
+        pagination: true,
 
         rowEdit: function(id, data, row) {
           setTableEdited(true);
         }
       });
 
-      //delete a column
+      $("#save_table").click(function() {
+        getLastClickedNode(function(nodeID) {
+          if (nodeID != undefined && confirm('Save data?')) {
+            updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
+            updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
+            setTableEdited(false);
+          }
+        });
+      });
+
+      // delete a column
 //      $("#delete_col").click(function(){
 //        var columns = $("#samples-table").tabulator('getColumns');
 //
@@ -215,19 +233,18 @@
 //        $('#samples-table').tabulator('setColumns', newcol);
 //      });
 
-      // add/del rows
-      $("#add_table").click(function(){
+      // add rows
+      $("#add_table").click(function() {
         $("#samples-table").tabulator("addRow");
       });
 
       // add columns
-      $("#add_col").click(function(){
+      $("#add_col").click(function() {
         var thiscolumns = $("#samples-table").tabulator('getColumns');
         var temp1 = $("#samples-table").tabulator("getData");
         var newCol = $("#col_name").val();
 
-        thiscolumns.push({ title: ""+newCol,field:""+newCol, fitColumns:true,editable: true, sorter: "string" });
-
+        thiscolumns.push({ title: ""+newCol, field: ""+newCol, fitColumns: true, editable: true, sorter: "string" });
 
         db.update({ _id: "DNA Extract" }, { $push: { attributeNames:""+newCol } });
 
@@ -235,19 +252,15 @@
         $('#samples-table').tabulator('setColumns', thiscolumns);
         $("#samples-table").tabulator("setData", temp1);
         newCol='';
-
       });
 
-
-
       // delete row
-      $("#delete_table").click(function(){
+      $("#delete_table").click(function() {
         var bla = $("#txt_name").val();
         $("#samples-table").tabulator("deleteRow",bla);
 
         getLastClickedNode(function(nodeID) {
           db.remove({ _id: { nodeID: nodeID, sampleID: bla }}, { multi: true });
-
         });
 
         var x = $("#samples-table").tabulator("getData");
