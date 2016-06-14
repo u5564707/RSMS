@@ -11,16 +11,16 @@ Research Sample Management System
 
 ## Instruction
 
-0. The user interface contains two main components, the tree shows the process branch and the table shows the data stored in the node.
+- The user interface contains two main components, the tree shows the process branch and the table shows the data stored in the node.
 
-1. View samples
+- View samples
 
-In the demo tree structure, only by right click on the node, the data stored in this node will show up in the table.
+In the demo tree structure, only by right click on the node, the data stored in this node will show up in the table
 
-2. Edit sample data
+- Edit sample data
 
 After the table shown up, the user can edit the table, by create new rows and add new columns, edit every cell the user want, delete the row data the user do not need.
 
-3. Create a new process
+- Create a new process
 
-At current version, the user only can create new process data from root node, by right click on the root node, then click create new process.
+At current version, the user only can create new process data from root node, by right click on the root node,then click create new process.
