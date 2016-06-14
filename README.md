@@ -15,16 +15,16 @@ Research Sample Management System
 
 - View samples
 
-⋅⋅⋅In the demo tree structure, only by right click on the node, the data stored in this node will show up in the
+In the demo tree structure, only by right click on the node, the data stored in this node will show up in the
 
-⋅⋅⋅table
+table
 
 - Edit sample data
 
-⋅⋅⋅After the table shown up, the user can edit the table, by create new rows and add new columns, edit every cell the 
-⋅⋅⋅user want, delete the row data the user do not need.
+After the table shown up, the user can edit the table, by create new rows and add new columns, edit every cell the 
+user want, delete the row data the user do not need.
 
 - Create a new process
 
-⋅⋅⋅At current version, the user only can create new process data from root node, by right click on the root node,then 
-⋅⋅⋅click create new process.
+At current version, the user only can create new process data from root node, by right click on the root node,then 
+click create new process.
