@@ -10,6 +10,9 @@ Research Sample Management System
 3. Run the application by double clicking nwjs.
 
 ## Instruction
+
+0. The user interface contains two main components, the tree shows the process branch and the table shows the data stored in the node.
+
 1. View samples
 
 In the demo tree structure, only by right click on the node, the data stored in this node will show up in the table.
