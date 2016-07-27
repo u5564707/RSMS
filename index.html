@@ -124,6 +124,8 @@
             return console.log(err);
 
         });
+
+        //rename file
         fs.rename('newFile', newFile, function(err) {
           if ( err ) console.log('ERROR: ' + err);
         });
