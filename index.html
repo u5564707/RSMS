@@ -112,7 +112,7 @@
     projectMenu.append(new nw.MenuItem({
       label: 'Save',
       click: function(){
-        //var newFile = prompt("Please enter your file name");
+        var newFile = prompt("Please enter your file name");
 
         var fs = require('fs');
 
@@ -123,6 +123,9 @@
           if (err)
             return console.log(err);
 
+        });
+        fs.rename('newFile', newFile, function(err) {
+          if ( err ) console.log('ERROR: ' + err);
         });
 
 
