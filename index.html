@@ -47,6 +47,8 @@
     <!--<input type="text" id="col_delete" name="delet_col" placeholder="column number">-->
   <!--</form>-->
 
+  <input style="display:none;" id="fileDialog" type="file" />
+
   <div id="samples-table"></div>
 
   <script src="js/jquery-2.2.4.min.js" type="text/javascript"></script>
@@ -76,17 +78,24 @@
 
     // About sub-entry
     projectMenu.append(new nw.MenuItem({
-      label: 'about',
+      label: 'New Project',
       click: function(){
-        alert('I made this!');
+    	  chooseFile('#fileDialog');
       }
     }));
 
     // Assign to window
     nw.Window.get().menu = windowMenu;
 
-  </script>
-  <script>
+    function chooseFile(name) {
+      var chooser = document.querySelector(name);
+      chooser.addEventListener("change", function(evt) {
+        console.log(this.value);
+      }, false);
+
+      chooser.click();  
+    }
+      
     $("#save_table").hide();
     $("#add_table").hide();
     $("#form1").hide();

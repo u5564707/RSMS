@@ -1,0 +1,5 @@
+{"attributeNames":["newattribute1"],"_id":"newprocess"}
+{"_id":"rootNode","parentID":null,"processName":"rootProcess"}
+{"attributeNames":["newcol","newcol1","newcol1","newattribute"],"_id":"rootProcess"}
+{"parentID":"rootNode","processName":"newprocess","_id":"yr1DD7g0IXDIH6VH"}
+{"_id":{"nodeID":"rootNode","sampleID":0},"newcol":"etr","newcol1":"","newattribute":""}
