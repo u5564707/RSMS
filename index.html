@@ -78,7 +78,7 @@
       submenu: projectMenu
     }));
 
-    // About sub-entry
+    // Open and read data from another file
     projectMenu.append(new nw.MenuItem({
       label: 'Open Project',
       click: function(){
@@ -99,6 +99,7 @@
 
     }
 
+    //create the new empty project
     projectMenu.append(new nw.MenuItem({
       label: 'Create Project',
       click: function(){
@@ -107,6 +108,7 @@
       }
     }));
 
+    //Currently, save the userData to a new file
     projectMenu.append(new nw.MenuItem({
       label: 'Save',
       click: function(){
@@ -117,7 +119,7 @@
         // Synchronous read
           var data = fs.readFileSync('userData');
 
-        fs.writeFile('newFile.txt', data, function (err) {
+        fs.writeFile('newFile', data, function (err) {
           if (err)
             return console.log(err);
 
