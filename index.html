@@ -56,7 +56,36 @@
   <script src="js/databaseFunctions.js" type="text/javascript"></script>
   <script src="js/otherFunctions.js" type="text/javascript"></script>
   <script src="tests/unit.js" type="text/javascript"></script>
+  <script>
 
+    var nw = require('nw.gui');
+
+    // Window menu
+    var windowMenu = new nw.Menu({
+      type: 'menubar'
+    });
+
+    // Help menu
+    var projectMenu = new nw.Menu();
+
+    // Add to window menu
+    windowMenu.append(new nw.MenuItem({
+      label: 'Project',
+      submenu: projectMenu
+    }));
+
+    // About sub-entry
+    projectMenu.append(new nw.MenuItem({
+      label: 'about',
+      click: function(){
+        alert('I made this!');
+      }
+    }));
+
+    // Assign to window
+    nw.Window.get().menu = windowMenu;
+
+  </script>
   <script>
     $("#save_table").hide();
     $("#add_table").hide();
