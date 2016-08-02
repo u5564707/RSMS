@@ -1,6 +1,12 @@
+{"_id":"11","attributeNames":[]}
 {"_id":"Source samples","attributeNames":[]}
+{"parentID":"rootNode","processName":"11","_id":"g1levUsfEBjc5mqc"}
 {"_id":"rootNode","parentID":null,"processName":"Source samples"}
+{"_id":{"nodeID":"g1levUsfEBjc5mqc","sampleID":"1"}}
+{"$$deleted":true,"_id":"11"}
 {"$$deleted":true,"_id":"Source samples"}
+{"$$deleted":true,"_id":"g1levUsfEBjc5mqc"}
 {"$$deleted":true,"_id":"rootNode"}
+{"$$deleted":true,"_id":{"nodeID":"g1levUsfEBjc5mqc","sampleID":"1"}}
 {"_id":"Source samples","attributeNames":[]}
 {"_id":"rootNode","parentID":null,"processName":"Source samples"}

@@ -178,6 +178,7 @@
     var initialProject = function () {
       $(document).ready(function () {
         getTreeConfig(function (chart_config) {
+        	$("#tree").empty();
           new Treant(chart_config);
         });
         // define the context menu for clicks on the tree
