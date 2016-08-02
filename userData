@@ -1,5 +1,6 @@
-{"attributeNames":["newattribute1"],"_id":"newprocess"}
-{"_id":"rootNode","parentID":null,"processName":"rootProcess"}
-{"attributeNames":["new1","new2"],"_id":"rootProcess"}
-{"parentID":"rootNode","processName":"newprocess","_id":"yr1DD7g0IXDIH6VH"}
-{"_id":{"nodeID":"rootNode","sampleID":0},"newcol":"11","newcol1":"13","newattribute":"14","new1":"","new2":""}
+{"_id":"Source samples","attributeNames":[]}
+{"_id":"rootNode","parentID":null,"processName":"Source samples"}
+{"$$deleted":true,"_id":"Source samples"}
+{"$$deleted":true,"_id":"rootNode"}
+{"_id":"Source samples","attributeNames":[]}
+{"_id":"rootNode","parentID":null,"processName":"Source samples"}
