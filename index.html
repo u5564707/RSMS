@@ -12,7 +12,7 @@
 
   <style>
     div {
-	    width: fit-content;
+      width: fit-content;
     }
   </style>
 
@@ -22,221 +22,234 @@
 </head>
 
 <body>
-  <header>
-    <ul>
-	    <li><a href='#' title='Minimize' id='windowControlMinimize'></a></li>
-	    <li><a href='#' title='Maximize' id='windowControlMaximize'></a></li>
-	    <li><a href='#' title='Close'    id='windowControlClose'   ></a></li>
-    </ul>
-  </header>
+<header>
+  <ul>
+    <li><a href='#' title='Minimize' id='windowControlMinimize'></a></li>
+    <li><a href='#' title='Maximize' id='windowControlMaximize'></a></li>
+    <li><a href='#' title='Close'    id='windowControlClose'   ></a></li>
+  </ul>
+</header>
 
-  <div class="chart" id="tree"></div>
+<div class="chart" id="tree"></div>
 
-  <button id="save_table">Save</button>
-  <button id="add_table">Add new row</button>
-  <button id="delete_table">Delete Row</button>
-  <button id="add_col">Add new column</button>
-  <!--<button id="delete_col">Delete column</button>-->
-  <form id='form1'>
-    <input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
-  </form>
-  <form id='form2'>
-    <input type="text" id="col_name" name="add_col" placeholder="new column name">
-  </form>
-  <!--<form id='form3'>-->
-    <!--<input type="text" id="col_delete" name="delet_col" placeholder="column number">-->
-  <!--</form>-->
+<button id="save_table">Save</button>
+<button id="add_table">Add new row</button>
+<button id="delete_table">Delete Row</button>
+<button id="add_col">Add new column</button>
+<button id="del_col">Delete column</button>
+<!--<button id="delete_col">Delete column</button>-->
+<form id='form1'>
+  <input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
+</form>
+<form id='form2'>
+  <input type="text" id="col_name" name="add_col" placeholder="new column name">
+</form>
+<form id='form3'>
+  <input type="text" id="col_del" name="del_col" placeholder="Choose column name">
+</form>
+<!--<form id='form3'>-->
+<!--<input type="text" id="col_delete" name="delet_col" placeholder="column number">-->
+<!--</form>-->
 
-  <input style="display:none;" id="fileDialog" type="file" />
+<input style="display:none;" id="fileDialog" type="file" />
 
-  <div id="samples-table"></div>
+<div id="samples-table"></div>
 
-  <script src="js/jquery-2.2.4.min.js" type="text/javascript"></script>
-  <script src="js/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
-  <script src="js/jquery.contextMenu.min.js" type="text/javascript"></script>
-  <script src="js/tabulator.js" type="text/javascript"></script>
-  <script src="js/databaseFunctions.js" type="text/javascript"></script>
-  <script src="js/otherFunctions.js" type="text/javascript"></script>
-  <script src="tests/unit.js" type="text/javascript"></script>
-  <script>
-  	require('nw.gui').Window.get().showDevTools(); // open DevTools
-  
-	$("#save_table").hide();
-	$("#add_table").hide();
-	$("#form1").hide();
-	$("#delete_table").hide();
-	$("#add_col").hide();
-	$("#form2").hide();
-	$("#form3").hide();
-	$("#delete_col").hide();
-	$("#samples-table").hide();
-	  
-	var fs = require('fs'),
-	    nw = require('nw.gui'),
-	    tosource = require('tosource'),
-	    win = nw.Window.get();
+<script src="js/jquery-2.2.4.min.js" type="text/javascript"></script>
+<script src="js/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+<script src="js/jquery.contextMenu.min.js" type="text/javascript"></script>
+<script src="js/tabulator.js" type="text/javascript"></script>
+<script src="js/databaseFunctions.js" type="text/javascript"></script>
+<script src="js/otherFunctions.js" type="text/javascript"></script>
+<script src="tests/unit.js" type="text/javascript"></script>
+<script>
 
-	win.isMaximized = false;
+  // this is to open the DevTools
+  require('nw.gui').Window.get().showDevTools();
 
-    // min
-    document.getElementById('windowControlMinimize').onclick = function() {
-	    win.minimize();
-    };
+  var nw = require('nw.gui');
 
-    // close
-    document.getElementById('windowControlClose').onclick = function() {
-	    win.close();
-    };
+  // Window menu
+  var windowMenu = new nw.Menu({
+    type: 'menubar'
+  });
 
-    // max
-    document.getElementById('windowControlMaximize').onclick = function() {
-	    if (win.isMaximized)
-		    win.unmaximize();
-	    else
-		    win.maximize();
-    };
+  // Help menu
+  var projectMenu = new nw.Menu();
 
-    win.on('maximize', function() {
-	    win.isMaximized = true;
-    });
+  // Add to window menu
+  windowMenu.append(new nw.MenuItem({
+    label: 'Project',
+    submenu: projectMenu
+  }));
 
-    win.on('unmaximize', function() {
-	    win.isMaximized = false;
-    });
-    
-    // Window menu
-    var windowMenu = new nw.Menu({
-      type: 'menubar'
-    });
+  // Open and read data from another file
+  projectMenu.append(new nw.MenuItem({
+    label: 'Open Project',
+    click: function(){
+      chooseFile('#fileDialog');
+    }
+  }));
 
-    // File menu
-    var fileMenu = new nw.Menu();
+  // Assign to window
+  nw.Window.get().menu = windowMenu;
 
-    // Add to file menu
-    windowMenu.append(new nw.MenuItem({
-      label: 'File',
-      submenu: fileMenu
-    }));
-  
-    //create a new empty project
-    fileMenu.append(new nw.MenuItem({
-      label: 'New Project',
-      click: function(){
-    	  resetUserData();
-    	  initialProject();
-      }
-    }));
-  
-    // Open and read data from another file
-    fileMenu.append(new nw.MenuItem({
-      label: 'Open Project',
-      click: function(){
-    	  chooseFile('#fileDialog');
-      }
-    }));
+  function chooseFile(name) {
+    var chooser = document.querySelector(name);
+    chooser.addEventListener("change", function(evt) {
+      console.log(this.value);
+    }, false);
 
-    // Assign to window
-    nw.Window.get().menu = windowMenu;
+    chooser.click();
 
-    function chooseFile(name) {
-      var chooser = document.querySelector(name);
-      chooser.addEventListener("change", function(evt) {
-        console.log(this.value);
-      }, false);
-      chooser.click();
+  }
+
+  //create the new empty project
+  projectMenu.append(new nw.MenuItem({
+    label: 'Create Project',
+    click: function(){
+
+      initialProject();
+    }
+  }));
+
+  //Currently, save the userData to a new file
+  projectMenu.append(new nw.MenuItem({
+    label: 'Save',
+    click: function(){
+      var newFile = prompt("Please enter your file name");
+
+      var fs = require('fs');
+
+      // Synchronous read
+      var data = fs.readFileSync('userData');
+
+      fs.writeFile('newFile', data, function (err) {
+        if (err)
+          return console.log(err);
+
+      });
+
+      //rename file
+      fs.rename('newFile', newFile, function(err) {
+        if ( err ) console.log('ERROR: ' + err);
+      });
+
+
     }
 
-    //Currently, save the userData to a new file
-    fileMenu.append(new nw.MenuItem({
-      label: 'Save',
-      click: function(){
-        var newFile = prompt("Please enter your file name");
+  }));
 
-        var fs = require('fs');
+  $("#save_table").hide();
+  $("#add_table").hide();
+  $("#form1").hide();
+  $("#delete_table").hide();
+  $("#add_col").hide();
+  $("#form2").hide();
+  $("#form3").hide();
+  $("#delete_col").hide();
+  $("#samples-table").hide();
+  $("#del_col").hide();
+  var fs = require('fs'),
+          nw = require('nw.gui'),
+          tosource = require('tosource'),
+          win = nw.Window.get();
 
-        // Synchronous read
-          var data = fs.readFileSync('userData');
+  win.isMaximized = false;
 
-        fs.writeFile('newFile', data, function (err) {
-          if (err)
-            return console.log(err);
+  // min
+  document.getElementById('windowControlMinimize').onclick = function() {
+    win.minimize();
+  };
 
-        });
+  // close
+  document.getElementById('windowControlClose').onclick = function() {
+    win.close();
+  };
 
-        //rename file
-        fs.rename('newFile', newFile, function(err) {
-          if ( err ) console.log('ERROR: ' + err);
-        });
+  // max
+  document.getElementById('windowControlMaximize').onclick = function() {
+    if (win.isMaximized)
+      win.unmaximize();
+    else
+      win.maximize();
+  };
+
+  win.on('maximize', function() {
+    win.isMaximized = true;
+  });
+
+  win.on('unmaximize', function() {
+    win.isMaximized = false;
+  });
+
+  createRootNode();
+  //createTestData(); // for testing
+
+  var initialProject = function () {
 
 
-        }
+    $(document).ready(function () {
+      getTreeConfig(function (chart_config) {
+        new Treant(chart_config);
+      });
+      // define the context menu for clicks on the tree
+      $.contextMenu({
+        // define which elements trigger this menu
+        selector: ".node",
+        trigger: 'left',
+        // define the elements of the menu
+        items: {
+          view: {
+            name: "view samples",
+            callback: function (key, opt) {
+              // $("#samples-table").tabulator("clear");
 
-    }));
+              // update columns
+              $("#samples-table").show();
+              getProcessAttributeNames(opt.$trigger.attr("id"), function (columns) {
+                $("#samples-table").tabulator("setColumns", columns, false);
+              });
 
-    //createTestData(); // for testing
+              // save table then update data
+              getNodeSamples(opt.$trigger.attr("id"), function (samples) {
+                getLastClickedNode(function (nodeID) {
+                  isTableEdited(function (edited) {
+                    if (nodeID != undefined && edited && confirm('Save data?')) {
+                      updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
+                      updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
 
-    var initialProject = function () {
-      $(document).ready(function () {
-        getTreeConfig(function (chart_config) {
-          new Treant(chart_config);
-        });
-        // define the context menu for clicks on the tree
-        $.contextMenu({
-          // define which elements trigger this menu
-          selector: ".node",
-          trigger: 'left',
-          // define the elements of the menu
-          items: {
-            view: {
-              name: "view samples",
-              callback: function (key, opt) {
-                // $("#samples-table").tabulator("clear");
-
-                // update columns
-                $("#samples-table").show();
-                getProcessAttributeNames(opt.$trigger.attr("id"), function (columns) {
-                  $("#samples-table").tabulator("setColumns", columns, false);
-                });
-
-                // save table then update data
-                getNodeSamples(opt.$trigger.attr("id"), function (samples) {
-                  getLastClickedNode(function (nodeID) {
-                    isTableEdited(function (edited) {
-                      if (nodeID != undefined && edited && confirm('Save data?')) {
-                        updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
-                        updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
-
-                      }
-                    });
+                    }
                   });
-
-                  // temporary fix for data loading issue
-                  setTimeout(function () {
-                    $("#samples-table").tabulator("setData", samples);
-                  }, 10);
-
-                  setLastClickedNode(opt.$trigger.attr("id"));
-                  setTableEdited(false);
                 });
 
-                $("#samples-table").tabulator("redraw");
-                $("#samples-table").tabulator("setPageSize", 5); // show 50 rows per page
+                // temporary fix for data loading issue
+                setTimeout(function () {
+                  $("#samples-table").tabulator("setData", samples);
+                }, 10);
 
-                // show table operations
-                if (opt.$trigger.attr("id") == "rootNode") {
-                  $("#add_table").show();
-                } else {
-                  $("#add_table").hide();
-                }
-                $("#delete_table").show();
-                $("#save_table").show();
-                $("#form1").show();
-                $("#form2").show();
-                $("#add_col").show();
-//              $("#form3").show();
-//              $("#delete_col").show();
+                setLastClickedNode(opt.$trigger.attr("id"));
+                setTableEdited(false);
+              });
+
+              $("#samples-table").tabulator("redraw");
+              $("#samples-table").tabulator("setPageSize", 5); // show 50 rows per page
+
+              // show table operations
+              if (opt.$trigger.attr("id") == "rootNode") {
+                $("#add_table").show();
+              } else {
+                $("#add_table").hide();
               }
-            },
+              $("#delete_table").show();
+              $("#save_table").show();
+              $("#form1").show();
+              $("#form2").show();
+              $("#add_col").show();
+              $("#form3").show();
+              $("#del_col").show();
+            }
+          },
 //          Save: {
 //            name: "Save",
 //            callback: function(key, opt) {
@@ -254,48 +267,48 @@
 //              });
 //            }
 //          },
-            processSamples: {
-              name: "process samples",
-              callback: function (key, opt) {
-                var processName = prompt("Process name:");
-                var samplesString = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
+          processSamples: {
+            name: "process samples",
+            callback: function (key, opt) {
+              var processName = prompt("Process name:");
+              var samplesString = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
 
-                if (processName != null && samplesString != null) {
-                  processSamples(processName, opt.$trigger.attr("id"), samplesString);
-                }
-
-                // update tree
-                $("#tree").empty();
-                getTreeConfig(function (config) {
-                  new Treant(config);
-                });
+              if (processName != null && samplesString != null) {
+                processSamples(processName, opt.$trigger.attr("id"), samplesString);
               }
+
+              // update tree
+              $("#tree").empty();
+              getTreeConfig(function (config) {
+                new Treant(config);
+              });
             }
           }
-        });
+        }
+      });
 
-        // define table
-        $("#samples-table").tabulator({
-          fitColumns: true,
-          columns: [],
-          pagination: true,
+      // define table
+      $("#samples-table").tabulator({
+        fitColumns: true,
+        columns: [],
+        pagination: true,
 
-          rowEdit: function (id, data, row) {
-            setTableEdited(true);
+        rowEdit: function (id, data, row) {
+          setTableEdited(true);
+        }
+      });
+
+      $("#save_table").click(function () {
+        getLastClickedNode(function (nodeID) {
+          if (nodeID != undefined && confirm('Save data?')) {
+            updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
+            updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
+            setTableEdited(false);
           }
         });
+      });
 
-        $("#save_table").click(function () {
-          getLastClickedNode(function (nodeID) {
-            if (nodeID != undefined && confirm('Save data?')) {
-              updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
-              updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
-              setTableEdited(false);
-            }
-          });
-        });
-
-        // delete a column
+      // delete a column
 //      $("#delete_col").click(function(){
 //        var columns = $("#samples-table").tabulator('getColumns');
 //
@@ -307,48 +320,74 @@
 //        $('#samples-table').tabulator('setColumns', newcol);
 //      });
 
-        // add rows
-        $("#add_table").click(function () {
-          $("#samples-table").tabulator("addRow");
-        });
-
-        // add columns
-        $("#add_col").click(function () {
-          var thiscolumns = $("#samples-table").tabulator('getColumns');
-          var temp1 = $("#samples-table").tabulator("getData");
-          var newCol = $("#col_name").val();
-
-          thiscolumns.push({
-            title: "" + newCol,
-            field: "" + newCol,
-            fitColumns: true,
-            editable: true,
-            sorter: "string"
-          });
-
-          db.update({_id: "DNA Extract"}, {$push: {attributeNames: "" + newCol}});
-
-          //manipulate columns definition array
-          $('#samples-table').tabulator('setColumns', thiscolumns);
-          $("#samples-table").tabulator("setData", temp1);
-          newCol = '';
-        });
-
-        // delete row
-        $("#delete_table").click(function () {
-          var bla = $("#txt_name").val();
-          $("#samples-table").tabulator("deleteRow", bla);
-
-          getLastClickedNode(function (nodeID) {
-            db.remove({_id: {nodeID: nodeID, sampleID: bla}}, {multi: true});
-          });
-
-          var x = $("#samples-table").tabulator("getData");
-          $("#samples-table").tabulator("setData", x);
-          console.log(tosource(x));
-        });
+      // add rows
+      $("#add_table").click(function () {
+        $("#samples-table").tabulator("addRow");
       });
-    };
-  </script>
+
+      // add columns
+      $("#add_col").click(function () {
+        var thiscolumns = $("#samples-table").tabulator('getColumns');
+        var temp1 = $("#samples-table").tabulator("getData");
+        var newCol = $("#col_name").val();
+        if(newCol==""){
+          newCol = prompt("Please enter the column");
+        }
+        thiscolumns.push({
+          title: "" + newCol,
+          field: "" + newCol,
+          fitColumns: true,
+          editable: true,
+          sorter: "string"
+        });
+
+        db.update({_id: "DNA Extract"}, {$push: {attributeNames: "" + newCol}});
+
+        //manipulate columns definition array
+        $('#samples-table').tabulator('setColumns', thiscolumns);
+        $("#samples-table").tabulator("setData", temp1);
+        newCol = '';
+      });
+
+
+      //delete column
+      $("#del_col").click(function () {
+        var tmp = $("#col_del").val();
+        if(tmp==""){
+          tmp = prompt("Please enter the column to delete");
+        }
+        $("#samples-table").tabulator("deleteColumn", tmp);
+        var thiscolumns = $("#samples-table").tabulator('getColumns');
+        var temp1 = $("#samples-table").tabulator("getData");
+
+        getLastClickedNode(function (nodeID) {
+          db.remove({_id: {nodeID: nodeID, sampleID: tmp}}, {multi: true});
+        });
+
+        $('#samples-table').tabulator('setColumns', thiscolumns);
+        var x = $("#samples-table").tabulator("getData");
+        $("#samples-table").tabulator("setData", x);
+        console.log(tosource(x));
+      });
+
+      // delete row
+      $("#delete_table").click(function () {
+        var bla = $("#txt_name").val();
+        if(bla==""){
+          bla = prompt("Please enter the row");
+        }
+        $("#samples-table").tabulator("deleteRow", bla);
+
+        getLastClickedNode(function (nodeID) {
+          db.remove({_id: {nodeID: nodeID, sampleID: bla}}, {multi: true});
+        });
+
+        var x = $("#samples-table").tabulator("getData");
+        $("#samples-table").tabulator("setData", x);
+        console.log(tosource(x));
+      });
+    });
+  };
+</script>
 </body>
 </html>
