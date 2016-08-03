@@ -337,8 +337,8 @@
           title: "" + newCol,
           field: "" + newCol,
           fitColumns: true,
-          editable: true,
-          sorter: "string"
+          sorter: "string",
+          editable: true
         });
 
         db.update({_id: "DNA Extract"}, {$push: {attributeNames: "" + newCol}});
