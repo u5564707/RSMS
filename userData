@@ -1,6 +1,6 @@
-{"parentID":"rootNode","processName":"good","_id":"2JoVZgaznmIH0uIc"}
 {"_id":"Source samples","attributeNames":[]}
-{"_id":"good","attributeNames":[]}
 {"_id":"rootNode","parentID":null,"processName":"Source samples"}
-{"_id":"rootProcess","attributeNames":[]}
-{"_id":{"nodeID":"2JoVZgaznmIH0uIc","sampleID":"3"}}
+{"$$deleted":true,"_id":"Source samples"}
+{"$$deleted":true,"_id":"rootNode"}
+{"_id":"Source samples","attributeNames":[]}
+{"_id":"rootNode","parentID":null,"processName":"Source samples"}
