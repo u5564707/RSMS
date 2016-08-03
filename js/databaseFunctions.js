@@ -7,12 +7,12 @@
 var Datastore = require('nedb'),
     db;
 
-// creates first node
-function createRootNode() {
+// creates userData file with root node
+function resetUserData() {
   db = new Datastore({ filename: 'userData', autoload: true });
-
-  db.insert({ _id: "rootProcess", attributeNames: [] });
-  db.insert({ _id: "rootNode", parentID: null, processName: "rootProcess" });
+  db.remove({}, { multi: true });
+  db.insert({ _id: "Source samples", attributeNames: [] });
+  db.insert({ _id: "rootNode", parentID: null, processName: "Source samples" });
 }
 
 // creates dummy datastore for testing
@@ -21,11 +21,11 @@ function createTestData() {
   db.remove({}, { multi: true });
 
   // insert processes
-  db.insert({ _id: "rootProcess", attributeNames: ["mass (mg)"] });
+  db.insert({ _id: "Source samples", attributeNames: ["mass (mg)"] });
   db.insert({ _id: "DNA Extract", attributeNames: ["Date Extracted", "Kit", "Elution mL", "DNA mg", "Notes"] });
 
   // insert nodes
-  db.insert({ _id: "rootNode", parentID: null, processName: "rootProcess" });
+  db.insert({ _id: "rootNode", parentID: null, processName: "Source samples" });
   db.insert({ _id: "node2", parentID: "rootNode", processName: "DNA Extract" });
   db.insert({ _id: "node3", parentID: "rootNode", processName: "DNA Extract" });
   db.insert({ _id: "node4", parentID: "node3", processName: "DNA Extract" });
@@ -70,7 +70,7 @@ function getChildNodes(nodeID, callback) {
       children.push({
         text: { name: nodes[i].processName },
         HTMLid: nodes[i]._id
-      });
+      }); 
       getChildNodes(nodes[i]._id, function(grandChildren) {
         children.push({
           children: grandChildren
@@ -87,7 +87,7 @@ function getTreeConfig(callback) {
       container: "#tree"
     },
     nodeStructure: {
-      text: { name: "rootProcess" },
+      text: { name: "Source samples" },
       HTMLid: "rootNode"
     }
   };
