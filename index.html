@@ -136,10 +136,8 @@
     fileMenu.append(new nw.MenuItem({
       label: 'New Project',
       click: function(){
-    	  initialiseDbVariable();
     	  resetUserData();
-    	  initialProject();
-          $("#samples-table").hide();
+        $("#samples-table").hide();
       }
     }));
   
@@ -156,6 +154,7 @@
          	} else {
          		initialiseDbVariable();
          		replaceAllDocuments(this.value, 'userData');
+         		openProjectTest(this.value);
          		setOpenedFileLocation(this.value);
          		this.value = null; // reset file location
          	}
@@ -176,6 +175,7 @@
 	         	  
  	          chooser.addEventListener("change", function(evt) {
  	       	    replaceAllDocuments('userData', this.value);
+ 	       			saveTest(this.value);
  	          }, false);
  	         
  	          chooser.click();
@@ -192,9 +192,10 @@
       click: function() {
      	  var chooser = document.querySelector('#saveAsFileDialog');
      	  
-         chooser.addEventListener("change", function(evt) {
-       	  replaceAllDocuments('userData', this.value);
-         }, false);
+          chooser.addEventListener("change", function(evt) {
+       	    replaceAllDocuments('userData', this.value);
+       		  saveTest(this.value);
+          }, false);
          
          chooser.click();
        }

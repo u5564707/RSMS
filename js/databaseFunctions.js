@@ -5,29 +5,38 @@
 */
 
 var Datastore = require('nedb'),
-    db;
-
-function initialiseDbVariable() {
-	db = new Datastore({ filename: 'userData', autoload: true });
-}
+    db = new Datastore({ filename: 'userData', autoload: true });
 
 // replaces all documents of userData file with the root node and root process
 function resetUserData() {
-  db.remove({}, { multi: true });
-  db.insert({ _id: "Source samples", attributeNames: [] });
-  db.insert({ _id: "rootNode", parentID: null, processName: "Source samples" });
+  db.remove({}, { multi: true }, function() {
+	db.insert({ _id: "Source samples", attributeNames: [] }, function() {
+	  db.insert({ _id: "rootNode", parentID: null, processName: "Source samples" }, function() {
+		initialProject();
+		newProjectTest();
+	  });
+	});
+  });
 }
 
-// replaces all documents of userData with all documents from openedFileName
+// replaces all documents of one file with all documents from another
 function replaceAllDocuments(sourceFileLocation, destinationFileLocation) {
   sourceFileDb = new Datastore({ filename: sourceFileLocation, autoload: true });
 
   sourceFileDb.find({}, function (err, sourceFileDocs) {
 	destinationFileDb = new Datastore({ filename: destinationFileLocation, autoload: true });
 	
+	console.log("emptying"+destinationFileLocation+"...");
 	destinationFileDb.remove({}, { multi: true });
+	console.log("emptied!");
+	
+	console.log("copying files from "+sourceFileLocation+" to "+destinationFileLocation+"...");
 	destinationFileDb.insert(sourceFileDocs, function (err, newDocs) {
+      console.log("copied!");
+      
+      console.log("reinitialising tree...");
       initialProject();
+      console.log("initialised");
     });
   });
 }
