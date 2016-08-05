@@ -41,23 +41,25 @@
 	<!--<button id="add_col">Add new column</button>-->
 	<!--<button id="del_col">Delete column</button>-->
 	<!--<button id="delete_col">Delete column</button>-->
-	<form id='form1'>
+	<form class="forms" id='form1'>
 	  <input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
 	</form>
-    <button id="delete_table">Delete Row</button>
-	<form id='form2'>
+    <button class="buttons" id="del_row">Delete Row</button>
+
+    <form class="forms" id='form2'>
 	  <input type="text" id="col_name" name="add_col" placeholder="new column name">
 	</form>
-  <button id="add_col">Add new column</button>
-	<form id='form3'>
+    <button class="buttons" id="add_col">Add new column</button>
+
+    <form class="forms" id='form3'>
 	  <input type="text" id="col_del" name="del_col" placeholder="Choose column name">
 	</form>
-  <button id="del_col">Delete column</button>
+    <button class="buttons" id="del_col">Delete column</button>
 	<!--<form id='form3'>-->
 	<!--<input type="text" id="col_delete" name="delet_col" placeholder="column number">-->
 	<!--</form>-->
 
-  <div id="samples-table"></div>
+  <div class="tables" id="samples-table"></div>
 
   <script src="js/jquery-2.2.4.min.js" type="text/javascript"></script>
   <script src="js/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
@@ -72,13 +74,16 @@
 		$("#save_table").hide();
 		$("#add_table").hide();
 		$("#form1").hide();
-		$("#delete_table").hide();
+		$("#del_row").hide();
 		$("#add_col").hide();
 		$("#form2").hide();
 		$("#form3").hide();
 		$("#delete_col").hide();
         $("#del_col").hide();
 		$("#samples-table").hide();
+//        document.getElementsByClassName("buttons").style.visibility = "hidden";
+//        document.getElementsByClassName("forms").style.visibility = "hidden";
+//        document.getElementsByClassName("table").style.visibility = "hidden";
 	  
 		var fs = require('fs'),
 		    nw = require('nw.gui'),
@@ -214,7 +219,10 @@
               // $("#samples-table").tabulator("clear");
 
               // update columns
+
               $("#samples-table").show();
+//                document.getElementsByClassName("table").style.display = "block";
+//                document.getElementsByClassName("table").style.visibility = "visible";
               getProcessAttributeNames(opt.$trigger.attr("id"), function (columns) {
                 $("#samples-table").tabulator("setColumns", columns, false);
               });
@@ -247,13 +255,17 @@
 	            } else {
 	              $("#add_table").hide();
 	            }
-              $("#delete_table").show();
+              $("#del_row").show();
               $("#save_table").show();
               $("#form1").show();
               $("#form2").show();
               $("#add_col").show();
               $("#form3").show();
               $("#del_col").show();
+//                document.getElementsByClassName("forms").style.display = "block";
+//                document.getElementById("forms").style.visibility = "visible";
+//                document.getElementById("buttons").style.display = "block";
+//                document.getElementById("buttons").style.visibility = "visible";
 
             }
 	        },
