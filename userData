@@ -1,2 +1,13 @@
-{"_id":"Source samples","attributeNames":[]}
+{"parentID":"rootNode","processName":"dna","_id":"0COD0CWP5uFFzNeh"}
+{"parentID":"rootNode","processName":"test3","_id":"Q1HcqtuHRMSpKj77"}
+{"attributeNames":["dasda","sfasdfdfs"],"_id":"Source samples"}
+{"attributeNames":[],"_id":"dna"}
+{"parentID":"rootNode","processName":"test2","_id":"eRMp6Shnd9s2skXh"}
+{"parentID":"rootNode","processName":"test","_id":"g3ZSZvn0nGRh1U5M"}
+{"_id":"grind","attributeNames":[]}
 {"_id":"rootNode","parentID":null,"processName":"Source samples"}
+{"_id":"test","attributeNames":[]}
+{"_id":"test2","attributeNames":[]}
+{"_id":"test3","attributeNames":[]}
+{"parentID":"rootNode","processName":"grind","_id":"yUBbBrLLyCZuBzti"}
+{"_id":{"nodeID":"eRMp6Shnd9s2skXh","sampleID":"3"}}

@@ -5,8 +5,7 @@ function newProjectTest() {
 		
 		// tests if userData contains exactly 2 documents
 		if (userDataDocs.length != 2) {
-			console.log(userDataDocs[0]._id+userDataDocs[1]._id)
-			console.log("'New Project' test failed: userData does not contain exactly 2 documents")
+			console.log("'New Project' test failed: userData does not contain exactly 2 documents");
 		} else {
 			
 			// tests if the documents are the root node and process documents
