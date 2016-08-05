@@ -139,6 +139,7 @@
     	  initialiseDbVariable();
     	  resetUserData();
     	  initialProject();
+          $("#samples-table").hide();
       }
     }));
   
@@ -146,6 +147,7 @@
     fileMenu.append(new nw.MenuItem({
       label: 'Open Project',
       click: function(){
+          $("#samples-table").hide();
     	  var chooser = document.querySelector('#openFileDialog');
     	  
         chooser.addEventListener("change", function(evt) {
