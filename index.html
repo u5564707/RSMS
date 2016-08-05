@@ -135,6 +135,7 @@ div {
 			label : 'New Project',
 			click : function() {
 				initialiseUserData();
+				projectOpened = true;
 				$("#samples-table").hide();
 			}
 		}));
@@ -160,13 +161,13 @@ div {
 
 						copyToUserData(this.value);
 						setOpenedFileLocation(this.value);
+						projectOpened = true;
+						$("#samples-table").hide();
 					}
 					this.value = null; // reset file location
 				}, false);
 
 				chooser.click();
-
-				$("#samples-table").hide();
 			}
 		}));
 
@@ -174,19 +175,24 @@ div {
 		fileMenu.append(new nw.MenuItem({
 			label : 'Save',
 			click : function() {
-				getOpenedFileLocation(function(location) {
-					if (location == null) {
-						var chooser = document.querySelector('#saveAsFileDialog');
-
-						chooser.addEventListener("change", function(evt) {
-							copyFromUserData(this.value);
-						}, false);
-
-						chooser.click();
-					} else {
-						copyFromUserData(location);
-					}
-				});
+				if (!projectOpened) {
+					alert("No project opened!");
+				} else {
+					getOpenedFileLocation(function(location) {
+						if (location == null) {
+							var chooser = document.querySelector('#saveAsFileDialog');
+	
+							chooser.addEventListener("change", function(evt) {
+								copyFromUserData(this.value);
+								this.value = null; // reset file location
+							}, false);
+	
+							chooser.click();
+						} else {
+							copyFromUserData(location);
+						}
+					});
+				}
 			}
 		}));
 
@@ -194,14 +200,19 @@ div {
 		fileMenu.append(new nw.MenuItem({
 			label : 'Save As',
 			click : function() {
-				var chooser = document.querySelector('#saveAsFileDialog');
-
-				chooser.addEventListener("change", function(evt) {
-					copyFromUserData(this.value);
-				}, false);
-
-				chooser.click();
-			}
+				if (!projectOpened) {
+          alert("No project opened!");
+        } else {
+					var chooser = document.querySelector('#saveAsFileDialog');
+	
+					chooser.addEventListener("change", function(evt) {
+						copyFromUserData(this.value);
+						this.value = null; // reset file location
+					}, false);
+	
+					chooser.click();
+        }
+			s}
 		}));
 
 		// Assign to window

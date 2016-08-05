@@ -62,7 +62,7 @@ function copyFromUserData(destinationFileLocation) {
 			destinationFileDb.insert(userDataDocs, function(err, newDocs) {
 				console.log("copied " + newDocs.length + " documents!");
 
-				saveProjectTest(sourceFileLocation);
+				saveTest(destinationFileLocation);
 
 				initialProject();
 			});

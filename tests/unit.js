@@ -83,8 +83,9 @@ function saveTest(location) {
 					}
 					
 					if (!matchFound) {
-						console.log("'Save Project' test failed: the saved file does not contain all documents that userData contains");
-						callback();
+						console.log("'Save Project' test failed: the saved file does not contain all documents that userData contains", function() {
+							callback();
+						});
 					}
 				}
 			

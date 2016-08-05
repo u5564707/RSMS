@@ -1,4 +1,15 @@
-var openedFileLocation, lastClickedNode, tableEdited = false;
+var projectOpened = false,
+    openedFileLocation,
+    lastClickedNode,
+    tableEdited = false;
+
+function getOpenedFileLocation(callback) {
+	callback(openedFileLocation);
+}
+
+function setOpenedFileLocation(location) {
+	openedFileLocation = location;
+}
 
 function getLastClickedNode(callback) {
 	callback(lastClickedNode);
@@ -14,12 +25,4 @@ function isTableEdited(callback) {
 
 function setTableEdited(edited) {
 	tableEdited = edited;
-}
-
-function getOpenedFileLocation(callback) {
-	callback(openedFileLocation);
-}
-
-function setOpenedFileLocation(location) {
-	openedFileLocation = location;
 }
