@@ -135,6 +135,7 @@ div {
 			label : 'New Project',
 			click : function() {
 				initialiseUserData();
+				setOpenedFileLocation(null);
 				projectOpened = true;
 				$("#samples-table").hide();
 			}
@@ -183,8 +184,11 @@ div {
 							var chooser = document.querySelector('#saveAsFileDialog');
 	
 							chooser.addEventListener("change", function(evt) {
-								copyFromUserData(this.value);
-								this.value = null; // reset file location
+								if (this.value != "") {
+									copyFromUserData(this.value);
+									setOpenedFileLocation(this.value);
+									this.value = null; // reset file location
+								}
 							}, false);
 	
 							chooser.click();
@@ -206,8 +210,11 @@ div {
 					var chooser = document.querySelector('#saveAsFileDialog');
 	
 					chooser.addEventListener("change", function(evt) {
-						copyFromUserData(this.value);
-						this.value = null; // reset file location
+						if (this.value != "") {
+							copyFromUserData(this.value);
+							setOpenedFileLocation(this.value);
+							this.value = null; // reset file location
+						}
 					}, false);
 	
 					chooser.click();
@@ -310,7 +317,7 @@ div {
 							//          }
 							//        },
 							processSamples : {
-								name : "process samples",
+								name : "Process Samples",
 								callback : function(key, opt) {
 									var processName = prompt("Process name:");
 									var samplesString = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
