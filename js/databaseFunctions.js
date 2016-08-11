@@ -1,7 +1,7 @@
 /* Datastore schema
 	Process: { _id, attributeNames: [] }
 	Node:    { _id, parentID, processName }
-	Sample:  { _id: { NodeID, SampleID }, attr_1, attr_2, ... , attr_n }
+	Sample:  { _id, nodeID, sampleID, attr_1, attr_2, ... , attr_n }
  */
 
 var Datastore = require('nedb'), db = new Datastore({ filename : 'userData', autoload : true });
@@ -49,7 +49,7 @@ function copyToUserData(sourceFileLocation) {
 	});
 }
 
-// copies all documents from file at sourceFileLocation to userData
+// copies all documents from userData to file at destinationFileLocation
 function copyFromUserData(destinationFileLocation) {
 	destinationFileDb = new Datastore({ filename : destinationFileLocation, autoload : true });
 
@@ -63,8 +63,6 @@ function copyFromUserData(destinationFileLocation) {
 				console.log("copied " + newDocs.length + " documents!");
 
 				saveTest(destinationFileLocation);
-
-				initialProject();
 			});
 		});
 	});
@@ -164,13 +162,14 @@ function getProcessAttributeNames(nodeID, callback) {
 
 // return all samples with nodeID in a tabulator array structure
 function getNodeSamples(nodeID, callback) {
-	db.find({ "_id.nodeID" : nodeID }, function(err, samples) {
+	db.find({ nodeID : nodeID }, function(err, samples) {
 		var tableData = [];
 		for (i = 0; i < samples.length; i++) {
-			var sample = { id : samples[i]._id.sampleID };
+			var sample = { id : samples[i].sampleID };
 			for ( var key in samples[i]) {
 				// make sure key is not metadata
-				if (Object.prototype.hasOwnProperty.call(samples[i], key) && key != "_id") {
+				if (Object.prototype.hasOwnProperty.call(samples[i], key) && key != "_id" && key != "nodeID"
+						&& key != "sampleID") {
 					sample[key] = samples[i][key];
 				}
 			}
@@ -193,20 +192,21 @@ function updateProcess(nodeID, tableColumns) {
 
 // update samples with nodeID given tabulator tableData
 function updateNodeSamples(nodeID, tableData) {
-	console.log(tosource(tableData));
-	// remove all samples with nodeID
-	db.remove({ "_id.nodeID" : nodeID }, { multi : true });
 
-	// insert sample documents
-	for (i = 0; i < tableData.length; i++) {
-		var sample = { _id : { nodeID : nodeID, sampleID : tableData[i].id } };
-		for ( var key in tableData[i]) {
-			if (Object.prototype.hasOwnProperty.call(tableData[i], key) && key != "id") {
-				sample[key] = tableData[i][key];
+	// remove all samples with nodeID
+	db.remove({ nodeID : nodeID }, { multi : true }, function(err, numRemoved) {
+
+		// insert sample documents
+		for (i = 0; i < tableData.length; i++) {
+			var sample = { nodeID : nodeID, sampleID : tableData[i].id };
+			for ( var key in tableData[i]) {
+				if (Object.prototype.hasOwnProperty.call(tableData[i], key) && key != "_id" && key != "id") {
+					sample[key] = tableData[i][key];
+				}
 			}
+			db.insert(sample);
 		}
-		db.insert(sample);
-	}
+	});
 }
 
 function processSamples(processName, parentID, samplesString) {

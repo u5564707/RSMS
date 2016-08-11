@@ -1,5 +1,9 @@
-{"_id":"Source samples","attributeNames":[]}
-{"parentID":"rootNode","processName":"test","_id":"Ucg3k9LVmMcJCxet"}
+{"_id":"12","attributeNames":[]}
+{"parentID":"rootNode","processName":"12","_id":"6zYPMT7Ntm6IqwXn"}
+{"attributeNames":["asd"],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"01","asd":"ss","_id":"ovv5dNziyOfuAz31"}
+{"nodeID":"rootNode","sampleID":"03","asd":"","_id":"ro7t1qT9txpxS0D1"}
 {"_id":"rootNode","parentID":null,"processName":"Source samples"}
-{"_id":"test","attributeNames":[]}
-{"_id":{"nodeID":"Ucg3k9LVmMcJCxet","sampleID":"4"}}
+{"nodeID":"rootNode","sampleID":"02","asd":"","_id":"t5rqCnnz76hXQ42L"}
+{"nodeID":"rootNode","sampleID":"04","asd":"sss","_id":"tHcddKfEOFBN2zFP"}
+{"_id":{"nodeID":"6zYPMT7Ntm6IqwXn","sampleID":"1"}}
