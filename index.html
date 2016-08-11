@@ -23,6 +23,7 @@ div {
 
 <body>
 	<header>
+		<div id="file-name"></div>
 		<ul>
 			<li><a href='#' title='Minimize' id='windowControlMinimize'></a></li>
 			<li><a href='#' title='Maximize' id='windowControlMaximize'></a></li>
@@ -150,7 +151,8 @@ div {
 				console.log("browsing files...");
 				chooser.addEventListener("change", function(evt) {
 					console.log(this.value + " selected!");
-
+					document.getElementById("file-name").innerText = this.value;
+					document.title = this.value;
 					console.log("checking file...");
 					if (this.value.includes(".") || this.value == "") {
 						console.log("invalid file!");
