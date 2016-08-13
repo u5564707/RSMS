@@ -155,7 +155,8 @@ div {
 					document.getElementById("file-name").innerText = this.value;
 					document.title = this.value;
 					console.log("checking file...");
-					if (this.value.includes(".") || this.value == "") {
+					//if (this.value.includes(".") || this.value == "") {
+					if (this.value == "") {
 						console.log("invalid file!");
 
 						alert("Please load a valid project file");
