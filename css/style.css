@@ -47,3 +47,9 @@ a#windowControlMaximize{
 a#windowControlMinimize{
     background-position: 0 0;
 }
+#file-name{
+    float:        left;
+    text-align:   left;
+    line-height:  2;
+
+}

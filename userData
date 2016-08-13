@@ -1,7 +1,0 @@
-{"parentID":"rootNode","processName":"dna","_id":"1XCqgL2i2TEZJgUb"}
-{"nodeID":"rootNode","sampleID":"01","mass":"","_id":"HrOQR5JrzxjzWKZQ"}
-{"nodeID":"rootNode","sampleID":"02","mass":"30g","_id":"KQgifTNEWS1XSjdA"}
-{"attributeNames":["mass"],"_id":"Source samples"}
-{"_id":"dna","attributeNames":[]}
-{"_id":"rootNode","parentID":null,"processName":"Source samples"}
-{"_id":{"nodeID":"1XCqgL2i2TEZJgUb","sampleID":"3"}}
