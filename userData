@@ -1,9 +1,7 @@
-{"_id":"12","attributeNames":[]}
-{"parentID":"rootNode","processName":"12","_id":"6zYPMT7Ntm6IqwXn"}
-{"attributeNames":["asd"],"_id":"Source samples"}
-{"nodeID":"rootNode","sampleID":"01","asd":"ss","_id":"ovv5dNziyOfuAz31"}
-{"nodeID":"rootNode","sampleID":"03","asd":"","_id":"ro7t1qT9txpxS0D1"}
+{"parentID":"rootNode","processName":"dna","_id":"1XCqgL2i2TEZJgUb"}
+{"nodeID":"rootNode","sampleID":"01","mass":"","_id":"HrOQR5JrzxjzWKZQ"}
+{"nodeID":"rootNode","sampleID":"02","mass":"30g","_id":"KQgifTNEWS1XSjdA"}
+{"attributeNames":["mass"],"_id":"Source samples"}
+{"_id":"dna","attributeNames":[]}
 {"_id":"rootNode","parentID":null,"processName":"Source samples"}
-{"nodeID":"rootNode","sampleID":"02","asd":"","_id":"t5rqCnnz76hXQ42L"}
-{"nodeID":"rootNode","sampleID":"04","asd":"sss","_id":"tHcddKfEOFBN2zFP"}
-{"_id":{"nodeID":"6zYPMT7Ntm6IqwXn","sampleID":"1"}}
+{"_id":{"nodeID":"1XCqgL2i2TEZJgUb","sampleID":"3"}}
