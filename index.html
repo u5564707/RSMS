@@ -361,7 +361,7 @@ div {
 				}
 			});
 
-			$("#save_table").click(function() {
+			$("#save_table").one('click',function() {
 				getLastClickedNode(function(nodeID) {
 					if (nodeID != undefined && confirm('Save data?')) {
 						updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
@@ -387,7 +387,7 @@ div {
 			//      });
 
 			// add rows
-			$("#add_table").click(function() {
+			$("#add_table").one('click',function() {
 				$("#samples-table").tabulator("addRow");
 
 			});
@@ -488,7 +488,7 @@ div {
 //			});
 
 			//delete column
-			$("#del_col").click(function() {
+			$("#del_col").one('click',function() {
 				var tmp = $("#col_del").val();
 				if (tmp == "") {
 					tmp = prompt("Please enter the column to delete");
@@ -515,7 +515,7 @@ div {
 			});
 
 			// delete row
-			$("#delete_table").click(function() {
+			$("#delete_table").one('click',function() {
 				var bla = $("#txt_name").val();
 				if (bla == "") {
 					bla = prompt("Please enter the row");
