@@ -137,9 +137,30 @@ function getTreeConfig(callback) {
 		callback(chart_config);
 	});
 }
+getAttributeNames("Source samples", function(ids){
+	console.log(tosource(ids));
+});
+// return an array of process IDs
+function getAllProcessIDs(callback) {
+	db.find({ attributeNames : { $exists: true } }, function(err, processIDs) {
+		var processIDList = [];
+		
+		for(i=0; i<processIDs.length; i++) {
+			processIDList[i] = processIDs[i]._id;
+		}
+		
+		callback(processIDList);
+	});
+}
 
-// return all attributeNames of a nodeID's process in a tabulator array
-// structure
+// return the attributeNames array of process with processID
+function getAttributeNames(processID, callback) {
+	db.findOne({ _id : processID }, function(err, process) {
+		callback(process.attributeNames);
+	});
+}
+
+// return all attributeNames of a nodeID's process in a tabulator array structure
 function getProcessAttributeNames(nodeID, callback) {
 	db.findOne({ _id : nodeID }, function(err, node) {
 		db.findOne({ _id : node.processName }, function(err, process) {
@@ -207,6 +228,16 @@ function updateNodeSamples(nodeID, tableData) {
 			db.insert(sample);
 		}
 	});
+}
+
+// add a process with no attributes
+function addProcess(processName) {
+	db.insert({ _id : processName, attributeNames : [] });
+}
+
+// update the process' attributeNames with attributeNames
+function addProcessAttributes(processName, attributeNames) {
+	db.update({ _id : processName }, { $set: { attributeNames : attributeNames } });
 }
 
 function processSamples(processName, parentID, samplesString) {
