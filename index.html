@@ -136,6 +136,7 @@ div {
 			label : 'New Project',
 			click : function() {
 				initialiseUserData();
+				setOpenedFileLocation(null);
 				projectOpened = true;
 				$("#samples-table").hide();
 			}
@@ -227,8 +228,11 @@ div {
 					var chooser = document.querySelector('#saveAsFileDialog');
 
 					chooser.addEventListener("change", function(evt) {
-						copyFromUserData(this.value);
-						this.value = null; // reset file location
+						if (this.value != "") {
+							copyFromUserData(this.value);
+							setOpenedFileLocation(this.value);
+							this.value = null; // reset file location
+															}
 					}, false);
 
 					chooser.click();
@@ -361,7 +365,7 @@ div {
 				}
 			});
 
-			$("#save_table").one('click',function() {
+			$("#save_table").click(function() {
 				getLastClickedNode(function(nodeID) {
 					if (nodeID != undefined && confirm('Save data?')) {
 						updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
@@ -387,7 +391,7 @@ div {
 			//      });
 
 			// add rows
-			$("#add_table").one('click',function() {
+			$("#add_table").click(function() {
 				$("#samples-table").tabulator("addRow");
 
 			});
