@@ -53,5 +53,10 @@ a#windowControlMinimize{
     line-height:  2;
 
 }
-
+#navi-btn{
+    float:        left;
+    line-height:  2;
+    position: fixed;
+    padding-left: 400px;
+}
 

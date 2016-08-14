@@ -67,6 +67,10 @@ div {
 			<li><a href='#' title='Maximize' id='windowControlMaximize'></a></li>
 			<li><a href='#' title='Close' id='windowControlClose'></a></li>
 		</ul>
+		<div id="navi-btn">
+			<button id="main">Main</button>
+			<button id="process">Process</button>
+		</div>
 	</header>
 
 	<input style="display: none;" id="openFileDialog" type="file" />
@@ -119,6 +123,8 @@ div {
 		var swiper = new Swiper('.swiper-container', {
 			pagination: '.swiper-pagination',
 			paginationClickable: true,
+			nextButton: '#main',
+			prevButton: '#process',
 			paginationBulletRender: function (index, className) {
 				return '<span class="' + className + '">' + (index + 1) + '</span>';
 			}
