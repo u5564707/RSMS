@@ -10,28 +10,47 @@
 <link rel="stylesheet" href="css/tabulator.css">
 <link rel="stylesheet" href="css/jquery.contextMenu.min.css">
 	<link href="css/style.css" rel="stylesheet"/>
+	<link rel="stylesheet" href="css/swiper.min.css">
 <style>
 div {
 	width: fit-content;
 }
-/* Swipe 2 required styles */
-
-.swipe {
-	overflow: hidden;
-	visibility: hidden;
-	position: relative;
-}
-.swipe-wrap {
-	overflow: hidden;
-	position: relative;
-}
-.swipe-wrap > div {
-	float: left;
+.swiper-container {
 	width: 100%;
-	position: relative;
+	height: 100%;
 }
-
-/* END required styles */
+.swiper-slide {
+	text-align: left;
+	font-size: 18px;
+	background: #fff;
+	/* Center slide text vertically */
+	/*display: -webkit-box;*/
+	/*display: -ms-flexbox;*/
+	/*display: -webkit-flex;*/
+	/*display: flex;*/
+	/*-webkit-box-pack: center;*/
+	/*-ms-flex-pack: center;*/
+	/*-webkit-justify-content: center;*/
+	/*justify-content: center;*/
+	/*-webkit-box-align: center;*/
+	/*-ms-flex-align: center;*/
+	/*-webkit-align-items: center;*/
+	/*!*align-items: center;*!*/
+}
+.swiper-pagination-bullet {
+	width: 20px;
+	height: 20px;
+	text-align: center;
+	line-height: 20px;
+	font-size: 12px;
+	color:#000;
+	opacity: 1;
+	background: rgba(0,0,0,0.2);
+}
+.swiper-pagination-bullet-active {
+	color:#fff;
+	background: #007aff;
+}
 </style>
 
 <script src="js/raphael.js"></script>
@@ -42,10 +61,7 @@ div {
 <body>
 	<header>
 		<div id="file-name"></div>
-		<div class="demo-controls">
-			<a class="btn btn-primary" id="prev">Main</a>
-			<a class="btn btn-primary" id="next">Process</a>
-		</div>
+
 		<ul>
 			<li><a href='#' title='Minimize' id='windowControlMinimize'></a></li>
 			<li><a href='#' title='Maximize' id='windowControlMaximize'></a></li>
@@ -56,78 +72,59 @@ div {
 	<input style="display: none;" id="openFileDialog" type="file" />
 	<input style="display: none;" id="saveAsFileDialog" type="file" nwsaveas />
 
-	<div id="mySwipe" class="swipe">
-		<div class="swipe-wrap">
-			<div>
-				<div>
-					<div class="chart" id="tree"></div>
 
-					<button id="save_table">Save</button>
-					<button id="add_table">Add new row</button>
-					<!--<button id="delete_table">Delete Row</button>-->
-					<!--<button id="add_col">Add new column</button>-->
-					<!--<button id="del_col">Delete column</button>-->
-					<!--<button id="delete_col">Delete column</button>-->
-					<form class="forms" id='form1'>
-						<input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
-					</form>
-					<button class="buttons" id="del_row">Delete Row</button>
+	<!-- Swiper -->
+	<div class="swiper-container">
+		<div class="swiper-wrapper">
+			<div class="swiper-slide">
+				<div class="chart" id="tree"></div>
 
-					<form class="forms" id='form2'>
-						<input type="text" id="col_name" name="add_col" placeholder="new column name">
-					</form>
-					<button class="buttons" id="add_col">Add new column</button>
+				<button id="save_table">Save</button>
+				<button id="add_table">Add new row</button>
+				<!--<button id="delete_table">Delete Row</button>-->
+				<!--<button id="add_col">Add new column</button>-->
+				<!--<button id="del_col">Delete column</button>-->
+				<button id="delete_col">Delete column</button>
+				<form class="forms" id='form1'>
+					<input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
+				</form>
+				<button class="buttons" id="del_row">Delete Row</button>
 
-					<form class="forms" id='form3'>
-						<input type="text" id="col_del" name="del_col" placeholder="Choose column name">
-					</form>
-					<button class="buttons" id="del_col">Delete column</button>
-					<!--<form id='form3'>-->
-					<!--<input type="text" id="col_delete" name="delet_col" placeholder="column number">-->
-					<!--</form>-->
+				<form class="forms" id='form2'>
+					<input type="text" id="col_name" name="add_col" placeholder="new column name">
+				</form>
+				<button class="buttons" id="add_col">Add new column</button>
 
-					<div class="tables" id="samples-table"></div>
-					<div><b>This is the Main page</b></div>
-				</div>
+				<form class="forms" id='form3'>
+					<input type="text" id="col_del" name="del_col" placeholder="Choose column name">
+				</form>
+				<button class="buttons" id="del_col">Delete column</button>
+				<!--<form id='form3'>-->
+				<!--<input type="text" id="col_delete" name="delet_col" placeholder="column number">-->
+				<!--</form>-->
+
+				<div class="tables" id="samples-table"></div>
 			</div>
+			<div class="swiper-slide">Slide 2</div>
 
-			<!--leave this div empty-->
-			<div></div>
-
-			<!--second div-->
-			<div>
-				<p>This is the process page</p>
-			</div>
 		</div>
+		<!-- Add Pagination -->
+		<div class="swiper-pagination"></div>
 	</div>
 
+	<!-- Initialize Swiper -->
+	<script src="js/swiper.min.js"></script>
+	<script>
 
-		<script src="js/swipe.js"></script>
-		<script>
+		var swiper = new Swiper('.swiper-container', {
+			pagination: '.swiper-pagination',
+			paginationClickable: true,
+			paginationBulletRender: function (index, className) {
+				return '<span class="' + className + '">' + (index + 1) + '</span>';
+			}
+		});
+	</script>
 
-			// pure JS
-			var element = document.getElementById('mySwipe'),
-					prevBtn = document.getElementById('prev'),
-					nextBtn = document.getElementById('next');
-
-			window.mySwipe = new Swipe(element, {
-				startSlide: 0,
-				auto: 3000,
-				draggable: false,
-				autoRestart: false,
-				continuous: true,
-				disableScroll: true,
-				stopPropagation: true,
-				callback: function(index, element) {},
-				transitionEnd: function(index, element) {}
-			});
-
-			// using jQuery
-			// window.mySwipe = $('#mySwipe').Swipe().data('Swipe');
-
-			prevBtn.onclick = mySwipe.prev;
-			nextBtn.onclick = mySwipe.next;
-		</script>
 	<!--<div class="chart" id="tree"></div>-->
 
 	<!--<button id="save_table">Save</button>-->
@@ -135,7 +132,7 @@ div {
 	<!--&lt;!&ndash;<button id="delete_table">Delete Row</button>&ndash;&gt;-->
 	<!--&lt;!&ndash;<button id="add_col">Add new column</button>&ndash;&gt;-->
 	<!--&lt;!&ndash;<button id="del_col">Delete column</button>&ndash;&gt;-->
-	<!--&lt;!&ndash;<button id="delete_col">Delete column</button>&ndash;&gt;-->
+	<!--<button id="delete_col">Delete column</button>-->
 	<!--<form class="forms" id='form1'>-->
 		<!--<input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">-->
 	<!--</form>-->
