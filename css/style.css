@@ -65,10 +65,10 @@ div.container {
     border: 1px solid gray;
 }
 
-.new-column, footer {
+.new-column, header footer {
     padding: 1em;
-    color: white;
-    background-color: black;
+    color: black;
+    background-color: white;
     clear: left;
     text-align: center;
 }
@@ -94,4 +94,9 @@ article {
     border-left: 1px solid gray;
     padding: 1em;
     overflow: hidden;
+}
+
+#processID, #attriID{
+    text-decoration: underline;
+    font-weight: bold;
 }
