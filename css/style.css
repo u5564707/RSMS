@@ -53,3 +53,10 @@ a#windowControlMinimize{
     line-height:  2;
 
 }
+
+.demo-controls{
+    float:        left;
+    line-height:  5;
+    text-align: center;
+    padding: 0.5em;
+}

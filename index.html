@@ -9,11 +9,29 @@
 <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="css/tabulator.css">
 <link rel="stylesheet" href="css/jquery.contextMenu.min.css">
-
+	<link href="css/style.css" rel="stylesheet"/>
 <style>
 div {
 	width: fit-content;
 }
+/* Swipe 2 required styles */
+
+.swipe {
+	overflow: hidden;
+	visibility: hidden;
+	position: relative;
+}
+.swipe-wrap {
+	overflow: hidden;
+	position: relative;
+}
+.swipe-wrap > div {
+	float: left;
+	width: 100%;
+	position: relative;
+}
+
+/* END required styles */
 </style>
 
 <script src="js/raphael.js"></script>
@@ -24,6 +42,10 @@ div {
 <body>
 	<header>
 		<div id="file-name"></div>
+		<div class="demo-controls">
+			<a class="btn btn-primary" id="prev">Prev</a>
+			<a class="btn btn-primary" id="next">Next</a>
+		</div>
 		<ul>
 			<li><a href='#' title='Minimize' id='windowControlMinimize'></a></li>
 			<li><a href='#' title='Maximize' id='windowControlMaximize'></a></li>
@@ -34,33 +56,105 @@ div {
 	<input style="display: none;" id="openFileDialog" type="file" />
 	<input style="display: none;" id="saveAsFileDialog" type="file" nwsaveas />
 
-	<div class="chart" id="tree"></div>
+	<div id="mySwipe" class="swipe">
+		<div class="swipe-wrap">
+			<div>
+				<div>
+					<div class="chart" id="tree"></div>
 
-	<button id="save_table">Save</button>
-	<button id="add_table">Add new row</button>
-	<!--<button id="delete_table">Delete Row</button>-->
-	<!--<button id="add_col">Add new column</button>-->
-	<!--<button id="del_col">Delete column</button>-->
-	<!--<button id="delete_col">Delete column</button>-->
-	<form class="forms" id='form1'>
-		<input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
-	</form>
-	<button class="buttons" id="del_row">Delete Row</button>
+					<button id="save_table">Save</button>
+					<button id="add_table">Add new row</button>
+					<!--<button id="delete_table">Delete Row</button>-->
+					<!--<button id="add_col">Add new column</button>-->
+					<!--<button id="del_col">Delete column</button>-->
+					<!--<button id="delete_col">Delete column</button>-->
+					<form class="forms" id='form1'>
+						<input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
+					</form>
+					<button class="buttons" id="del_row">Delete Row</button>
 
-	<form class="forms" id='form2'>
-		<input type="text" id="col_name" name="add_col" placeholder="new column name">
-	</form>
-	<button class="buttons" id="add_col">Add new column</button>
+					<form class="forms" id='form2'>
+						<input type="text" id="col_name" name="add_col" placeholder="new column name">
+					</form>
+					<button class="buttons" id="add_col">Add new column</button>
 
-	<form class="forms" id='form3'>
-		<input type="text" id="col_del" name="del_col" placeholder="Choose column name">
-	</form>
-	<button class="buttons" id="del_col">Delete column</button>
-	<!--<form id='form3'>-->
-	<!--<input type="text" id="col_delete" name="delet_col" placeholder="column number">-->
+					<form class="forms" id='form3'>
+						<input type="text" id="col_del" name="del_col" placeholder="Choose column name">
+					</form>
+					<button class="buttons" id="del_col">Delete column</button>
+					<!--<form id='form3'>-->
+					<!--<input type="text" id="col_delete" name="delet_col" placeholder="column number">-->
+					<!--</form>-->
+
+					<div class="tables" id="samples-table"></div>
+					<div><b>This is the Main page</b></div>
+				</div>
+			</div>
+
+			<!--leave this div empty-->
+			<div></div>
+
+			<!--second div-->
+			<div>
+				<p>This is the process page</p>
+			</div>
+		</div>
+	</div>
+
+
+		<script src="js/swipe.js"></script>
+		<script>
+
+			// pure JS
+			var element = document.getElementById('mySwipe'),
+					prevBtn = document.getElementById('prev'),
+					nextBtn = document.getElementById('next');
+
+			window.mySwipe = new Swipe(element, {
+				startSlide: 0,
+				auto: 3000,
+				draggable: false,
+				autoRestart: false,
+				continuous: true,
+				disableScroll: true,
+				stopPropagation: true,
+				callback: function(index, element) {},
+				transitionEnd: function(index, element) {}
+			});
+
+			// using jQuery
+			// window.mySwipe = $('#mySwipe').Swipe().data('Swipe');
+
+			prevBtn.onclick = mySwipe.prev;
+			nextBtn.onclick = mySwipe.next;
+		</script>
+	<!--<div class="chart" id="tree"></div>-->
+
+	<!--<button id="save_table">Save</button>-->
+	<!--<button id="add_table">Add new row</button>-->
+	<!--&lt;!&ndash;<button id="delete_table">Delete Row</button>&ndash;&gt;-->
+	<!--&lt;!&ndash;<button id="add_col">Add new column</button>&ndash;&gt;-->
+	<!--&lt;!&ndash;<button id="del_col">Delete column</button>&ndash;&gt;-->
+	<!--&lt;!&ndash;<button id="delete_col">Delete column</button>&ndash;&gt;-->
+	<!--<form class="forms" id='form1'>-->
+		<!--<input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">-->
 	<!--</form>-->
+	<!--<button class="buttons" id="del_row">Delete Row</button>-->
 
-	<div class="tables" id="samples-table"></div>
+	<!--<form class="forms" id='form2'>-->
+		<!--<input type="text" id="col_name" name="add_col" placeholder="new column name">-->
+	<!--</form>-->
+	<!--<button class="buttons" id="add_col">Add new column</button>-->
+
+	<!--<form class="forms" id='form3'>-->
+		<!--<input type="text" id="col_del" name="del_col" placeholder="Choose column name">-->
+	<!--</form>-->
+	<!--<button class="buttons" id="del_col">Delete column</button>-->
+	<!--&lt;!&ndash;<form id='form3'>&ndash;&gt;-->
+	<!--&lt;!&ndash;<input type="text" id="col_delete" name="delet_col" placeholder="column number">&ndash;&gt;-->
+	<!--&lt;!&ndash;</form>&ndash;&gt;-->
+
+	<!--<div class="tables" id="samples-table"></div>-->
 
 	<script src="js/jquery-2.2.4.min.js" type="text/javascript"></script>
 	<script src="js/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
@@ -422,7 +516,7 @@ div {
 							field: "" + newCol,
 							fitColumns: true,
 							sorter: "string",
-							editable: true
+							//editableTitle:true
 						});
 					}
 
