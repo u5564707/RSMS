@@ -678,9 +678,10 @@ div {
 			
 			// populate process list
 	    getAllProcessIDs(function(ids) {
-	      $("#processList").empty();
+	      $("#ProcessList").empty();
+
 	      for (var i in ids) {
-	        $("#processList").append('<li><a href="#">'+ids+'</a></li>');
+	        $("#ProcessList").append('<li><a href="#">'+ids+'</a></li>');
 	      }
 	    });
 		};
@@ -726,7 +727,7 @@ div {
 			alert(this.id);
 			$("#attri-table").tabulator({
 				columns: [
-					{title: "Name", field: "name", sortable: true, sorter: "string", width: 200, editable: true},
+					{title: ""+this.id, field: "name", sortable: true, sorter: "string", width: 200, editable: true},
 
 				]
 			});
