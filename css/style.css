@@ -75,13 +75,13 @@ div.container {
 
 nav {
     float: left;
-    max-width: 160px;
+    max-width: 260px;
     margin: 0;
     padding: 1em;
 }
 
 nav ul {
-    list-style-type: none;
+    list-style-type: circle;
     padding: 0;
 }
 
@@ -90,7 +90,7 @@ nav ul a {
 }
 
 article {
-    margin-left: 170px;
+    margin-left: 270px;
     border-left: 1px solid gray;
     padding: 1em;
     overflow: hidden;
