@@ -121,7 +121,7 @@ div {
 
 				<nav>
 					<h2 id="processID">Process list</h2>
-					<ul>
+					<ul id="process-list">
 						<li id="attriID-1"><a href="#">London</a></li>
 						<li><a href="#">Paris</a></li>
 						<li><a href="#">Tokyo</a></li>
@@ -372,7 +372,7 @@ div {
 
 		// Assign to window
 		nw.Window.get().menu = windowMenu;
-
+			
 		//createTestData(); // for testing
 
 		var initialProject = function() {
@@ -671,6 +671,14 @@ div {
 				$("#samples-table").tabulator("setData", x);
 				console.log(tosource(x));
 			});
+			
+			// populate process list
+	    getAllProcessIDs(function(ids) {
+	    	$("#process-list").empty();
+	      for (var i in ids) {
+	        $("#process-list").append('<li><a href="#">'+ids+'</a></li>');
+	      }
+	    });
 		};
 
 		$("#attriID-1").one('click',function() {

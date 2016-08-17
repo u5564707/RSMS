@@ -137,15 +137,15 @@ function getTreeConfig(callback) {
 		callback(chart_config);
 	});
 }
-getAttributeNames("Source samples", function(ids){
-	console.log(tosource(ids));
-});
+
 // return an array of process IDs
 function getAllProcessIDs(callback) {
-	db.find({ attributeNames : { $exists: true } }, function(err, processIDs) {
+	
+	// find process docs - "attributeNames : { $exists : true }" wasn't working for some reason
+	db.find({ parentID : { $exists : false }, nodeID : { $exists : false } }, function(err, processIDs) {
 		var processIDList = [];
 		
-		for(i=0; i<processIDs.length; i++) {
+		for (i=0; i<processIDs.length; i++) {
 			processIDList[i] = processIDs[i]._id;
 		}
 		
