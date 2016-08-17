@@ -79,9 +79,12 @@ div {
 
 
 	<!-- Swiper -->
+	 <!--swiper container-->
 	<div class="swiper-container">
 		<div class="swiper-wrapper">
 			<div class="swiper-slide">
+
+				<!--swipe contents inside-->
 				<div class="chart" id="tree"></div>
 
 				<button id="save_table">Save</button>
@@ -111,7 +114,7 @@ div {
 				<div class="tables" id="samples-table"></div>
 			</div>
 
-
+			<!--second swiper-->
 			<div class="swiper-slide">
 				<div class="container">
 
@@ -675,18 +678,18 @@ div {
 		};
 
 		//click the first list demo
-		$("#attriID-1").one('click',function() {
-			$("#attri-table").tabulator({
-				columns: [
-					{title: "Name", field: "name", sortable: true, sorter: "string", width: 200, editable: true},
-
-				]
-			});
-
-			$("#attri-table").tabulator("setData", [
-				{id: 1, name: "Billy Bob"}
-			]);
-		});
+//		$("#attriID-1").one('click',function() {
+//			$("#attri-table").tabulator({
+//				columns: [
+//					{title: "Name", field: "name", sortable: true, sorter: "string", width: 200, editable: true},
+//
+//				]
+//			});
+//
+//			$("#attri-table").tabulator("setData", [
+//				{id: 1, name: "Billy Bob"}
+//			]);
+//		});
 
 		// add new attribute
 		$("#addNewAttribute").click(function() {
@@ -705,22 +708,13 @@ div {
 				alert(li.id);
 		});
 
-		//click process name
-//		$("#ProcessList").click(function(){
-//			alert(this.childNodes);
-//			$("#attri-table").tabulator({
-//				columns: [
-//					{title: "Name", field: "name", sortable: true, sorter: "string", width: 200, editable: true},
-//
-//				]
-//			});
-//
-//			$("#attri-table").tabulator("setData", [
-//				{id: 1, name: "Billy Bob"}
-//			]);
-//		});
+
+		//click process ul
 		$("#ProcessList").on("click",function(){
-		$("li").on("click",function() {
+
+//			$("#attri-table").tabulator("clear");
+
+			$("li").on("click",function() {
 			alert(this.id);
 			$("#attri-table").tabulator({
 				columns: [
@@ -733,6 +727,9 @@ div {
 				{id: 1, name: "Billy Bob"}
 			]);
 			this.clearQueue();
+				//$("#attri-table").tabulator("setData", x);
+				//$('#samples-table').tabulator('setColumns', thiscolumns,false);
+
 		});
 			this.clearQueue();
 		});

@@ -78,6 +78,7 @@ nav {
     max-width: 260px;
     margin: 0;
     padding: 1em;
+    overflow: hidden;
 }
 
 nav ul {
