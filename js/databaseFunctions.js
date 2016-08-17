@@ -217,7 +217,7 @@ function updateNodeSamples(nodeID, tableData) {
 	// remove all samples with nodeID
 	db.remove({ nodeID : nodeID }, { multi : true }, function(err, numRemoved) {
 
-		// insert sample documents
+		// insert sample documents //
 		for (i = 0; i < tableData.length; i++) {
 			var sample = { nodeID : nodeID, sampleID : tableData[i].id };
 			for ( var key in tableData[i]) {
