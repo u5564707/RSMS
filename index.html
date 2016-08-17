@@ -122,7 +122,7 @@ div {
 				<nav>
 					<h2 id="processID">Process list</h2>
 					<ul>
-						<li><a href="#">London</a></li>
+						<li id="attriID-1"><a href="#">London</a></li>
 						<li><a href="#">Paris</a></li>
 						<li><a href="#">Tokyo</a></li>
 					</ul>
@@ -135,6 +135,7 @@ div {
 					<p>London is the capital city of England. It is the most populous city in the  United Kingdom, with a metropolitan area of over 13 million inhabitants.</p>
 					<p>Standing on the River Thames, London has been a major settlement for two millennia, its history going back to its founding by the Romans, who named it Londinium.</p>
 					<button>Edit</button>
+					<div class="attri-tables" id="attri-table"></div>
 				</article>
 
 				<!--<footer>Copyright © W3Schools.com</footer>-->
@@ -671,6 +672,20 @@ div {
 				console.log(tosource(x));
 			});
 		};
+
+		$("#attriID-1").one('click',function() {
+			$("#attri-table").tabulator({
+				columns: [
+					{title: "Name", field: "name", sortable: true, sorter: "string", width: 200, editable: true},
+
+				]
+			});
+
+			$("#attri-table").tabulator("setData", [
+				{id: 1, name: "Billy Bob"}
+			]);
+		});
+
 	</script>
 </body>
 </html>
