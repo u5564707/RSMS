@@ -1,2 +1,5 @@
 {"_id":"Source samples","attributeNames":[]}
+{"parentID":"rootNode","processName":"test","_id":"dgqxMI4YNoClZLP2"}
 {"_id":"rootNode","parentID":null,"processName":"Source samples"}
+{"_id":"test","attributeNames":[]}
+{"_id":{"nodeID":"dgqxMI4YNoClZLP2","sampleID":"2"}}
