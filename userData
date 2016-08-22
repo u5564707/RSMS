@@ -1,4 +1,5 @@
-{"nodeID":"rootNode","sampleID":0,"go1":"g2","_id":"4H0TL8rQBK1xca4j"}
-{"nodeID":"rootNode","sampleID":"1","go1":"g1","_id":"GVFycejen3H5vBfG"}
-{"attributeNames":["go1ggg"],"_id":"Source samples"}
+{"_id":"Source samples","attributeNames":[]}
 {"_id":"rootNode","parentID":null,"processName":"Source samples"}
+{"_id":"good","attributeNames":[]}
+{"parentID":"Source samples","processName":"good","_id":"7OnS2b5GpW4paiYw"}
+{"_id":{"nodeID":"7OnS2b5GpW4paiYw","sampleID":"0"}}

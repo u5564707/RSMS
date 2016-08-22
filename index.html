@@ -139,6 +139,7 @@ div {
 					<!--<p>Standing on the River Thames, London has been a major settlement for two millennia, its history going back to its founding by the Romans, who named it Londinium.</p>-->
 					<button id="addNewAttribute">Add New Attribute</button>
 					<button id="saveNewAttributes">SaveAttributes</button>
+					<button id="del-attri-table">DeleteAttributes</button>
 					<div class="attri-tables" id="attri-table"></div>
 				</article>
 
@@ -717,6 +718,26 @@ div {
 				li.setAttribute("id", t1); // added line
 				ul.appendChild(li);
 				alert(li.id);
+
+			var samplesString2 = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
+
+
+			var lis = $("#ProcessList li");
+
+			var par = ul.childNodes[lis.length-2].innerText;
+
+			console.log(par);
+
+			if (t1 != null && samplesString2 != null) {
+				processSamples(t1, par,
+						samplesString2);
+			}
+
+			// update tree
+			$("#tree").empty();
+			getTreeConfig(function(config) {
+				new Treant(config);
+			});
 		});
 
 
@@ -743,6 +764,21 @@ div {
 
 		});
 			this.clearQueue();
+		});
+
+
+		$("#del-attri-table").on('click',function() {
+			var bla2 = $("#txt_name").val();
+			if (bla2 == "") {
+				bla2 = prompt("Please enter the row");
+			}
+			$("#attri-table").tabulator("deleteRow", bla2);
+
+
+
+			var x = $("#attri-table").tabulator("getData");
+			$("#attri-table").tabulator("setData", x);
+			console.log(tosource(x));
 		});
 	</script>
 </body>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="52dc558f-77da-4891-ac9d-ec41e25c1871" name="Default" comment="editeTitle">
+    <list default="true" id="52dc558f-77da-4891-ac9d-ec41e25c1871" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/databaseFunctions.js" afterPath="$PROJECT_DIR$/js/databaseFunctions.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/userData" afterPath="$PROJECT_DIR$/userData" />
     </list>
     <ignored path="RSMS.iws" />
@@ -28,8 +27,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="244">
-              <caret line="554" column="8" selection-start-line="554" selection-start-column="8" selection-end-line="554" selection-end-column="8" />
+            <state relative-caret-position="484">
+              <caret line="731" column="35" selection-start-line="731" selection-start-column="35" selection-end-line="731" selection-end-column="35" />
               <folding>
                 <element signature="n#style#0;n#input#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#input#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -123,8 +122,8 @@
       <file leaf-file-name="databaseFunctions.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/databaseFunctions.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="382">
-              <caret line="176" column="92" selection-start-line="176" selection-start-column="92" selection-end-line="176" selection-end-column="92" />
+            <state relative-caret-position="478">
+              <caret line="242" column="42" selection-start-line="242" selection-start-column="42" selection-end-line="242" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -156,8 +155,8 @@
         <option value="$PROJECT_DIR$/css/swipejs.css" />
         <option value="$PROJECT_DIR$/css/swiper.min.css" />
         <option value="$PROJECT_DIR$/css/style.css" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/js/databaseFunctions.js" />
+        <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
   </component>
@@ -372,7 +371,7 @@
       <workItem from="1471156326601" duration="4823000" />
       <workItem from="1471604082778" duration="225000" />
       <workItem from="1471775664627" duration="2000" />
-      <workItem from="1471838824229" duration="918000" />
+      <workItem from="1471838824229" duration="3949000" />
     </task>
     <task id="LOCAL-00001" summary="merge branck">
       <created>1465622603197</created>
@@ -626,11 +625,18 @@
       <option name="project" value="LOCAL" />
       <updated>1471839254814</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="editeTitle">
+      <created>1471840359217</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1471840359217</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31962000" />
+    <option name="totallyTimeSpent" value="34993000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1140,16 +1146,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/databaseFunctions.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="382">
-          <caret line="176" column="92" selection-start-line="176" selection-start-column="92" selection-end-line="176" selection-end-column="92" />
+        <state relative-caret-position="478">
+          <caret line="242" column="42" selection-start-line="242" selection-start-column="42" selection-end-line="242" selection-end-column="42" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
-          <caret line="554" column="8" selection-start-line="554" selection-start-column="8" selection-end-line="554" selection-end-column="8" />
+        <state relative-caret-position="484">
+          <caret line="731" column="35" selection-start-line="731" selection-start-column="35" selection-end-line="731" selection-end-column="35" />
           <folding>
             <element signature="n#style#0;n#input#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#input#1;n#body#0;n#html#0;n#!!top" expanded="true" />
