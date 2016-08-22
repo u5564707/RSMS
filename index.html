@@ -530,7 +530,7 @@ div {
 
 			});
 
-			$("#add_col").one('click',function() {
+			$("#add_col").on('click',function() {
 					var count = 1;
 					console.log("first time"+ count);
 					var thiscolumns = $("#samples-table").tabulator('getColumns');
@@ -555,6 +555,7 @@ div {
 							field: "" + newCol,
 							fitColumns: true,
 							sorter: "string",
+							editable:true,
 							editableTitle:true
 						});
 					}
@@ -571,6 +572,7 @@ div {
 					$('#samples-table').tabulator('setColumns', thiscolumns,false);
 					$("#samples-table").tabulator("setData", temp1);
 					newCol == "";
+				this.clearQueue();
 
 			});
 

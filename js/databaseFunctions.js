@@ -167,14 +167,14 @@ function getProcessAttributeNames(nodeID, callback) {
 			var columns = [];
 			if (nodeID == "rootNode") {
 				columns.push({ title : "Id", field : "id", sortable : true, sorter : "string", fitColumns : true,
-					editable : true });
+					editable : true , editableTitle:true});
 			} else {
 				columns.push({ title : "Id", field : "id", sortable : true, sorter : "string", fitColumns : true,
 					editable : false });
 			}
 			for (i = 0; i < process.attributeNames.length; i++) {
 				columns.push({ title : process.attributeNames[i], field : process.attributeNames[i], sortable : true,
-					sorter : "string", fitColumns : true, editable : true });
+					sorter : "string", fitColumns : true, editable : true,editableTitle:true });
 			}
 			callback(columns);
 		});
