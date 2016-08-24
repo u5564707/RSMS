@@ -127,7 +127,7 @@ div {
 					<button id="addNewProcess">AddNewProcess</button>
 					<button id="saveNewProcess">SaveProcess</button>
 					<ul id="ProcessList">
-						<li id="attriID-1"><a href="#">London</a></li>
+						<!--<li id="attriID-1"><a href="#">London</a></li>-->
 					</ul>
 
 				</nav>
@@ -717,9 +717,9 @@ div {
 				li.appendChild(document.createTextNode(t1));
 				li.setAttribute("id", t1); // added line
 				ul.appendChild(li);
-				alert(li.id);
+				//alert(li.id);
 
-			var samplesString2 = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
+			//var samplesString2 = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
 
 
 			var lis = $("#ProcessList li");
@@ -728,10 +728,11 @@ div {
 
 			console.log(par);
 
-			if (t1 != null && samplesString2 != null) {
-				processSamples(t1, par,
-						samplesString2);
-			}
+//			if (t1 != null && samplesString2 != null) {
+//				processSamples(t1, par+"[id]",
+//						samplesString2);
+//			}
+			addProcess(t1);
 
 			// update tree
 			$("#tree").empty();
@@ -744,23 +745,27 @@ div {
 		//click process ul
 		$("#ProcessList").on("click",function(){
 
-//			$("#attri-table").tabulator("clear");
+			//$("#attri-table").tabulator();
+			//$("#attri-table").tabulator("clear");
 
 			$("li").on("click",function() {
-			alert(this.id);
+				var thisCol = {title: ""+this.id, field: ""+this.id, sortable: true, sorter: "string", width: 200, editable: true};
+			//alert(this.id);
 			$("#attri-table").tabulator({
 				columns: [
-					{title: ""+this.id, field: "name", sortable: true, sorter: "string", width: 200, editable: true},
+					thisCol,
 
 				]
 			});
 
-			$("#attri-table").tabulator("setData", [
-				{id: 1, name: "Billy Bob"}
-			]);
-			this.clearQueue();
+
+				$('#attri-table').tabulator('setColumns', thisCol);
+
 				//$("#attri-table").tabulator("setData", x);
-				//$('#samples-table').tabulator('setColumns', thiscolumns,false);
+				thisCol = null;
+			this.clearQueue();
+
+
 
 		});
 			this.clearQueue();

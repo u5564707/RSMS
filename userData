@@ -1,5 +1,12 @@
 {"_id":"Source samples","attributeNames":[]}
-{"_id":"rootNode","parentID":null,"processName":"Source samples"}
+{"_id":"g1","attributeNames":[]}
+{"_id":"g2","attributeNames":[]}
+{"_id":"g3","attributeNames":[]}
+{"_id":"gold","attributeNames":[]}
+{"_id":"goo1","attributeNames":[]}
+{"_id":"goo2","attributeNames":[]}
 {"_id":"good","attributeNames":[]}
-{"parentID":"Source samples","processName":"good","_id":"7OnS2b5GpW4paiYw"}
-{"_id":{"nodeID":"7OnS2b5GpW4paiYw","sampleID":"0"}}
+{"_id":"good2","attributeNames":[]}
+{"parentID":"Source samples[id]","processName":"good","_id":"oh9l9B9vFmttNBRn"}
+{"_id":"rootNode","parentID":null,"processName":"Source samples"}
+{"_id":{"nodeID":"oh9l9B9vFmttNBRn","sampleID":"0"}}
