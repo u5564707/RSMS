@@ -217,7 +217,7 @@ function updateNodeSamples(nodeID, tableData) {
 	// remove all samples with nodeID
 	db.remove({ nodeID : nodeID }, { multi : true }, function(err, numRemoved) {
 
-		// insert sample documents //
+		// insert sample documents
 		for (i = 0; i < tableData.length; i++) {
 			var sample = { nodeID : nodeID, sampleID : tableData[i].id };
 			for ( var key in tableData[i]) {
@@ -236,7 +236,12 @@ function addProcess(processName) {
 }
 
 // update the process' attributeNames with attributeNames
-function addProcessAttributes(processName, attributeNames) {
+function updateProcessAttributes(processName, tableData) {
+	var attributeNames = [];
+	
+	for (i = 0; i < tableData.length; i++) {
+		//attributeNames[i] = 
+	}
 	db.update({ _id : processName }, { $set: { attributeNames : attributeNames } });
 }
 

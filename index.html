@@ -780,6 +780,15 @@ div {
 			$("#attri-table").tabulator("setData", x);
 			console.log(tosource(x));
 		});
+		
+		// save list of attributes
+		$("#saveNewAttributes").on('click',function() {
+			getLastClickedProcess(function(processID) {
+        if (processID != undefined && confirm('Save data?')) {
+          updateProcessAttributes(processID, $("#attri-table").tabulator("getData"));
+          processID.clearQueue();
+        }
+		}
 	</script>
 </body>
 </html>

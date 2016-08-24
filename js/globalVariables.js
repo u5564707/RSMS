@@ -1,6 +1,7 @@
 var projectOpened = false,
     openedFileLocation,
     lastClickedNode,
+    lastClickedProcess,
     tableEdited = false;
 
 function getOpenedFileLocation(callback) {
@@ -17,6 +18,14 @@ function getLastClickedNode(callback) {
 
 function setLastClickedNode(node) {
 	lastClickedNode = node;
+}
+
+function getLastClickedProcess(callback) {
+	callback(lastClickedProcess);
+}
+
+function setLastClickedProcess(process) {
+	lastClickedProcess = process;
 }
 
 function isTableEdited(callback) {
