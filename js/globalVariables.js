@@ -3,7 +3,7 @@ var projectOpened = false,
     lastClickedNode,
     lastClickedProcess,
     tableEdited = false;
-
+//
 function getOpenedFileLocation(callback) {
 	callback(openedFileLocation);
 }

@@ -118,8 +118,10 @@ function getNode(nodeID, callback) {
 function getChildNodes(nodeID, callback) {
 	db.find({ parentID : nodeID }, function(err, nodes) {
 		children = [];
+		
 		for (i = 0; i < nodes.length; i++) {
 			children.push({ text : { name : nodes[i].processName }, HTMLid : nodes[i]._id });
+			
 			getChildNodes(nodes[i]._id, function(grandChildren) {
 				children.push({ children : grandChildren });
 			});
@@ -130,7 +132,7 @@ function getChildNodes(nodeID, callback) {
 
 function getTreeConfig(callback) {
 	var chart_config = { chart : { container : "#tree" },
-		nodeStructure : { text : { name : "Source samples" }, HTMLid : "rootNode" } };
+			nodeStructure : { text : { name : "Source samples" }, HTMLid : "rootNode" } };
 
 	getChildNodes("rootNode", function(childNodes) {
 		chart_config.nodeStructure.children = childNodes;
@@ -155,16 +157,14 @@ function getAllProcessIDs(callback) {
 
 // return attributeNames of process with processID for the attributes table
 function getAttributeNames(processID, callback) {
-	db.findOne({ _id : nodeID }, function(err, node) {
-		db.findOne({ _id : node.processName }, function(err, process) {
-			var tableData = [];
+	db.findOne({ _id : processID }, function(err, process) {
+		var tableData = [];
 
-			for (i = 0; i < process.attributeNames.length; i++) {
-				tableData.push({ id : process.attributeNames[i] });
-			}
-			
-			callback(columns);
-		});
+		for (i = 0; i < process.attributeNames.length; i++) {
+			tableData.push({ id : i, name : process.attributeNames[i] });
+		}
+		
+		callback(tableData);
 	});
 }
 
@@ -173,6 +173,7 @@ function getProcessAttributeNames(nodeID, callback) {
 	db.findOne({ _id : nodeID }, function(err, node) {
 		db.findOne({ _id : node.processName }, function(err, process) {
 			var columns = [];
+			
 			if (nodeID == "rootNode") {
 				columns.push({ title : "Id", field : "id", sortable : true, sorter : "string", fitColumns : true,
 					editable : true , editableTitle:true});
@@ -180,10 +181,12 @@ function getProcessAttributeNames(nodeID, callback) {
 				columns.push({ title : "Id", field : "id", sortable : true, sorter : "string", fitColumns : true,
 					editable : false });
 			}
+			
 			for (i = 0; i < process.attributeNames.length; i++) {
 				columns.push({ title : process.attributeNames[i], field : process.attributeNames[i], sortable : true,
 					sorter : "string", fitColumns : true, editable : true,editableTitle:true });
 			}
+			
 			callback(columns);
 		});
 	});
@@ -193,17 +196,22 @@ function getProcessAttributeNames(nodeID, callback) {
 function getNodeSamples(nodeID, callback) {
 	db.find({ nodeID : nodeID }, function(err, samples) {
 		var tableData = [];
+		
 		for (i = 0; i < samples.length; i++) {
 			var sample = { id : samples[i].sampleID };
-			for ( var key in samples[i]) {
+			
+			for (var key in samples[i]) {
+				
 				// make sure key is not metadata
 				if (Object.prototype.hasOwnProperty.call(samples[i], key) && key != "_id" && key != "nodeID"
 						&& key != "sampleID") {
 					sample[key] = samples[i][key];
 				}
 			}
+			
 			tableData.push(sample);
 		}
+		
 		callback(tableData);
 	});
 }
@@ -211,9 +219,11 @@ function getNodeSamples(nodeID, callback) {
 // update the process of nodeID given tabulator tableColumns
 function updateProcess(nodeID, tableColumns) {
 	var columns = [];
+	
 	for (i = 1; i < tableColumns.length; i++) {
 		columns.push(tableColumns[i].title);
 	}
+	
 	db.findOne({ _id : nodeID }, function(err, node) {
 		db.update({ _id : node.processName }, { attributeNames : columns }, {});
 	});
@@ -228,11 +238,13 @@ function updateNodeSamples(nodeID, tableData) {
 		// insert sample documents
 		for (i = 0; i < tableData.length; i++) {
 			var sample = { nodeID : nodeID, sampleID : tableData[i].id };
+			
 			for ( var key in tableData[i]) {
 				if (Object.prototype.hasOwnProperty.call(tableData[i], key) && key != "_id" && key != "id") {
 					sample[key] = tableData[i][key];
 				}
 			}
+			
 			db.insert(sample);
 		}
 	});
@@ -248,15 +260,18 @@ function updateProcessAttributes(processName, tableData) {
 	var attributeNames = [];
 	
 	for (i = 0; i < tableData.length; i++) {
-		//attributeNames[i] = 
+		attributeNames[i] = tableData[i].name;
 	}
+	
 	db.update({ _id : processName }, { $set: { attributeNames : attributeNames } });
 }
 
 function processSamples(processName, parentID, samplesString) {
 	db.insert({ _id : processName, attributeNames : [] });
+	
 	db.insert({ parentID : parentID, processName : processName }, function(err, newNode) {
 		var sampleIDs = samplesString.split(',');
+		
 		for (i = 0; i < sampleIDs.length; i++) {
 			db.insert({ _id : { nodeID : newNode._id, sampleID : sampleIDs[i] } });
 		}

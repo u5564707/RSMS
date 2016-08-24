@@ -9,8 +9,9 @@
 <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="css/tabulator.css">
 <link rel="stylesheet" href="css/jquery.contextMenu.min.css">
-	<link href="css/style.css" rel="stylesheet"/>
-	<link rel="stylesheet" href="css/swiper.min.css">
+<link href="css/style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="css/swiper.min.css">
+
 <style>
 div {
 	width: fit-content;
@@ -51,7 +52,6 @@ div {
 	color:#fff;
 	background: #007aff;
 }
-
 </style>
 
 <script src="js/raphael.js"></script>
@@ -68,6 +68,7 @@ div {
 			<li><a href='#' title='Maximize' id='windowControlMaximize'></a></li>
 			<li><a href='#' title='Close' id='windowControlClose'></a></li>
 		</ul>
+		
 		<div id="navi-btn">
 			<button id="main">Main</button>
 			<button id="process">Process</button>
@@ -77,9 +78,7 @@ div {
 	<input style="display: none;" id="openFileDialog" type="file" />
 	<input style="display: none;" id="saveAsFileDialog" type="file" nwsaveas />
 
-
 	<!-- Swiper -->
-	 <!--swiper container-->
 	<div class="swiper-container">
 		<div class="swiper-wrapper">
 			<div class="swiper-slide">
@@ -91,8 +90,8 @@ div {
 				<button id="add_table">Add new row</button>
 				<!--<button id="delete_table">Delete Row</button>-->
 				<!--<button id="add_col">Add new column</button>-->
-				<!--<button id="del_col">Delete column</button>-->
 				<button id="delete_col">Delete column</button>
+				
 				<form class="forms" id='form1'>
 					<input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
 				</form>
@@ -107,6 +106,7 @@ div {
 					<input type="text" id="col_del" name="del_col" placeholder="Choose column name">
 				</form>
 				<button class="buttons" id="del_col">Delete column</button>
+				
 				<!--<form id='form3'>-->
 				<!--<input type="text" id="col_delete" name="delet_col" placeholder="column number">-->
 				<!--</form>-->
@@ -118,36 +118,25 @@ div {
 			<div class="swiper-slide">
 				<div class="container">
 
-				<!--<header>-->
-					<!--<h1 class="new-column">Process and attributes</h1>-->
-				<!--</header>-->
-
-				<nav>
-					<h2 id="processID">Process list</h2>
-					<button id="addNewProcess">AddNewProcess</button>
-					<button id="saveNewProcess">SaveProcess</button>
-					<ul id="ProcessList">
-						<!--<li id="attriID-1"><a href="#">London</a></li>-->
-					</ul>
-
-				</nav>
-
-				<article>
-					<p id="attriID">Attributes</p>
-					<!--<h1>London</h1>-->
-					<!--<p>London is the capital city of England. It is the most populous city in the  United Kingdom, with a metropolitan area of over 13 million inhabitants.</p>-->
-					<!--<p>Standing on the River Thames, London has been a major settlement for two millennia, its history going back to its founding by the Romans, who named it Londinium.</p>-->
-					<button id="addNewAttribute">Add New Attribute</button>
-					<button id="saveNewAttributes">SaveAttributes</button>
-					<button id="del-attri-table">DeleteAttributes</button>
-					<div class="attri-tables" id="attri-table"></div>
-				</article>
-
-				<!--<footer>Copyright © W3Schools.com</footer>-->
-
+					<!--<header>-->
+						<!--<h1 class="new-column">Process and attributes</h1>-->
+					<!--</header>-->
+	
+					<nav>
+						<h2 id="processID">Process list</h2>
+						<button id="addNewProcess">AddNewProcess</button>
+						<ul id="ProcessList"></ul>
+					</nav>
+	
+					<article>
+						<p id="attriID">Attributes</p>
+						<button id="addNewAttribute">Add New Attribute</button>
+						<button id="del-attri-table">DeleteAttributes</button>
+						<button id="saveNewAttributes">SaveAttributes</button>
+						<div class="attri-tables" id="attri-table"></div>
+					</article>
+				</div>
 			</div>
-			</div>
-
 		</div>
 		<!-- Add Pagination -->
 		<!--<div class="swiper-pagination"></div>-->
@@ -155,8 +144,8 @@ div {
 
 	<!-- Initialize Swiper -->
 	<script src="js/swiper.min.js"></script>
+	
 	<script>
-
 		var swiper = new Swiper('.swiper-container', {
 			pagination: '.swiper-pagination',
 			paginationClickable: true,
@@ -216,9 +205,10 @@ div {
 		$("#delete_col").hide();
 		$("#del_col").hide();
 		$("#samples-table").hide();
-		//        document.getElementsByClassName("buttons").style.visibility = "hidden";
-		//        document.getElementsByClassName("forms").style.visibility = "hidden";
-		//        document.getElementsByClassName("table").style.visibility = "hidden";
+		
+		//document.getElementsByClassName("buttons").style.visibility = "hidden";
+		//document.getElementsByClassName("forms").style.visibility = "hidden";
+		//document.getElementsByClassName("table").style.visibility = "hidden";
 
 		var fs = require('fs'), nw = require('nw.gui'), tosource = require('tosource'), win = nw.Window
 				.get();
@@ -280,20 +270,21 @@ div {
 		fileMenu.append(new nw.MenuItem({
 			label : 'Open Project',
 			click : function() {
-
 				var chooser = document.querySelector('#openFileDialog');
 
 				console.log("browsing files...");
 				chooser.addEventListener("change", function(evt) {
 					console.log(this.value + " selected!");
+					
 					document.getElementById("file-name").innerText = this.value;
 					document.title = this.value;
+					
 					console.log("checking file...");
 					//if (this.value.includes(".") || this.value == "") {
 					if (this.value == "") {
 						console.log("invalid file!");
 
-						alert("Please load a valid project file");
+						//alert("Please load a valid project file"); // uncomment when queueing problem is fixed
 					} else {
 						console.log("valid file!");
 
@@ -325,13 +316,11 @@ div {
 								this.value = null; // reset file location
 							}, false);
 
-	
 							chooser.click();
 
 						} else {
 							copyFromUserData(location);
 						}
-
 					});
 				}
 			}
@@ -344,22 +333,6 @@ div {
 				if (!projectOpened) {
           alert("No project opened!");
         } else {
- //Another way to save
-//					var fs = require("fs");
-//
-//					var data = fs.readFileSync('userData');
-//					fs.writeFile('input', data,  function(err) {
-//						if (err) {
-//							return console.error(err);
-//						}
-//
-//						fs.readFile('input', function (err, data) {
-//							if (err) {
-//								return console.error(err);
-//							}
-//
-//						});
-//					});
 					var chooser = document.querySelector('#saveAsFileDialog');
 
 					chooser.addEventListener("change", function(evt) {
@@ -367,7 +340,7 @@ div {
 							copyFromUserData(this.value);
 							setOpenedFileLocation(this.value);
 							this.value = null; // reset file location
-															}
+						}
 					}, false);
 
 					chooser.click();
@@ -387,114 +360,107 @@ div {
 			});
 
 			$.contextMenu({
-						selector : ".node",
-						trigger : 'left',
-						items : {
-							view : {
-								name : "View Samples",
-								callback : function(key, opt) {
-									// $("#samples-table").tabulator("clear");
+				selector : ".node",
+				trigger : 'left',
+				items : {
+					view : {
+						name : "View Samples",
+						callback : function(key, opt) {
+                $("#samples-table").show();
 
-									// update columns
+							//document.getElementsByClassName("table").style.display = "block"
+							//document.getElementsByClassName("table").style.visibility = "visible";
+							
+							// update columns
+							getProcessAttributeNames(opt.$trigger.attr("id"), function(columns) {
+								$("#samples-table").tabulator("setColumns", columns, false);
+							});
 
-									$("#samples-table").show();
-									//                document.getElementsByClassName("table").style.display = "block";
-									//                document.getElementsByClassName("table").style.visibility = "visible";
-									getProcessAttributeNames(opt.$trigger.attr("id"),
-											function(columns) {
-												$("#samples-table").tabulator("setColumns",
-														columns, false);
-											});
-
-									// save table then update data
-									getNodeSamples(opt.$trigger.attr("id"), function(samples) {
-										getLastClickedNode(function(nodeID) {
-											isTableEdited(function(edited) {
-												if (nodeID != undefined && edited
-														&& confirm('Save data?')) {
-													updateProcess(nodeID, $("#samples-table")
-															.tabulator("getColumns"));
-													updateNodeSamples(nodeID, $("#samples-table")
-															.tabulator("getData"));
-												}
-											});
-										});
-
-										setTimeout(function() { // temporary fix for data loading issue
-											$("#samples-table").tabulator("setData", samples);
-										}, 10);
-
-										setLastClickedNode(opt.$trigger.attr("id"));
-										setTableEdited(false);
+							// save table then update data
+							getNodeSamples(opt.$trigger.attr("id"), function(samples) {
+								getLastClickedNode(function(nodeID) {
+									isTableEdited(function(edited) {
+										if (nodeID != undefined && edited && confirm('Save data?')) {
+											updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
+											updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
+										}
 									});
+								});
 
-									$("#samples-table").tabulator("redraw");
-									$("#samples-table").tabulator("setPageSize", 5); // show 50 rows per page
+								setTimeout(function() { // temporary fix for data loading issue
+									$("#samples-table").tabulator("setData", samples);
+								}, 10);
 
-									// show table operations
-									if (opt.$trigger.attr("id") == "rootNode") {
-										$("#add_table").show();
-									} else {
-										$("#add_table").hide();
-									}
-									$("#del_row").show();
-									$("#save_table").show();
-									$("#form1").show();
-									$("#form2").show();
-									$("#add_col").show();
-									$("#form3").show();
-									$("#del_col").show();
-									//                document.getElementsByClassName("forms").style.display = "block";
-									//                document.getElementById("forms").style.visibility = "visible";
-									//                document.getElementById("buttons").style.display = "block";
-									//                document.getElementById("buttons").style.visibility = "visible";
+								setLastClickedNode(opt.$trigger.attr("id"));
+								setTableEdited(false);
+							});
 
-								}
-							},
-							//        Save: {
-							//          name: "Save",
-							//          callback: function(key, opt) {
-							//            getNodeSamples(opt.$trigger.attr("id"), function(samples) {
-							//              getLastClickedNode(function(nodeID) {
-							//                var tempGetData = $("#samples-table").tabulator("getData");
-							//                var tempGetCol = $("#samples-table").tabulator("getColumn");
-							//                updateNodeSamples(nodeID, tempGetData);
-							//                $("#samples-table").tabulator("setData",tempGetData);
-							//                $("#samples-table").tabulator("setColumns",tempGetCol);
-							//              });
-							//              setLastClickedNode(opt.$trigger.attr("id"));
-							//             // $("#samples-table").tabulator("setData", samples);
-							//              setTableEdited(false);
-							//            });
-							//          }
-							//        },
-							processSamples : {
-								name : "process samples",
-								callback : function(key, opt) {
-									var processName = prompt("Process name:");
-									var samplesString = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
+							$("#samples-table").tabulator("redraw");
+							$("#samples-table").tabulator("setPageSize", 5); // show 50 rows per page
 
-									if (processName != null && samplesString != null) {
-										processSamples(processName, opt.$trigger.attr("id"),
-												samplesString);
-									}
-
-									// update tree
-									$("#tree").empty();
-									getTreeConfig(function(config) {
-										new Treant(config);
-									});
-								}
+							// show table operations
+							if (opt.$trigger.attr("id") == "rootNode") {
+								$("#add_table").show();
+							} else {
+								$("#add_table").hide();
 							}
+							$("#del_row").show();
+							$("#save_table").show();
+							$("#form1").show();
+							$("#form2").show();
+							$("#add_col").show();
+							$("#form3").show();
+							$("#del_col").show();
+							
+							//document.getElementsByClassName("forms").style.display = "block";
+							//document.getElementById("forms").style.visibility = "visible";
+							//document.getElementById("buttons").style.display = "block";
+							//document.getElementById("buttons").style.visibility = "visible";
 						}
-					});
+					},
+					//        Save: {
+					//          name: "Save",
+					//          callback: function(key, opt) {
+					//            getNodeSamples(opt.$trigger.attr("id"), function(samples) {
+					//              getLastClickedNode(function(nodeID) {
+					//                var tempGetData = $("#samples-table").tabulator("getData");
+					//                var tempGetCol = $("#samples-table").tabulator("getColumn");
+					//                updateNodeSamples(nodeID, tempGetData);
+					//                $("#samples-table").tabulator("setData",tempGetData);
+					//                $("#samples-table").tabulator("setColumns",tempGetCol);
+					//              });
+					//              setLastClickedNode(opt.$trigger.attr("id"));
+					//             // $("#samples-table").tabulator("setData", samples);
+					//              setTableEdited(false);
+					//            });
+					//          }
+					//        },
+					processSamples : {
+						name : "process samples",
+						callback : function(key, opt) {
+							var processName = prompt("Process name:"),
+							    samplesString = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
+
+							if (processName != null && samplesString != null) {
+								processSamples(processName, opt.$trigger.attr("id"),
+										samplesString);
+							}
+
+							// update tree
+							$("#tree").empty();
+							getTreeConfig(function(config) {
+								new Treant(config);
+							});
+						}
+					}
+				}
+			});
 
 			// define table
 			$("#samples-table").tabulator({
 				fitColumns : true,
 				columns : [],
 				pagination : true,
-
 				rowEdit : function(id, data, row) {
 					setTableEdited(true);
 				}
@@ -508,8 +474,6 @@ div {
 						setTableEdited(false);
 						nodeID.clearQueue();
 					}
-
-
 				});
 			});
 
@@ -528,7 +492,6 @@ div {
 			// add rows
 			$("#add_table").click(function() {
 				$("#samples-table").tabulator("addRow");
-
 			});
 
 			$("#add_col").on('click',function() {
@@ -679,7 +642,7 @@ div {
 				console.log(tosource(x));
 			});
 			
-			// populate process list //
+			// populate process list
 	    getAllProcessIDs(function(ids) {
 	      $("#ProcessList").empty();
 
@@ -741,30 +704,29 @@ div {
 			});
 		});
 
-
-		//click process ul
+		// click process ul
 		$("#ProcessList").on("click",function(){
-
-			//$("#attri-table").tabulator();
-			//$("#attri-table").tabulator("clear");
+			console.log("list clicked");
 
 			$("li").on("click",function() {
-				var thisCol = {title: ""+this.id, field: ""+this.id, sortable: true, sorter: "string", width: 200, editable: true};
-				$('#attri-table').tabulator('setColumns', thisCol);
-				thisCol = null;
+				console.log("list element clicked");
 				
-				getAttributeNames(this.id, function(attributeNames) {
+				// define table
+	      $("#attri-table").tabulator({
+	        columns : [{ title: ""+this.innerText, field: "name", sortable: true, sorter: "string", width: 200, editable: true }]
+	      });
+
+				getAttributeNames(this.innerText, function(attributeNames) {
 					$("#attri-table").tabulator("setData", attributeNames);
 				});
 				
-			this.clearQueue();
-
-
-
+				setLastClickedProcess(this.innerText);
+				
+				//this.clearQueue();
+			});
+			
+			//this.clearQueue();
 		});
-			this.clearQueue();
-		});
-
 
 		$("#del-attri-table").on('click',function() {
 			var bla2 = $("#txt_name").val();
@@ -772,8 +734,6 @@ div {
 				bla2 = prompt("Please enter the row");
 			}
 			$("#attri-table").tabulator("deleteRow", bla2);
-
-
 
 			var x = $("#attri-table").tabulator("getData");
 			$("#attri-table").tabulator("setData", x);
@@ -785,7 +745,7 @@ div {
 			getLastClickedProcess(function(processID) {
         if (processID != undefined && confirm('Save data?')) {
           updateProcessAttributes(processID, $("#attri-table").tabulator("getData"));
-          processID.clearQueue();
+          //processID.clearQueue();
         }
 			});
 		});
