@@ -750,19 +750,13 @@ div {
 
 			$("li").on("click",function() {
 				var thisCol = {title: ""+this.id, field: ""+this.id, sortable: true, sorter: "string", width: 200, editable: true};
-			//alert(this.id);
-			$("#attri-table").tabulator({
-				columns: [
-					thisCol,
-
-				]
-			});
-
-
 				$('#attri-table').tabulator('setColumns', thisCol);
-
-				//$("#attri-table").tabulator("setData", x);
 				thisCol = null;
+				
+				getAttributeNames(this.id, function(attributeNames) {
+					$("#attri-table").tabulator("setData", attributeNames);
+				});
+				
 			this.clearQueue();
 
 

@@ -153,14 +153,22 @@ function getAllProcessIDs(callback) {
 	});
 }
 
-// return the attributeNames array of process with processID
+// return attributeNames of process with processID for the attributes table
 function getAttributeNames(processID, callback) {
-	db.findOne({ _id : processID }, function(err, process) {
-		callback(process.attributeNames);
+	db.findOne({ _id : nodeID }, function(err, node) {
+		db.findOne({ _id : node.processName }, function(err, process) {
+			var tableData = [];
+
+			for (i = 0; i < process.attributeNames.length; i++) {
+				tableData.push({ id : process.attributeNames[i] });
+			}
+			
+			callback(columns);
+		});
 	});
 }
 
-// return all attributeNames of a nodeID's process in a tabulator array structure
+// return all attributeNames of a nodeID's process in a tabulator column structure for the samples table
 function getProcessAttributeNames(nodeID, callback) {
 	db.findOne({ _id : nodeID }, function(err, node) {
 		db.findOne({ _id : node.processName }, function(err, process) {
