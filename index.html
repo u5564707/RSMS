@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="css/tabulator.css">
 <link rel="stylesheet" href="css/jquery.contextMenu.min.css">
-<link href="css/style.css" rel="stylesheet"/>
 <link rel="stylesheet" href="css/swiper.min.css">
 
 <style>
@@ -86,26 +85,25 @@ div {
 				<!--swipe contents inside-->
 				<div class="chart" id="tree"></div>
 
-				<button id="save_table">Save</button>
-				<button id="add_table">Add new row</button>
+				<button id="add_table" style="display: none">Add new row</button>
 				<!--<button id="delete_table">Delete Row</button>-->
-				<!--<button id="add_col">Add new column</button>-->
-				<button id="delete_col">Delete column</button>
+				<!--<button id="add_col">Add new column</button><!--
+				<button id="delete_col" style="display: none">Delete column</button>
 				
-				<form class="forms" id='form1'>
+				<!--<form class="forms" id='form1' style="display: none">
 					<input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
 				</form>
-				<button class="buttons" id="del_row">Delete Row</button>
+				<button class="buttons" id="del_row" style="display: none">Delete Row</button>-->
 
-				<form class="forms" id='form2'>
+				<form class="forms" id='form2' style="display: none">
 					<input type="text" id="col_name" name="add_col" placeholder="new column name">
 				</form>
-				<button class="buttons" id="add_col">Add new column</button>
+				<button class="buttons" id="add_col" style="display: none">Add new column</button>
 
-				<form class="forms" id='form3'>
+				<form class="forms" id='form3' style="display: none">
 					<input type="text" id="col_del" name="del_col" placeholder="Choose column name">
 				</form>
-				<button class="buttons" id="del_col">Delete column</button>
+				<button class="buttons" id="del_col" style="display: none">Delete column</button>
 				
 				<!--<form id='form3'>-->
 				<!--<input type="text" id="col_delete" name="delet_col" placeholder="column number">-->
@@ -123,16 +121,16 @@ div {
 					<!--</header>-->
 	
 					<nav>
-						<h2 id="processID">Process list</h2>
-						<button id="addNewProcess">AddNewProcess</button>
+						<h2 id="processID" style="display: none">Process list</h2>
+						<button id="addNewProcess" style="display: none">AddNewProcess</button>
 						<ul id="ProcessList"></ul>
 					</nav>
 	
 					<article>
-						<p id="attriID">Attributes</p>
-						<button id="addNewAttribute">Add New Attribute</button>
-						<button id="del-attri-table">DeleteAttributes</button>
-						<button id="saveNewAttributes">SaveAttributes</button>
+						<p id="attriID" style="display: none">Attributes</p>
+						<button id="addNewAttribute" style="display: none">Add New Attribute</button>
+						<!--<button id="del-attri-table" style="display: none">DeleteAttributes</button>-->
+						<button id="saveAttributes" style="display: none">SaveAttributes</button>
 						<div class="attri-tables" id="attri-table"></div>
 					</article>
 				</div>
@@ -195,23 +193,10 @@ div {
 	<script>
 		require('nw.gui').Window.get().showDevTools(); // open DevTools
 
-		$("#save_table").hide();
-		$("#add_table").hide();
-		$("#form1").hide();
-		$("#del_row").hide();
-		$("#add_col").hide();
-		$("#form2").hide();
-		$("#form3").hide();
-		$("#delete_col").hide();
-		$("#del_col").hide();
-		$("#samples-table").hide();
-		
-		//document.getElementsByClassName("buttons").style.visibility = "hidden";
-		//document.getElementsByClassName("forms").style.visibility = "hidden";
-		//document.getElementsByClassName("table").style.visibility = "hidden";
-
-		var fs = require('fs'), nw = require('nw.gui'), tosource = require('tosource'), win = nw.Window
-				.get();
+		var fs       = require('fs'),
+		    nw       = require('nw.gui'),
+		    tosource = require('tosource'),
+		    win      = nw.Window.get();
 
 		win.isMaximized = false;
 
@@ -262,7 +247,21 @@ div {
 				initialiseUserData();
 				setOpenedFileLocation(null);
 				projectOpened = true;
+				
+				$("#add_table").hide();
+				$("#form2").hide();
+        $("#add_col").hide();
+        $("#form3").hide();
+        $("#del_col").hide();
 				$("#samples-table").hide();
+				
+				$("#processID").show();
+				$("#addNewProcess").show();
+				
+				$("#attri-table").hide();
+	      $("#attriID").hide();
+	      $("#addNewAttribute").hide();
+	      $("#saveAttributes").hide();
 			}
 		}));
 
@@ -291,7 +290,21 @@ div {
 						copyToUserData(this.value);
 						setOpenedFileLocation(this.value);
 						projectOpened = true;
-						$("#samples-table").hide();
+						
+						$("#add_table").hide();
+						$("#form2").hide();
+		        $("#add_col").hide();
+		        $("#form3").hide();
+		        $("#del_col").hide();
+		        $("#samples-table").hide();
+		        
+		        $("#processID").show();
+		        $("#addNewProcess").show();
+		        
+		        $("#attri-table").hide();
+		        $("#attriID").hide();
+		        $("#addNewAttribute").hide();
+		        $("#saveAttributes").hide();
 					}
 					this.value = null; // reset file location
 				}, false);
@@ -304,25 +317,28 @@ div {
 		fileMenu.append(new nw.MenuItem({
 			label : 'Save',
 			click : function() {
-				if (!projectOpened) {
-					alert("No project opened!");
-				} else {
-					getOpenedFileLocation(function(location) {
-						if (location == null) {
-							var chooser = document.querySelector('#saveAsFileDialog');
-	
-							chooser.addEventListener("change", function(evt) {
-								copyFromUserData(this.value);
-								this.value = null; // reset file location
-							}, false);
-
-							chooser.click();
-
-						} else {
-							copyFromUserData(location);
-						}
+				getLastClickedNode(function(nodeID) {
+					saveTable(nodeID, function() {
+	          if (!projectOpened) {
+	            alert("No project opened!");
+	          } else {
+	            getOpenedFileLocation(function(location) {
+	              if (location == null) {
+	                var chooser = document.querySelector('#saveAsFileDialog');
+	    
+	                chooser.addEventListener("change", function(evt) {
+	                  copyFromUserData(this.value);
+	                  this.value = null; // reset file location
+	                }, false);
+	  
+	                chooser.click();
+	              } else {
+	                copyFromUserData(location);
+	              }
+	            });
+	          }
 					});
-				}
+				});
 			}
 		}));
 
@@ -330,24 +346,36 @@ div {
 		fileMenu.append(new nw.MenuItem({
 			label : 'Save As',
 			click : function() {
-				if (!projectOpened) {
-          alert("No project opened!");
-        } else {
-					var chooser = document.querySelector('#saveAsFileDialog');
-
-					chooser.addEventListener("change", function(evt) {
-						if (this.value != "") {
-							copyFromUserData(this.value);
-							setOpenedFileLocation(this.value);
-							this.value = null; // reset file location
-						}
-					}, false);
-
-					chooser.click();
-        }
+				getLastClickedNode(function(nodeID) {
+					saveTable(nodeID, function() {
+						if (!projectOpened) {
+	            alert("No project opened!");
+	          } else {
+	            var chooser = document.querySelector('#saveAsFileDialog');
+	  
+	            chooser.addEventListener("change", function(evt) {
+	              if (this.value != "") {
+	                copyFromUserData(this.value);
+	                setOpenedFileLocation(this.value);
+	                this.value = null; // reset file location
+	              }
+	            }, false);
+	  
+	            chooser.click();
+	          }
+	        });
+				});
 			}
 		}));
 
+		// exit
+    fileMenu.append(new nw.MenuItem({
+      label : 'Exit',
+      click : function() {
+        win.close();
+      }
+    }));
+		
 		// Assign to window
 		nw.Window.get().menu = windowMenu;
 
@@ -359,6 +387,8 @@ div {
 				new Treant(chart_config);
 			});
 
+			$
+			
 			$.contextMenu({
 				selector : ".node",
 				trigger : 'left',
@@ -366,33 +396,27 @@ div {
 					view : {
 						name : "View Samples",
 						callback : function(key, opt) {
-                $("#samples-table").show();
+              $("#samples-table").show();
 
 							//document.getElementsByClassName("table").style.display = "block"
 							//document.getElementsByClassName("table").style.visibility = "visible";
-							
-							// update columns
-							getProcessAttributeNames(opt.$trigger.attr("id"), function(columns) {
-								$("#samples-table").tabulator("setColumns", columns, false);
-							});
 
 							// save table then update data
-							getNodeSamples(opt.$trigger.attr("id"), function(samples) {
-								getLastClickedNode(function(nodeID) {
-									isTableEdited(function(edited) {
-										if (nodeID != undefined && edited && confirm('Save data?')) {
-											updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
-											updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
-										}
-									});
+							getLastClickedNode(function(nodeID) {
+								saveTable(nodeID, function() {
+									
+									// update columns
+		              getProcessAttributeNames(opt.$trigger.attr("id"), function(columns) {
+		                $("#samples-table").tabulator("setColumns", columns, false);
+		                
+		                // update samples (relies on columns to be set)
+		                getNodeSamples(opt.$trigger.attr("id"), function(samples) {
+	                    $("#samples-table").tabulator("setData", samples);
+		                });
+		              });
+									
+									setLastClickedNode(opt.$trigger.attr("id"));
 								});
-
-								setTimeout(function() { // temporary fix for data loading issue
-									$("#samples-table").tabulator("setData", samples);
-								}, 10);
-
-								setLastClickedNode(opt.$trigger.attr("id"));
-								setTableEdited(false);
 							});
 
 							$("#samples-table").tabulator("redraw");
@@ -404,9 +428,8 @@ div {
 							} else {
 								$("#add_table").hide();
 							}
-							$("#del_row").show();
-							$("#save_table").show();
-							$("#form1").show();
+							//$("#del_row").show();
+							//$("#form1").show();
 							$("#form2").show();
 							$("#add_col").show();
 							$("#form3").show();
@@ -418,25 +441,8 @@ div {
 							//document.getElementById("buttons").style.visibility = "visible";
 						}
 					},
-					//        Save: {
-					//          name: "Save",
-					//          callback: function(key, opt) {
-					//            getNodeSamples(opt.$trigger.attr("id"), function(samples) {
-					//              getLastClickedNode(function(nodeID) {
-					//                var tempGetData = $("#samples-table").tabulator("getData");
-					//                var tempGetCol = $("#samples-table").tabulator("getColumn");
-					//                updateNodeSamples(nodeID, tempGetData);
-					//                $("#samples-table").tabulator("setData",tempGetData);
-					//                $("#samples-table").tabulator("setColumns",tempGetCol);
-					//              });
-					//              setLastClickedNode(opt.$trigger.attr("id"));
-					//             // $("#samples-table").tabulator("setData", samples);
-					//              setTableEdited(false);
-					//            });
-					//          }
-					//        },
 					processSamples : {
-						name : "process samples",
+						name : "Process Samples",
 						callback : function(key, opt) {
 							var processName = prompt("Process name:"),
 							    samplesString = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
@@ -459,22 +465,8 @@ div {
 			// define table
 			$("#samples-table").tabulator({
 				fitColumns : true,
-				columns : [],
-				pagination : true,
-				rowEdit : function(id, data, row) {
-					setTableEdited(true);
-				}
-			});
-
-			$("#save_table").click(function() {
-				getLastClickedNode(function(nodeID) {
-					if (nodeID != undefined && confirm('Save data?')) {
-						updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
-						updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
-						setTableEdited(false);
-						nodeID.clearQueue();
-					}
-				});
+				columns : []
+				//pagination : true, // uncomment for final version
 			});
 
 			// delete a column
@@ -491,7 +483,7 @@ div {
 
 			// add rows
 			$("#add_table").click(function() {
-				$("#samples-table").tabulator("addRow");
+				$("#samples-table").tabulator("addRow", { id: ""+samplesTableRowCount++ });
 			});
 
 			$("#add_col").on('click',function() {
@@ -503,7 +495,7 @@ div {
 					var newCol = $("#col_name").val();
 
 					if ($("#col_name").val() == "") {
-						newCol = prompt("Please enter the column");
+						newCol = prompt("Please enter the column name");
 						count++;
 						console.log("Second time" + count);
 					}
@@ -536,7 +528,7 @@ div {
 					$('#samples-table').tabulator('setColumns', thiscolumns,false);
 					$("#samples-table").tabulator("setData", temp1);
 					newCol == "";
-				this.clearQueue();
+				//this.clearQueue();
 
 			});
 
@@ -592,13 +584,13 @@ div {
 //			});
 
 			//delete column
-			$("#del_col").one('click',function() {
+			$("#del_col").on('click',function() {
 				var tmp = $("#col_del").val();
 				if (tmp == "") {
-					tmp = prompt("Please enter the column to delete");
+					tmp = prompt("Please enter the name of the column to delete");
 				}
 				$("#samples-table").tabulator("deleteColumn", tmp);
-				var thiscolumns = $("#samples-table").tabulator('getColumns');
+				/*var thiscolumns = $("#samples-table").tabulator('getColumns');
 				var temp1 = $("#samples-table").tabulator("getData");
 
 				getLastClickedNode(function(nodeID) {
@@ -615,10 +607,10 @@ div {
 				$('#samples-table').tabulator('setColumns', thiscolumns);
 				var x = $("#samples-table").tabulator("getData");
 				$("#samples-table").tabulator("setData", x);
-				console.log(tosource(x));
+				console.log(tosource(x));*/
 			});
 
-			// delete row
+			/*// delete row
 			$("#delete_table").one('click',function() {
 				var bla = $("#txt_name").val();
 				if (bla == "") {
@@ -640,7 +632,7 @@ div {
 				var x = $("#samples-table").tabulator("getData");
 				$("#samples-table").tabulator("setData", x);
 				console.log(tosource(x));
-			});
+			});*/
 			
 			// populate process list
 	    getAllProcessIDs(function(ids) {
@@ -652,6 +644,21 @@ div {
 	    });
 		};
 
+		// saves the current state of samples-table
+		function saveTable(nodeID, callback) {
+      if (nodeID != null) {
+        console.log("saving column headers for node "+nodeID+"...");
+        updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
+        console.log("saved!");
+        
+        console.log("saving sample data for node "+nodeID+"...");
+        updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
+        console.log("saved!");
+      }
+
+      callback();
+    }
+		
 		//click the first list demo
 //		$("#attriID-1").one('click',function() {
 //			$("#attri-table").tabulator({
@@ -668,33 +675,34 @@ div {
 		
 		// add new attribute
 		$("#addNewAttribute").click(function() {
-			$("#attri-table").tabulator("addRow");
+			$("#attri-table").tabulator("addRow", { id: attriTableRowCount, name: "attr"+attriTableRowCount++ });
 		});
 
 		//add new process
 		$("#addNewProcess").click(function(){
 
-				var ul = document.getElementById("ProcessList");
-				var li = document.createElement("li");
-				var t1 = prompt("Name of the new process?");
-				li.appendChild(document.createTextNode(t1));
-				li.setAttribute("id", t1); // added line
-				ul.appendChild(li);
-				//alert(li.id);
+			var ul = document.getElementById("ProcessList");
+			var li = document.createElement("li");
+			var t1 = prompt("Name of the new process?");
+			li.appendChild(document.createTextNode(t1));
+			li.setAttribute("id", t1); // added line
+			ul.appendChild(li);
+			//alert(li.id);
 
 			//var samplesString2 = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
 
 
 			var lis = $("#ProcessList li");
 
-			var par = ul.childNodes[lis.length-2].innerText;
+			//var par = ul.childNodes[lis.length-2].innerText;
 
-			console.log(par);
+			//console.log(par);
 
 //			if (t1 != null && samplesString2 != null) {
 //				processSamples(t1, par+"[id]",
 //						samplesString2);
 //			}
+      console.log("adding process"+t1);
 			addProcess(t1);
 
 			// update tree
@@ -702,6 +710,11 @@ div {
 			getTreeConfig(function(config) {
 				new Treant(config);
 			});
+			
+			$("#attri-table").hide();
+      $("#attriID").hide();
+      $("#addNewAttribute").hide();
+      $("#saveAttributes").hide();
 		});
 
 		// click process ul
@@ -713,22 +726,37 @@ div {
 				
 				// define table
 	      $("#attri-table").tabulator({
-	        columns : [{ title: ""+this.innerText, field: "name", sortable: true, sorter: "string", width: 200, editable: true }]
+	        columns : []
 	      });
 
+				// set columns
+	      $("#attri-table").tabulator("setColumns", [
+          { formatter: deleteButton, align: "center", width: 50, onClick: function(e, cell, val, data) {
+            console.log("deleting row "+data.id);
+            $("#attri-table").tabulator("deleteRow", data.id);
+          } },
+          { title: ""+this.innerText, field: "name", sortable: true, sorter: "string", width: 200, editable: true }
+        ]);
+				
+				// set data
 				getAttributeNames(this.innerText, function(attributeNames) {
 					$("#attri-table").tabulator("setData", attributeNames);
 				});
 				
 				setLastClickedProcess(this.innerText);
 				
+				$("#attri-table").show();
+				$("#attriID").show();
+        $("#addNewAttribute").show();
+        $("#saveAttributes").show();
+		        
 				//this.clearQueue();
 			});
 			
 			//this.clearQueue();
 		});
 
-		$("#del-attri-table").on('click',function() {
+		/*$("#del-attri-table").on('click',function() {
 			var bla2 = $("#txt_name").val();
 			if (bla2 == "") {
 				bla2 = prompt("Please enter the row");
@@ -738,10 +766,10 @@ div {
 			var x = $("#attri-table").tabulator("getData");
 			$("#attri-table").tabulator("setData", x);
 			console.log(tosource(x));
-		});
+		});*/
 		
 		// save list of attributes
-		$("#saveNewAttributes").on('click',function() {
+		$("#saveAttributes").on('click',function() {
 			getLastClickedProcess(function(processID) {
         if (processID != undefined && confirm('Save data?')) {
           updateProcessAttributes(processID, $("#attri-table").tabulator("getData"));

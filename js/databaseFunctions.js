@@ -4,8 +4,11 @@
 	Sample:  { _id, nodeID, sampleID, attr_1, attr_2, ... , attr_n }
  */
 
-var Datastore = require('nedb'), db = new Datastore({ filename : 'userData', autoload : true });
-
+var Datastore    = require('nedb'), db = new Datastore({ filename : 'userData', autoload : true });
+    deleteButton = function(value, data, cell, row, options) {
+    	return "<button>x</button>";
+    };
+    
 // replaces all documents of userData file with the root node and root process
 function initialiseUserData() {
 	console.log("emptying userData...");
@@ -140,11 +143,12 @@ function getTreeConfig(callback) {
 	});
 }
 
-// return an array of process IDs
+// return an array of all process IDs except the "Source samples'"
 function getAllProcessIDs(callback) {
 	
-	// find process docs - "attributeNames : { $exists : true }" wasn't working for some reason
-	db.find({ parentID : { $exists : false }, nodeID : { $exists : false } }, function(err, processIDs) {
+	// find all process docs except "Source samples" - "attributeNames : { $exists : true }" wasn't working for some reason
+	db.find({ parentID : { $exists : false }, nodeID : { $exists : false }, _id : { $ne : "Source samples" } },
+			function(err, processIDs) {
 		var processIDList = [];
 		
 		for (i=0; i<processIDs.length; i++) {
@@ -172,11 +176,15 @@ function getAttributeNames(processID, callback) {
 function getProcessAttributeNames(nodeID, callback) {
 	db.findOne({ _id : nodeID }, function(err, node) {
 		db.findOne({ _id : node.processName }, function(err, process) {
-			var columns = [];
+			var columns = [
+			    { formatter : deleteButton, align : "center", width : 30, onClick : function(e, cell, val, data) {
+			    	$("#samples-table").tabulator("deleteRow", data.id);
+			    } }
+			];
 			
 			if (nodeID == "rootNode") {
 				columns.push({ title : "Id", field : "id", sortable : true, sorter : "string", fitColumns : true,
-					editable : true , editableTitle:true});
+					editable : true });
 			} else {
 				columns.push({ title : "Id", field : "id", sortable : true, sorter : "string", fitColumns : true,
 					editable : false });
@@ -184,7 +192,7 @@ function getProcessAttributeNames(nodeID, callback) {
 			
 			for (i = 0; i < process.attributeNames.length; i++) {
 				columns.push({ title : process.attributeNames[i], field : process.attributeNames[i], sortable : true,
-					sorter : "string", fitColumns : true, editable : true,editableTitle:true });
+					sorter : "string", fitColumns : true, editable : true, editableTitle:true });
 			}
 			
 			callback(columns);
@@ -196,7 +204,7 @@ function getProcessAttributeNames(nodeID, callback) {
 function getNodeSamples(nodeID, callback) {
 	db.find({ nodeID : nodeID }, function(err, samples) {
 		var tableData = [];
-		
+
 		for (i = 0; i < samples.length; i++) {
 			var sample = { id : samples[i].sampleID };
 			
@@ -220,7 +228,7 @@ function getNodeSamples(nodeID, callback) {
 function updateProcess(nodeID, tableColumns) {
 	var columns = [];
 	
-	for (i = 1; i < tableColumns.length; i++) {
+	for (i = 2; i < tableColumns.length; i++) {
 		columns.push(tableColumns[i].title);
 	}
 	
@@ -266,6 +274,7 @@ function updateProcessAttributes(processName, tableData) {
 	db.update({ _id : processName }, { $set: { attributeNames : attributeNames } });
 }
 
+// outdated, doesn't work properly
 function processSamples(processName, parentID, samplesString) {
 	db.insert({ _id : processName, attributeNames : [] });
 	

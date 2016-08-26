@@ -1,9 +1,10 @@
-var projectOpened = false,
+var projectOpened        = false,
+    samplesTableRowCount = 1,
+    attriTableRowCount   = 1,
     openedFileLocation,
     lastClickedNode,
-    lastClickedProcess,
-    tableEdited = false;
-//
+    lastClickedProcess;
+
 function getOpenedFileLocation(callback) {
 	callback(openedFileLocation);
 }
@@ -26,12 +27,4 @@ function getLastClickedProcess(callback) {
 
 function setLastClickedProcess(process) {
 	lastClickedProcess = process;
-}
-
-function isTableEdited(callback) {
-	callback(tableEdited);
-}
-
-function setTableEdited(edited) {
-	tableEdited = edited;
 }
