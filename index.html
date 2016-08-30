@@ -11,6 +11,13 @@
 <link rel="stylesheet" href="css/jquery.contextMenu.min.css">
 <link rel="stylesheet" href="css/swiper.min.css">
 	<link href="css/themes/tabulator_simple.css" rel="stylesheet">
+	<script src="js/jquery-3.1.js" type="text/javascript"></script>
+	<script src="js/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="js/jquery.contextMenu.min.js" type="text/javascript"></script>
+	<script src="js/tabulator.js" type="text/javascript"></script>
+	<script src="js/databaseFunctions.js" type="text/javascript"></script>
+	<script src="js/globalVariables.js" type="text/javascript"></script>
+	<script src="tests/unit.js" type="text/javascript"></script>
 
 <style>
 div {
@@ -151,7 +158,6 @@ div {
 
 	<!-- Initialize Swiper -->
 	<script src="js/swiper.min.js"></script>
-	
 	<script>
 		var swiper = new Swiper('.swiper-container', {
 			pagination: '.swiper-pagination',
@@ -192,13 +198,13 @@ div {
 
 	<!--<div class="tables" id="samples-table"></div>-->
 
-	<script src="js/jquery-2.2.4.min.js" type="text/javascript"></script>
-	<script src="js/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>
-	<script src="js/jquery.contextMenu.min.js" type="text/javascript"></script>
-	<script src="js/tabulator.js" type="text/javascript"></script>
-	<script src="js/databaseFunctions.js" type="text/javascript"></script>
-	<script src="js/globalVariables.js" type="text/javascript"></script>
-	<script src="tests/unit.js" type="text/javascript"></script>
+	<!--<script src="js/jquery-2.2.4.min.js" type="text/javascript"></script>-->
+	<!--<script src="js/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>-->
+	<!--<script src="js/jquery.contextMenu.min.js" type="text/javascript"></script>-->
+	<!--<script src="js/tabulator.js" type="text/javascript"></script>-->
+	<!--<script src="js/databaseFunctions.js" type="text/javascript"></script>-->
+	<!--<script src="js/globalVariables.js" type="text/javascript"></script>-->
+	<!--<script src="tests/unit.js" type="text/javascript"></script>-->
 	<script>
 		require('nw.gui').Window.get().showDevTools(); // open DevTools
 
@@ -396,7 +402,6 @@ div {
 				new Treant(chart_config);
 			});
 
-			$
 			
 			$.contextMenu({
 				selector : ".node",
@@ -492,8 +497,13 @@ div {
 
 			// add rows
 			$("#add_table").click(function() {
+
 				$("#samples-table").tabulator("addRow", { id: ""+samplesTableRowCount++ });
+				this.clearQueue();
 			});
+
+
+
 
 			$("#add_col").on('click',function() {
 					var count = 1;
@@ -537,7 +547,7 @@ div {
 					$('#samples-table').tabulator('setColumns', thiscolumns,false);
 					$("#samples-table").tabulator("setData", temp1);
 					newCol == "";
-				//this.clearQueue();
+				this.clearQueue();
 
 			});
 
@@ -758,11 +768,11 @@ div {
 				$("#attriID").show();
         $("#addNewAttribute").show();
         $("#saveAttributes").show();
-		        
-				//this.clearQueue();
+
+				this.clearQueue();
 			});
-			
-			//this.clearQueue();
+
+			this.clearQueue();
 		});
 
 		/*$("#del-attri-table").on('click',function() {
@@ -782,10 +792,11 @@ div {
 			getLastClickedProcess(function(processID) {
         if (processID != undefined && confirm('Save data?')) {
           updateProcessAttributes(processID, $("#attri-table").tabulator("getData"));
-          //processID.clearQueue();
+			this.clearQueue();
         }
 			});
 		});
+
 	</script>
 </body>
 </html>

@@ -15,5 +15,8 @@
     "jsonfile": "^2.3.0",
     "nedb": "^1.8.0",
     "tosource": "^1.0.0"
+  },
+  "devDependencies": {
+    "jquery": "^3.1.0"
   }
 }
