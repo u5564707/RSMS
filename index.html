@@ -51,6 +51,11 @@ div {
 	color:#fff;
 	background: #007aff;
 }
+#mainPart{
+	text-align: center;
+
+	margin-right: auto; margin-left: auto;
+}
 </style>
 
 <script src="js/raphael.js"></script>
@@ -82,9 +87,11 @@ div {
 		<div class="swiper-wrapper">
 			<div class="swiper-slide">
 
+
 				<!--swipe contents inside-->
 				<div class="chart" id="tree"></div>
 
+				<div id="mainPart">
 				<button id="add_table" style="display: none">Add new row</button>
 				<!--<button id="delete_table">Delete Row</button>-->
 				<!--<button id="add_col">Add new column</button><!--
@@ -94,12 +101,12 @@ div {
 					<input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
 				</form>
 				<button class="buttons" id="del_row" style="display: none">Delete Row</button>-->
-
+				<p> <br> </p>
 				<form class="forms" id='form2' style="display: none">
 					<input type="text" id="col_name" name="add_col" placeholder="new column name">
 				</form>
 				<button class="buttons" id="add_col" style="display: none">Add new column</button>
-
+					<p> <br> </p>
 				<form class="forms" id='form3' style="display: none">
 					<input type="text" id="col_del" name="del_col" placeholder="Choose column name">
 				</form>
@@ -110,6 +117,7 @@ div {
 				<!--</form>-->
 
 				<div class="tables" id="samples-table"></div>
+				</div>
 			</div>
 
 			<!--second swiper-->
