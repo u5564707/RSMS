@@ -77,7 +77,7 @@ div.container {
 nav {
     float: left;
     max-width: 260px;
-    margin: 0;
+    margin: -16px;
     padding: 1em;
     overflow: hidden;
 }
