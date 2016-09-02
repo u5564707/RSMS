@@ -23,11 +23,12 @@
 <script src="tests/unit.js" type="text/javascript"></script>
 	<script src="js/raphael.js"></script>
 	<script src="js/Treant.js"></script>
+	<script src="js/uikit.min.js"></script>
 
 <style>
-div {
-	width: fit-content;
-}
+/*div {*/
+	/*width: fit-content;*/
+/*}*/
 .swiper-container {
 	width: 100%;
 	height: 100%;
@@ -64,11 +65,7 @@ div {
 	color:#fff;
 	background: #007aff;
 }
-#mainPart{
-	text-align: center;
 
-	margin-right: auto; margin-left: auto;
-}
 </style>
 
 
@@ -76,6 +73,7 @@ div {
 </head>
 
 <body>
+
 	<header>
 		<div id="file-name"></div>
 
@@ -84,84 +82,214 @@ div {
 			<li><a href='#' title='Maximize' id='windowControlMaximize'></a></li>
 			<li><a href='#' title='Close' id='windowControlClose'></a></li>
 		</ul>
-		
-		<div id="navi-btn">
-			<button id="main">Main</button>
-			<button id="process">Process</button>
-		</div>
+
 	</header>
 
 	<input style="display: none;" id="openFileDialog" type="file" />
 	<input style="display: none;" id="saveAsFileDialog" type="file" nwsaveas />
 
+
+
+
+	<div id="navi-btn">
+		<button id="main" class="uk-button-primary">Main</button>
+		<button id="process" class="uk-button-success">Process</button>
+	</div>
+
 	<!-- Swiper -->
 	<div class="swiper-container">
 		<div class="swiper-wrapper">
 			<div class="swiper-slide">
-
 				<!--swipe contents inside-->
-				<div class="chart" id="tree"></div>
-        <p> <br> </p>
-        
-				<div id="mainPart">
-				<button id="add_table" style="display: none">Add new row</button>
-				<!--<button id="delete_table">Delete Row</button>-->
-				<!--<button id="add_col">Add new column</button><!--
-				<button id="delete_col" style="display: none">Delete column</button>
-				
-				<!--<form class="forms" id='form1' style="display: none">
-					<input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">
-				</form>
-				<button class="buttons" id="del_row" style="display: none">Delete Row</button>-->
-				<p> <br> </p>
-				
-				<form class="forms" id='form2' style="display: none">
-					<input type="text" id="col_name" name="add_col" placeholder="new column name">
-				</form>
-				<button class="buttons" id="add_col" style="display: none">Add new column</button>
-			  <p> <br> </p>
-				
-				<div class="tables" id="samples-table"></div>
-				<p> <br> </p>
-				
-				<form class="forms" id='form3' style="display: none">
-					<input type="text" id="col_del" name="del_col" placeholder="Choose column name">
-				</form>
-				<button class="buttons" id="del_col" style="display: none">Delete column</button>
-				
-				<!--<form id='form3'>-->
-				<!--<input type="text" id="col_delete" name="delet_col" placeholder="column number">-->
-				<!--</form>-->
+
+
+				<div class="uk-grid uk-grid-collapse">
+					<div class="chart uk-width-1-1 " id="tree"></div>
+
+					<div class="uk-width" style="width: 10%">
+						<div class="uk-panel uk-panel-box uk-panel-box-primary">Column 1</div>
+					</div>
+
+					<div class="uk-width" style="width: 75%">
+						<div class="uk-panel uk-panel-box uk-panel-box-primary" style="overflow:scroll">
+
+							<!--filter example-->
+							<div id="table-filters" style="display: none">
+							<p>
+							<fieldset>
+								<legend>Filter Parameters</legend>
+
+
+								<label>Field: </label>
+								<select id="filter-field">
+									<option></option>
+									<!--<option value="name">Name</option>-->
+									<!--<option value="age">Age</option>-->
+									<!--<option value="gender">Gender</option>-->
+									<!--<option value="height">Height</option>-->
+									<!--<option value="col">Favourite Colour</option>-->
+									<!--<option value="dob">Date Of Birth</option>-->
+									<!--<option value="cheese">Likes Cheese</option>-->
+									<!--<option value="function">Likes Cheese &amp; height &lt; 3</option>-->
+								</select>
+
+
+								<label>Type:</label>
+								<select id="filter-type">
+									<option value="=">=</option>
+									<option value="<">&lt;</option>
+									<option value="<=">&lt;=</option>
+									<option value=">">&gt;</option>
+									<option value=">=">&gt;=</option>
+									<option value="!=">!=</option>
+									<option value="like">like</option>
+								</select>
+
+
+								<label>Value: </label><input id="filter-value" type="text" placeholder="value to filter">
+
+								<input id="filter-clear" type="button" value="Clear Filter" style="margin-left:40px;">
+
+							</fieldset>
+
+							</p>
+								</div>
+							<div id="example-table-filters" ></div>
+
+
+							<div class="tables" id="samples-table"></div>
+
+
+						</div>
+					</div>
+
+					<div class="uk-width" style="width: 15%">
+						<div class="uk-panel uk-panel-box uk-panel-box-primary">
+							<h3>Buttons</h3>
+
+							<button id="add_table" class="buttons uk-button-success" style="display: none">Add new row</button>
+							<p><br></p>
+							<form class="forms" id='form2' style="display: none">
+								<input type="text" id="col_name" class="uk-form-success" name="add_col" placeholder="new column name">
+							</form>
+
+							<button class="buttons uk-button-primary" id="add_col" style="display: none">Add new column</button>
+							<p><br></p>
+							<form class="forms" id='form3' style="display: none">
+							<input type="text" class="uk-form-danger" id="col_del" name="del_col" placeholder="Choose column name">
+							</form>
+
+							<button class="buttons uk-button-danger" id="del_col" style="display: none">Delete column</button>
+
+						</div>
+					</div>
 				</div>
+
+
+
+
+
+
 			</div>
 
 			<!--second swiper-->
 			<div class="swiper-slide">
 				<div class="container">
+					<div class="uk-grid ">
+						<div class="uk-width-medium-1-3 uk-width-1-2 ">
+							<h1>Process lists</h1>
+							<!-- This is the nav containing the toggling elements -->
+							<ul class="uk-nav uk-nav-side uk-panel uk-panel-box uk-panel-box-primary" data-uk-switcher="{connect:'#thisIsmy-id'}">
+								<!--<h1>Process lists</h1>-->
+								<li><a href="#">Item1</a></li>
+								<li><a href="#">Item2</a></li>
+							</ul>
+						</div>
 
-					<!--<header>-->
-						<!--<h1 class="new-column">Process and attributes</h1>-->
-					<!--</header>-->
-	
-					<nav>
-						<h2 id="processID" style="display: none">Process list</h2>
-						<button id="addNewProcess" style="display: none">AddNewProcess</button>
-						<ul id="ProcessList"></ul>
-					</nav>
-	
-					<article>
-						<p id="attriID" style="display: none">Attributes</p>
-						<button id="addNewAttribute" style="display: none">Add New Attribute</button>
-						<!--<button id="del-attri-table" style="display: none">DeleteAttributes</button>-->
-						<button id="saveAttributes" style="display: none">SaveAttributes</button>
-						<div class="attri-tables" id="attri-table"></div>
-					</article>
+						<div class="uk-width-large-1-3 uk-width-1-2">
+							<h1>Process Attributes</h1>
+							<div>
+
+								<button id="addNewAttribute" class="uk-button-primary">Add New Attribute</button>
+								<!--<button id="del-attri-table" style="display: none">DeleteAttributes</button>-->
+								<!--<button id="saveAttributes" style="display: none">SaveAttributes</button>-->
+
+								<div class="attri-tables" id="attri-table"></div>
+								<script>
+									$("#attri-table").tabulator({
+										height:"300px",
+										columns:[
+											{title:"Name", field:"name", width:100},
+										],
+									});
+
+									var tabledata = [
+										{id:1, name:"Mary May"},
+									];
+									$("#attri-table").tabulator("setData", tabledata);
+								</script>
+							</div>
+							<!-- This is the container of the content items -->
+							<!--<ul id="thisIsmy-id" class="uk-switcher uk-panel uk-panel-box uk-panel-box-primary">-->
+
+								<!--&lt;!&ndash;for the first Item&ndash;&gt;-->
+								<!--<li>-->
+									<!--<ul class="uk-list uk-list-striped">-->
+										<!--<li>-->
+											<!--good-->
+										<!--</li>-->
+										<!--<li>-->
+											<!--good1-->
+										<!--</li>-->
+										<!--<li>-->
+											<!--good5-->
+										<!--</li>-->
+										<!--<li>-->
+											<!--good6-->
+										<!--</li>-->
+									<!--</ul>-->
+
+								<!--</li>-->
+
+								<!--&lt;!&ndash;for the second Item&ndash;&gt;-->
+								<!--<li>-->
+
+									<!--<div>-->
+
+										<!--<button id="addNewAttribute" class="uk-button-primary">Add New Attribute</button>-->
+									<!--&lt;!&ndash;<button id="del-attri-table" style="display: none">DeleteAttributes</button>&ndash;&gt;-->
+									<!--&lt;!&ndash;<button id="saveAttributes" style="display: none">SaveAttributes</button>&ndash;&gt;-->
+
+										<!--<div class="attri-tables" id="attri-table"></div>-->
+										<!--<script>-->
+											<!--$("#attri-table").tabulator({-->
+												<!--height:"300px",-->
+												<!--columns:[-->
+													<!--{title:"Name", field:"name", width:100},-->
+												<!--],-->
+											<!--});-->
+
+											<!--var tabledata = [-->
+												<!--{id:1, name:"Mary May"},-->
+											<!--];-->
+											<!--$("#attri-table").tabulator("setData", tabledata);-->
+										<!--</script>-->
+									<!--</div>-->
+
+								<!--</li>-->
+							<!--</ul>-->
+						</div>
+					</div>
+
 				</div>
 			</div>
 		</div>
-		<!-- Add Pagination -->
+		<!-- Add Swiper Pagination -->
 		<!--<div class="swiper-pagination"></div>-->
 	</div>
+
+
+
 
 	<!-- Initialize Swiper -->
 	<script src="js/swiper.min.js"></script>
@@ -177,41 +305,6 @@ div {
 		});
 	</script>
 
-	<!--<div class="chart" id="tree"></div>-->
-
-	<!--<button id="save_table">Save</button>-->
-	<!--<button id="add_table">Add new row</button>-->
-	<!--&lt;!&ndash;<button id="delete_table">Delete Row</button>&ndash;&gt;-->
-	<!--&lt;!&ndash;<button id="add_col">Add new column</button>&ndash;&gt;-->
-	<!--&lt;!&ndash;<button id="del_col">Delete column</button>&ndash;&gt;-->
-	<!--<button id="delete_col">Delete column</button>-->
-	<!--<form class="forms" id='form1'>-->
-		<!--<input type="text" id="txt_name" name="delete_row" placeholder="deleted row number">-->
-	<!--</form>-->
-	<!--<button class="buttons" id="del_row">Delete Row</button>-->
-
-	<!--<form class="forms" id='form2'>-->
-		<!--<input type="text" id="col_name" name="add_col" placeholder="new column name">-->
-	<!--</form>-->
-	<!--<button class="buttons" id="add_col">Add new column</button>-->
-
-	<!--<form class="forms" id='form3'>-->
-		<!--<input type="text" id="col_del" name="del_col" placeholder="Choose column name">-->
-	<!--</form>-->
-	<!--<button class="buttons" id="del_col">Delete column</button>-->
-	<!--&lt;!&ndash;<form id='form3'>&ndash;&gt;-->
-	<!--&lt;!&ndash;<input type="text" id="col_delete" name="delet_col" placeholder="column number">&ndash;&gt;-->
-	<!--&lt;!&ndash;</form>&ndash;&gt;-->
-
-	<!--<div class="tables" id="samples-table"></div>-->
-
-	<!--<script src="js/jquery-2.2.4.min.js" type="text/javascript"></script>-->
-	<!--<script src="js/jquery-ui-1.11.4/jquery-ui.min.js" type="text/javascript"></script>-->
-	<!--<script src="js/jquery.contextMenu.min.js" type="text/javascript"></script>-->
-	<!--<script src="js/tabulator.js" type="text/javascript"></script>-->
-	<!--<script src="js/databaseFunctions.js" type="text/javascript"></script>-->
-	<!--<script src="js/globalVariables.js" type="text/javascript"></script>-->
-	<!--<script src="tests/unit.js" type="text/javascript"></script>-->
 	<script>
 		require('nw.gui').Window.get().showDevTools(); // open DevTools
 
@@ -280,7 +373,7 @@ div {
 				
 				$("#processID").show();
 				$("#addNewProcess").show();
-				
+
 				$("#attri-table").hide();
 	      $("#attriID").hide();
 	      $("#addNewAttribute").hide();
@@ -321,7 +414,7 @@ div {
 		        $("#form3").hide();
 		        $("#del_col").hide();
 		        $("#samples-table").hide();
-		        
+						$("#table-filters").hide();
 		        $("#processID").show();
 		        $("#addNewProcess").show();
 		        
@@ -465,12 +558,14 @@ div {
 							} else {
 								$("#add_table").hide();
 							}
+
 							//$("#del_row").show();
 							//$("#form1").show();
 							$("#form2").show();
 							$("#add_col").show();
 							$("#form3").show();
 							$("#del_col").show();
+							$("#table-filters").show();
 							
 							//document.getElementsByClassName("forms").style.display = "block";
 							//document.getElementById("forms").style.visibility = "visible";
@@ -819,6 +914,44 @@ div {
         }
 			});
 		});
+
+
+		//Custom filter example
+		function customFilter(data){
+			return data.car && data.rating < 3;
+		}
+
+		//Trigger setFilter function with correct parameters
+		function updateFilter(){
+
+			var filter = $("#filter-field").val() == "function" ? customFilter : $("#filter-field").val();
+
+			if($("#filter-field").val() == "function" ){
+				$("#filter-type").prop("disabled", true);
+				$("#filter-value").prop("disabled", true);
+			}else{
+				$("#filter-type").prop("disabled", false);
+				$("#filter-value").prop("disabled", false);
+			}
+
+			$("#example-table-filters").tabulator("setFilter", filter, $("#filter-type").val(), $("#filter-value").val());
+		}
+
+		//Update filters on value change
+		$("#filter-field, #filter-type").change(updateFilter);
+		$("#filter-value").keyup(updateFilter);
+
+		//Clear filters on "Clear Filters" button click
+		$("#filter-clear").click(function(){
+			$("#filter-field").val("");
+			$("#filter-type").val("=");
+			$("#filter-value").val("");
+
+			$("#example-table-filters").tabulator("clearFilter");
+		});
+
+
+
 
 	</script>
 </body>

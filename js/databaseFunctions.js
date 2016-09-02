@@ -134,7 +134,7 @@ function getChildNodes(nodeID, callback) {
 }
 
 function getTreeConfig(callback) {
-	var chart_config = { chart : { container : "#tree" },
+	var chart_config = { chart : { container : "#tree", rootOrientation:  'WEST' },
 			nodeStructure : { text : { name : "Source samples" }, HTMLid : "rootNode" } };
 
 	getChildNodes("rootNode", function(childNodes) {
