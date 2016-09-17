@@ -212,8 +212,8 @@
 							<div>
 
 								<button id="addNewAttribute" class="uk-button-primary">Add New Attribute</button>
-								<!--<button id="del-attri-table" style="display: none">DeleteAttributes</button>-->
-								<!--<button id="saveAttributes" style="display: none">SaveAttributes</button>-->
+								<button id="del-attri-table" class="uk-button-primary" style="display: none">DeleteAttributes</button>
+								<button id="saveAttributes" class="uk-button-primary" style="display: none">SaveAttributes</button>
 
 								<div class="attri-tables" id="attri-table"></div>
 								<script>
@@ -378,7 +378,7 @@
 				$("#attri-table").show();
 	      $("#attriID").hide();
 	      $("#addNewAttribute").show();
-	      $("#saveAttributes").hide();
+	      $("#saveAttributes").show();
 			}
 		}));
 
@@ -422,7 +422,7 @@
 		        $("#attri-table").show();
 		        $("#attriID").hide();
 		        $("#addNewAttribute").show();
-		        $("#saveAttributes").hide();
+		        $("#saveAttributes").show();
 					}
 					this.value = null; // reset file location
 				}, false);
@@ -853,7 +853,7 @@
 			$("#attri-table").show();
       $("#attriID").hide();
       $("#addNewAttribute").show();
-      $("#saveAttributes").hide();
+      $("#saveAttributes").show();
 		});
 
 		// click process ul
