@@ -66,6 +66,7 @@
 	background: #007aff;
 }
 
+
 </style>
 
 
@@ -200,7 +201,7 @@
 							<h1>Process lists</h1>
 							<button id="addNewProcess" class="uk-button-primary">Add New Process</button>
 							<!-- This is the nav containing the toggling elements -->
-							<ul id="ProcessList" class="uk-nav uk-nav-side uk-panel uk-panel-box uk-panel-box-primary" data-uk-switcher="{connect:'#thisIsmy-id'}">
+							<ul id="ProcessList" class="uk-nav uk-nav-side uk-panel uk-panel-box uk-panel-box-primary " data-uk-switcher="{connect:'#thisIsmy-id'}">
 								<!--<h1>Process lists</h1>-->
 								<!--<li><a href="#">Item1</a></li>-->
 								<!--<li><a href="#">Item2</a></li>-->
@@ -216,69 +217,10 @@
 								<button id="saveAttributes" class="uk-button-primary" style="display: none">SaveAttributes</button>
 
 								<div class="attri-tables" id="attri-table"></div>
-								<script>
-									$("#attri-table").tabulator({
-										height:"300px",
-										columns:[
-											{title:"Name", field:"name", width:100},
-										],
-									});
 
-									var tabledata = [
-										{id:1, name:" "},
-									];
-									$("#attri-table").tabulator("setData", tabledata);
-								</script>
 							</div>
-							<!-- This is the container of the content items -->
-							<!--<ul id="thisIsmy-id" class="uk-switcher uk-panel uk-panel-box uk-panel-box-primary">-->
 
-								<!--&lt;!&ndash;for the first Item&ndash;&gt;-->
-								<!--<li>-->
-									<!--<ul class="uk-list uk-list-striped">-->
-										<!--<li>-->
-											<!--good-->
-										<!--</li>-->
-										<!--<li>-->
-											<!--good1-->
-										<!--</li>-->
-										<!--<li>-->
-											<!--good5-->
-										<!--</li>-->
-										<!--<li>-->
-											<!--good6-->
-										<!--</li>-->
-									<!--</ul>-->
 
-								<!--</li>-->
-
-								<!--&lt;!&ndash;for the second Item&ndash;&gt;-->
-								<!--<li>-->
-
-									<!--<div>-->
-
-										<!--<button id="addNewAttribute" class="uk-button-primary">Add New Attribute</button>-->
-									<!--&lt;!&ndash;<button id="del-attri-table" style="display: none">DeleteAttributes</button>&ndash;&gt;-->
-									<!--&lt;!&ndash;<button id="saveAttributes" style="display: none">SaveAttributes</button>&ndash;&gt;-->
-
-										<!--<div class="attri-tables" id="attri-table"></div>-->
-										<!--<script>-->
-											<!--$("#attri-table").tabulator({-->
-												<!--height:"300px",-->
-												<!--columns:[-->
-													<!--{title:"Name", field:"name", width:100},-->
-												<!--],-->
-											<!--});-->
-
-											<!--var tabledata = [-->
-												<!--{id:1, name:"Mary May"},-->
-											<!--];-->
-											<!--$("#attri-table").tabulator("setData", tabledata);-->
-										<!--</script>-->
-									<!--</div>-->
-
-								<!--</li>-->
-							<!--</ul>-->
 						</div>
 					</div>
 
@@ -823,11 +765,17 @@
 			var ul = document.getElementById("ProcessList");
 			var li = document.createElement("li");
 			var t1 = prompt("Name of the new process?");
-			li.appendChild(document.createTextNode(t1));
+			//li.appendChild(document.createTextNode(t1));
+
+			var a = document.createElement('a');
+			a.href = "#";
+
+			a.appendChild(document.createTextNode(t1));
+			li.appendChild(a);
 			li.setAttribute("id", t1); // added line
-			//ul.appendChild(li);
+			ul.appendChild(li);
 			//alert(li.id);
-			$("#ProcessList").append('<li id='+t1+'><a href="#">'+t1+'</a></li>');
+			//$("#ProcessList").append('<li id='+t1+'><a href="#">'+t1+'</a></li>');
 			//var samplesString2 = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
 
 
@@ -860,9 +808,10 @@
 		$("#ProcessList").on("click",function(){
 			console.log("list clicked");
 
-			$("li").on("click",function() {
+			$("a").on("click",function() {
 				console.log("list element clicked");
-				
+
+
 				// define table
 	      $("#attri-table").tabulator({
 	        columns : []
@@ -872,18 +821,19 @@
 	      $("#attri-table").tabulator("setColumns", [
           { formatter: deleteButton, align: "center", width: 50, onClick: function(e, cell, val, data) {
             console.log("deleting row "+data.id);
-            $("#attri-table").tabulator("deleteRow", data.id);
+
+			  $("#attri-table").tabulator("deleteRow", data.id);
           } },
           { title: ""+this.innerText, field: "name", sortable: true, sorter: "string", width: 200, editable: true }
         ]);
-				
+
 				// set data
 				getAttributeNames(this.innerText, function(attributeNames) {
 					$("#attri-table").tabulator("setData", attributeNames);
 				});
-				
+
 				setLastClickedProcess(this.innerText);
-				
+
 				$("#attri-table").show();
 				$("#attriID").show();
         $("#addNewAttribute").show();
