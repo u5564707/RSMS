@@ -774,7 +774,7 @@
 			
 			// populate process list
 	    getAllProcessIDs(function(ids) {
-	      $("#ProcessList").innerHTML.empty();
+	      $("#ProcessList").empty();
 
 	      for (var i in ids) {
 	        $("#ProcessList").append('<li id='+ids[i]+'><a href="#">'+ids[i]+'</a></li>');
