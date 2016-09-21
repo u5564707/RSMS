@@ -1,6 +1,5 @@
 {"_id":"Source samples","attributeNames":[]}
-{"_id":"g1","attributeNames":[]}
-{"_id":"g2","attributeNames":[]}
 {"_id":"rootNode","parentID":null,"processName":"Source samples"}
-{"_id":"g3","attributeNames":[]}
-{"_id":"g2","attributeNames":["attr11","attr112"]}
+{"_id":"ad","attributeNames":[]}
+{"parentID":"rootNode","processName":"ad","_id":"vDjqVLRw3jrjk9cu"}
+{"_id":{"nodeID":"vDjqVLRw3jrjk9cu","sampleID":"ss"}}
