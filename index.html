@@ -82,6 +82,7 @@
 			<li><a href='#' title='Minimize' id='windowControlMinimize'></a></li>
 			<li><a href='#' title='Maximize' id='windowControlMaximize'></a></li>
 			<li><a href='#' title='Close' id='windowControlClose'></a></li>
+
 		</ul>
 
 	</header>
@@ -92,7 +93,7 @@
 
 
 
-	<div id="navi-btn">
+	<div id="navi-btn" style="text-align: center">
 		<button id="main" class="uk-button-primary">Main</button>
 		<button id="process" class="uk-button-success">Process</button>
 	</div>
@@ -103,7 +104,7 @@
 			<div class="swiper-slide">
 				<!--swipe contents inside-->
 
-
+<div style="margin-left: 10px;margin-right: 10px">
 				<div class="uk-grid uk-grid-collapse uk-grid-small">
 					<div class="chart uk-width-1-1 " id="tree"></div>
 
@@ -186,7 +187,7 @@
 					</div>
 				</div>
 
-
+</div>
 
 
 
@@ -195,12 +196,14 @@
 
 			<!--second swiper-->
 			<div class="swiper-slide">
+				<div style="margin-left: 20px;margin-top: 20px">
 				<div class="container">
 					<div class="uk-grid ">
 						<div class="uk-width-medium-1-3 uk-width-1-2 ">
-							<h1>Process lists</h1>
+							<h4>Process lists</h4>
 							<button id="addNewProcess" class="uk-button-primary">Add New Process</button>
 							<!-- This is the nav containing the toggling elements -->
+							<p></p>
 							<ul id="ProcessList" class="uk-nav uk-nav-side uk-panel uk-panel-box uk-panel-box-primary " data-uk-switcher="{connect:'#thisIsmy-id'}">
 								<!--<h1>Process lists</h1>-->
 								<!--<li><a href="#">Item1</a></li>-->
@@ -209,13 +212,13 @@
 						</div>
 
 						<div class="uk-width-large-1-3 uk-width-1-2">
-							<h1>Process Attributes</h1>
+							<h4>Process Attributes</h4>
 							<div>
 
 								<button id="addNewAttribute" class="uk-button-primary">Add New Attribute</button>
 								<button id="del-attri-table" class="uk-button-primary" style="display: none">DeleteAttributes</button>
 								<button id="saveAttributes" class="uk-button-primary" style="display: none">SaveAttributes</button>
-
+								<p></p>
 								<div class="attri-tables" id="attri-table"></div>
 
 							</div>
@@ -226,6 +229,7 @@
 
 				</div>
 			</div>
+				</div>>
 		</div>
 		<!-- Add Swiper Pagination -->
 		<!--<div class="swiper-pagination"></div>-->
@@ -839,10 +843,10 @@
         $("#addNewAttribute").show();
         $("#saveAttributes").show();
 
-				this.clearQueue();
+				$("#ProcessList").clearQueue();
 			});
 
-			this.clearQueue();
+			$("#ProcessList").clearQueue();
 		});
 
 		/*$("#del-attri-table").on('click',function() {

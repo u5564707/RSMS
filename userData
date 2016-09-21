@@ -1,6 +1,3 @@
 {"_id":"Source samples","attributeNames":[]}
-{"_id":"g1","attributeNames":[]}
-{"_id":"g2","attributeNames":[]}
 {"_id":"rootNode","parentID":null,"processName":"Source samples"}
-{"_id":"g3","attributeNames":[]}
-{"_id":"g2","attributeNames":["attr11","attr112"]}
+{"attributeNames":[],"_id":"Source samples"}

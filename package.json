@@ -6,8 +6,8 @@
     "start": "nw"
   },
   "window": {
-    "frame": false,
-    "toolbar": true,
+    "frame": true,
+    "toolbar": false,
     "width": 1024,
     "height": 800
   },
