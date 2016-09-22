@@ -537,6 +537,7 @@
 			$("#add_table").click(function() {
 
 				$("#samples-table").tabulator("addRow", { id: ""+samplesTableRowCount++ });
+				$("#samples-table").tabulator("redraw",true);
 				this.clearQueue();
 			});
 
@@ -734,6 +735,7 @@
 		// add new attribute
 		$("#addNewAttribute").click(function() {
 			$("#attri-table").tabulator("addRow", { id: attriTableRowCount, name: "attr"+attriTableRowCount++ });
+			$("#attri-table").tabulator("redraw",true);
 		});
 
 		//add new process
@@ -791,6 +793,17 @@
 
 				// define table
 	      $("#attri-table").tabulator({
+			  fitColumns:true,
+			  cellEdited:function(id, field, value, oldValue, data, cell, row){
+				  //id - the id of the row
+				  //field - field of the cell
+				  //value - the new value for the cell
+				  //oldValue - the old value for the cell
+				  //data - the data for the row
+				  //cell - the DOM element of the cell
+				  //row - the DOM element of the row
+				  $("#attri-table").tabulator("redraw",true);
+			  },
 	        columns : []
 	      });
 
@@ -878,6 +891,21 @@
 
 			$("#example-table-filters").tabulator("clearFilter");
 		});
+
+
+//
+//		$("#attri-table").tabulator({
+//			rowClick:function(e, id, data, row){
+//				$("#attri-table").tabulator("redraw");
+//			},
+//		});
+
+
+		$(window).resize(function(){
+			$("#attri-table").tabulator("redraw",true);
+			$("#samples-table").tabulator("redraw",true);
+		});
+
 
 	</script>
 </body>
