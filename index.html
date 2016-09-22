@@ -517,7 +517,13 @@
 			// define table
 			$("#samples-table").tabulator({
 				fitColumns : true,
-				columns : []
+				columns : [],
+				rowFormatter:function(row, data){
+					//row - JQuery object for row
+					//data - the data for the row
+
+					row.css({"height":"36px"});
+				},
 				//pagination : true, // uncomment for final version
 			});
 
@@ -792,19 +798,16 @@
 
 
 				// define table
+
 	      $("#attri-table").tabulator({
 			  fitColumns:true,
-			  cellEdited:function(id, field, value, oldValue, data, cell, row){
-				  //id - the id of the row
-				  //field - field of the cell
-				  //value - the new value for the cell
-				  //oldValue - the old value for the cell
+	        columns : [],
+			  rowFormatter:function(row, data){
+				  //row - JQuery object for row
 				  //data - the data for the row
-				  //cell - the DOM element of the cell
-				  //row - the DOM element of the row
-				  $("#attri-table").tabulator("redraw",true);
+
+				  row.css({"height":"36px"});
 			  },
-	        columns : []
 	      });
 
 				// set columns
