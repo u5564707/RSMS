@@ -517,7 +517,13 @@
 			// define table
 			$("#samples-table").tabulator({
 				fitColumns : true,
-				columns : []
+				columns : [],
+				rowFormatter:function(row, data){
+					//row - JQuery object for row
+					//data - the data for the row
+
+					row.css({"height":"36px"});
+				},
 				//pagination : true, // uncomment for final version
 			});
 
@@ -537,6 +543,7 @@
 			$("#add_table").click(function() {
 
 				$("#samples-table").tabulator("addRow", { id: ""+samplesTableRowCount++ });
+				$("#samples-table").tabulator("redraw",true);
 				this.clearQueue();
 			});
 
@@ -734,6 +741,7 @@
 		// add new attribute
 		$("#addNewAttribute").click(function() {
 			$("#attri-table").tabulator("addRow", { id: attriTableRowCount, name: "attr"+attriTableRowCount++ });
+			$("#attri-table").tabulator("redraw",true);
 		});
 
 		//add new process
@@ -790,8 +798,16 @@
 
 
 				// define table
+
 	      $("#attri-table").tabulator({
-	        columns : []
+			  fitColumns:true,
+	        columns : [],
+			  rowFormatter:function(row, data){
+				  //row - JQuery object for row
+				  //data - the data for the row
+
+				  row.css({"height":"36px"});
+			  },
 	      });
 
 				// set columns
@@ -865,7 +881,7 @@
 
 			$("#example-table-filters").tabulator("setFilter", filter, $("#filter-type").val(), $("#filter-value").val());
 		}
-
+		
 		//Update filters on value change
 		$("#filter-field, #filter-type").change(updateFilter);
 		$("#filter-value").keyup(updateFilter);
@@ -878,6 +894,21 @@
 
 			$("#example-table-filters").tabulator("clearFilter");
 		});
+
+
+//
+//		$("#attri-table").tabulator({
+//			rowClick:function(e, id, data, row){
+//				$("#attri-table").tabulator("redraw");
+//			},
+//		});
+
+
+		$(window).resize(function(){
+			$("#attri-table").tabulator("redraw",true);
+			$("#samples-table").tabulator("redraw",true);
+		});
+
 
 	</script>
 </body>

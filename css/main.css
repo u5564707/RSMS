@@ -1,5 +1,8 @@
 .chart { height: 259px; width: 90px; margin: 5px; margin: 5px auto; border: 3px solid white; border-radius: 3px; }
 .node { color: #9CB5ED; border: 2px solid #C8C8C8; border-radius: 3px; }
+.node {
+	cursor:pointer;
+}
 .node p { font-size: 20px; line-height: 20px; height: 20px; font-weight: bold; padding: 3px; margin: 0; }
 
 .tooltip {
