@@ -495,20 +495,25 @@
 					},
 					processSamples : {
 						name : "Process Samples",
-						callback : function(key, opt) {
-							var processName = prompt("Process name:"),
-							    samplesString = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
-
-							if (processName != null && samplesString != null) {
-								processSamples(processName, opt.$trigger.attr("id"),
-										samplesString);
+						items : {
+							processNew : {
+								name : "New",
+								callback : function(key, opt) {
+									var processName = prompt("Process name:"),
+									    samplesString = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
+		
+									if (processName != null && samplesString != null) {
+										processSamples(processName, opt.$trigger.attr("id"),
+												samplesString);
+									}
+		
+									// update tree
+									$("#tree").empty();
+									getTreeConfig(function(config) {
+										new Treant(config);
+									});
+								}
 							}
-
-							// update tree
-							$("#tree").empty();
-							getTreeConfig(function(config) {
-								new Treant(config);
-							});
 						}
 					}
 				}
