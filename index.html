@@ -745,13 +745,17 @@
 		});
 
 		//add new process
-		$("#addNewProcess").click(function(){
+		$("#addNewProcess").click(function() {
 
 			var ul = document.getElementById("ProcessList");
-			var li = document.createElement("li");
 			var t1 = prompt("Name of the new process?");
 			//li.appendChild(document.createTextNode(t1));
 
+			if (t1 == null) {
+				return;
+			} else {
+
+			var li = document.createElement("li");
 			var a = document.createElement('a');
 			a.href = "#";
 
@@ -774,15 +778,15 @@
 //				processSamples(t1, par+"[id]",
 //						samplesString2);
 //			}
-      console.log("adding process"+t1);
+			console.log("adding process" + t1);
 			addProcess(t1);
 
 			// update tree
 			$("#tree").empty();
-			getTreeConfig(function(config) {
+			getTreeConfig(function (config) {
 				new Treant(config);
 			});
-			
+		}
 			/*$("#attri-table").show();
       $("#attriID").hide();
       $("#addNewAttribute").show();
