@@ -134,15 +134,11 @@ function getChildNodes(nodeID, callback) {
 }
 
 function getTreeConfig(callback) {
-	var chart_config = {
-		chart : {
-			container : "#tree",
-			rootOrientation:  'WEST'
-		},
-		nodeStructure : {
-			text : {
-				name : "Source samples"
-			},
+	var chart_config = [{ container : "#tree", rootOrientation: 'WEST' },
+	                    { text : { name : "Source samples" } }];
+
+		/*nodeStructure : {
+			,
 			connectors: {
 				style: {
 					stroke: "#00CE67"
@@ -150,15 +146,18 @@ function getTreeConfig(callback) {
 			},
 			HTMLid : "rootNode"
 		}
-	};
+	};*/
 
 	getChildNodes("rootNode", function(childNodes) {
-		chart_config.nodeStructure.children = childNodes;
+		for (i=0; i<childNodes.length; i++) {
+			chart_config.push(childNodes[i]);
+		}
+		
 		callback(chart_config);
 	});
 }
 
-// return an array of all process IDs except the "Source samples'"
+// return an array of all process IDs except the "Source samples"
 function getAllProcessIDs(callback) {
 	
 	// find all process docs except "Source samples" - "attributeNames : { $exists : true }" wasn't working for some reason
