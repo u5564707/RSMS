@@ -117,42 +117,20 @@ function getNode(nodeID, callback) {
 	});
 }
 
-// return the child nodes of nodeID as an array of documents
-function getChildNodes(nodeID, callback) {
-	db.find({ parentID : nodeID }, function(err, nodes) {
-		children = [];
-		
-		for (i = 0; i < nodes.length; i++) {
-			children.push({ text : { name : nodes[i].processName }, HTMLid : nodes[i]._id });
-			
-			getChildNodes(nodes[i]._id, function(grandChildren) {
-				children.push({ children : grandChildren });
-			});
-		}
-		callback(children);
-	});
-}
-
 function getTreeConfig(callback) {
 	var chart_config = [{ container : "#tree", rootOrientation: 'WEST' },
-	                    { text : { name : "Source samples" } }];
-
-		/*nodeStructure : {
-			,
-			connectors: {
-				style: {
-					stroke: "#00CE67"
-				}
-			},
-			HTMLid : "rootNode"
-		}
-	};*/
-
-	getChildNodes("rootNode", function(childNodes) {
-		for (i=0; i<childNodes.length; i++) {
-			chart_config.push(childNodes[i]);
+	                    { HTMLid : "rootNode", text : { name : "Source samples" } }];
+	
+	db.find({ parentID : chart_config[1].HTMLid }, function(err, nodes) {
+		for (i = 0; i < nodes.length; i++) {
+			chart_config.push({ parent : chart_config[1], HTMLid : nodes[i]._id, text : { name : nodes[i].processName } });
+			
+			//getChildNodes(nodes[i]._id, function(grandchildren) {
+			//	children.push({ text : { name : grandchildren[i].processName }, HTMLid : grandchildren[i]._id });
+			//});
 		}
 		
+		console.log(tosource(chart_config));
 		callback(chart_config);
 	});
 }
@@ -288,8 +266,9 @@ function updateProcessAttributes(processName, tableData) {
 	db.update({ _id : processName }, { $set: { attributeNames : attributeNames } });
 }
 
-// outdated, doesn't work properly
+// adds new node and samples
 function processSamples(processName, parentID, samplesString) {
+	console.log("Inserting new node "+processName+" with parentID "+parentID);
 	db.insert({ _id : processName, attributeNames : [] });
 	
 	db.insert({ parentID : parentID, processName : processName }, function(err, newNode) {
