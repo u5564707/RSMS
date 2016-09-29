@@ -1,5 +1,9 @@
 {"_id":"Source samples","attributeNames":[]}
 {"_id":"rootNode","parentID":null,"processName":"Source samples"}
+<<<<<<< HEAD
 {"_id":"k","attributeNames":[]}
 {"processName":"k","_id":"k3WtSJTqJcergLPJ"}
 {"_id":{"nodeID":"k3WtSJTqJcergLPJ","sampleID":"k"}}
+=======
+{"_id":"1","attributeNames":[]}
+>>>>>>> branch 'master' of https://github.com/u5564707/RSMS
