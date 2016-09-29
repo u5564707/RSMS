@@ -117,48 +117,25 @@ function getNode(nodeID, callback) {
 	});
 }
 
-// return the child nodes of nodeID as an array of documents
-function getChildNodes(nodeID, callback) {
-	db.find({ parentID : nodeID }, function(err, nodes) {
-		children = [];
-		
-		for (i = 0; i < nodes.length; i++) {
-			children.push({ text : { name : nodes[i].processName }, HTMLid : nodes[i]._id });
-			
-			getChildNodes(nodes[i]._id, function(grandChildren) {
-				children.push({ children : grandChildren });
-			});
-		}
-		callback(children);
-	});
-}
-
 function getTreeConfig(callback) {
-	var chart_config = {
-		chart : {
-			container : "#tree",
-			rootOrientation:  'WEST'
-		},
-		nodeStructure : {
-			text : {
-				name : "Source samples"
-			},
-			connectors: {
-				style: {
-					stroke: "#00CE67"
-				}
-			},
-			HTMLid : "rootNode"
+	var chart_config = [{ container : "#tree", rootOrientation: 'WEST' },
+	                    { HTMLid : "rootNode", text : { name : "Source samples" } }];
+	
+	db.find({ parentID : chart_config[1].HTMLid }, function(err, nodes) {
+		for (i = 0; i < nodes.length; i++) {
+			chart_config.push({ parent : chart_config[1], HTMLid : nodes[i]._id, text : { name : nodes[i].processName } });
+			
+			//getChildNodes(nodes[i]._id, function(grandchildren) {
+			//	children.push({ text : { name : grandchildren[i].processName }, HTMLid : grandchildren[i]._id });
+			//});
 		}
-	};
-
-	getChildNodes("rootNode", function(childNodes) {
-		chart_config.nodeStructure.children = childNodes;
+		
+		console.log(tosource(chart_config));
 		callback(chart_config);
 	});
 }
 
-// return an array of all process IDs except the "Source samples'"
+// return an array of all process IDs except the "Source samples"
 function getAllProcessIDs(callback) {
 	
 	// find all process docs except "Source samples" - "attributeNames : { $exists : true }" wasn't working for some reason
@@ -313,8 +290,9 @@ function updateProcessAttributes(processName, tableData) {
 	db.update({ _id : processName }, { $set: { attributeNames : attributeNames } });
 }
 
-// outdated, doesn't work properly
+// adds new node and samples
 function processSamples(processName, parentID, samplesString) {
+	console.log("Inserting new node "+processName+" with parentID "+parentID);
 	db.insert({ _id : processName, attributeNames : [] });
 	
 	db.insert({ parentID : parentID, processName : processName }, function(err, newNode) {
