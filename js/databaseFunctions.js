@@ -187,6 +187,24 @@ function getAttributeNames(processID, callback) {
 	});
 }
 
+var tickbox = function(value, data, cell, row, options){ //plain text value
+	return '<input type="checkbox" id="myCheck">';
+};
+
+function check() {
+	document.getElementById("myCheck").checked = true;
+	$('#samples-table  input:checkbox').each(function() {
+		this.checked = true;
+	});
+}
+
+function uncheck() {
+	document.getElementById("myCheck").checked = false;
+	$('#samples-table  input:checkbox').each(function() {
+		this.checked = false;
+	});
+}
+
 // return all attributeNames of a nodeID's process in a tabulator column structure for the samples table
 function getProcessAttributeNames(nodeID, callback) {
 	db.findOne({ _id : nodeID }, function(err, node) {
@@ -194,7 +212,13 @@ function getProcessAttributeNames(nodeID, callback) {
 			var columns = [
 			    { formatter : deleteButton, align : "center", width : 30, onClick : function(e, cell, val, data) {
 			    	$("#samples-table").tabulator("deleteRow", data.id);
-			    } }
+			    } },{formatter:tickbox, width:40, align:"center", onClick:function(e, cell, val, row){
+					var checkboxes = document.getElementById('myCheck');
+
+			    	alert("Printing row data for: " + row.id);
+					alert(document.getElementById("myCheck").id)}},
+
+
 			];
 			
 			if (nodeID == "rootNode") {
