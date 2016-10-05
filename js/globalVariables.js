@@ -1,8 +1,9 @@
 // Tomasz J Kocik (u5564707), 2016
 
-var projectOpened        = false,
-    samplesTableRowCount = 1,
-    attriTableRowCount   = 1,
+var projectOpened                    = false,
+    samplesTableRowCount             = 1,
+    attriTableRowCount               = 1,
+    lastClickedNewProcessListElement = null,
     openedFileLocation,
     lastClickedNode,
     lastClickedProcess;
