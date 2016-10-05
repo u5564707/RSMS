@@ -1,2 +1,7 @@
-{"_id":"Source samples","attributeNames":[]}
+{"_id":"1","attributeNames":[]}
+{"_id":"2","attributeNames":[]}
+{"nodeID":"rootNode","sampleID":"2","undefined":"","_id":"4UQVXEEClCgXANzN"}
+{"nodeID":"rootNode","sampleID":"3","undefined":"","_id":"80LQI5pc4NWx9dPW"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","_id":"BlxhS2jBP9M4glRt"}
+{"attributeNames":["Id"],"_id":"Source samples"}
 {"_id":"rootNode","parentID":null,"processName":"Source samples"}

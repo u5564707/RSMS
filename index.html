@@ -103,7 +103,15 @@
 							<div class="uk-panel uk-panel-box uk-panel-box-primary" style="font-family: 'Trebuchet MS'">
 								<p style="font-size:85%;">Getting started:</p>
 								<p style="font-size:70%;">To start a new project select File > New Project</p>
+
+								<ul id="new-ProcessList" class="uk-nav uk-nav-side uk-panel uk-panel-box uk-panel-box-primary ProcessList" data-uk-switcher="{connect:'#thisIsmy-id'}" style="font-family: 'Trebuchet MS'">
+									<h3>Process lists</h3>
+									<!--<li><a href="#">Item1</a></li>-->
+									<!--<li><a href="#">Item2</a></li>-->
+								</ul>
 							</div>
+
+
 						</div>
 	
 						<div class="uk-width" style="width: 70%">
@@ -190,7 +198,7 @@
 								<button id="addNewProcess" class="uk-button-primary" style="font-family: 'Trebuchet MS'">New Process</button>
 								<!-- This is the nav containing the toggling elements -->
 								<p></p>
-								<ul id="ProcessList" class="uk-nav uk-nav-side uk-panel uk-panel-box uk-panel-box-primary " data-uk-switcher="{connect:'#thisIsmy-id'}" style="font-family: 'Trebuchet MS'">
+								<ul id="originalProcessList" class="uk-nav uk-nav-side uk-panel uk-panel-box uk-panel-box-primary ProcessList originalProcessList " data-uk-switcher="{connect:'#thisIsmy-id'}" style="font-family: 'Trebuchet MS'; list-style-type:initial;">
 									<!--<h1>Process lists</h1>-->
 									<!--<li><a href="#">Item1</a></li>-->
 									<!--<li><a href="#">Item2</a></li>-->
@@ -709,10 +717,11 @@
 			
 			// populate process list
 	    getAllProcessIDs(function(ids) {
-	      $("#ProcessList").empty();
+	      $(".ProcessList").empty();
 
 	      for (var i in ids) {
-	        $("#ProcessList").append('<li id='+ids[i]+'><a href="#">'+ids[i]+'</a></li>');
+	        $(".ProcessList").append('<li id='+ids[i]+'><a href="#">'+ids[i]+'</a></li>');
+			  //$("#new-ProcessList").append('<li id= new'+ids[i]+'><a href="#">'+ids[i]+'</a></li>');
 	      }
 
 	    });
@@ -756,7 +765,9 @@
 		//add new process
 		$("#addNewProcess").click(function() {
 
-			var ul = document.getElementById("ProcessList");
+			//var ul = document.getElementById("ProcessList");
+			var ul = document.getElementById("originalProcessList");
+			var ul2 = document.getElementById("new-ProcessList");
 			var t1 = prompt("Name of the new process?");
 			//li.appendChild(document.createTextNode(t1));
 
@@ -764,20 +775,33 @@
 				return;
 			} else {
 
+				var t2 = t1;
 			var li = document.createElement("li");
 			var a = document.createElement('a');
 			a.href = "#";
 
 			a.appendChild(document.createTextNode(t1));
 			li.appendChild(a);
+
 			li.setAttribute("id", t1); // added line
-			ul.appendChild(li);
+
+				var li2 = document.createElement("li");
+				var a2 = document.createElement('a');
+				a2.href = "#";
+
+				a2.appendChild(document.createTextNode(t2));
+				li2.appendChild(a2);
+				li2.setAttribute("id", t2); // added line
+
+
+				ul.appendChild(li);
+				ul2.appendChild(li2);
 			//alert(li.id);
 			//$("#ProcessList").append('<li id='+t1+'><a href="#">'+t1+'</a></li>');
 			//var samplesString2 = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
 
 
-			var lis = $("#ProcessList li");
+			var lis = $(".ProcessList li");
 
 			//var par = ul.childNodes[lis.length-2].innerText;
 
@@ -803,10 +827,10 @@
 		});
 
 		// click process ul
-		$("#ProcessList").on("click",function(){
+		$(".originalProcessList").on("click",function(){
 			console.log("list clicked");
 
-			$("a").on("click",function() {
+			$(".originalProcessList a").on("click",function() {
 				console.log("list element clicked");
 
 
@@ -823,7 +847,9 @@
 			  },
 	      });
 
+				console.log(this);
 				// set columns
+
 	      $("#attri-table").tabulator("setColumns", [
           { formatter: deleteButton, align: "center", width: 50, onClick: function(e, cell, val, data) {
             console.log("deleting row "+data.id);
@@ -845,10 +871,10 @@
         $("#addNewAttribute").show();
         $("#saveAttributes").show();
 
-				$("#ProcessList").clearQueue();
+				$("#newProcessList").clearQueue();
 			});
 
-			$("#ProcessList").clearQueue();
+			$("#newProcessList").clearQueue();
 		});
 
 		/*$("#del-attri-table").on('click',function() {
