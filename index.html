@@ -115,8 +115,12 @@
 						</div>
 
 						<div class="uk-width" style="width: 70%">
+
+
 							<div class="uk-panel uk-panel-box uk-panel-box-primary" style="overflow:scroll">
 
+
+								<!--<button id="selectButton" class="uk-button" onclick="selectProcess()">Select</button>-->
 								<!--filter example-->
 								<div id="table-filters" style="display: none">
 								<p>
@@ -157,8 +161,14 @@
 
 								<div id="example-table-filters" ></div>
 
-								<button onclick="check()">Check Checkbox</button>
-								<button onclick="uncheck()">Uncheck Checkbox</button>
+									<legend>Select Process Samples</legend>
+									<input id="range1" type="text" placeholder="Range from">
+									<input id="range2" type="text" placeholder="Range to">
+
+									<button class="uk-button-primary" onclick="selectProcess()">Select</button>
+									<br>
+								<button class="uk-button" onclick="check()">Check Checkbox</button>
+								<button class="uk-button" onclick="uncheck()">Uncheck Checkbox</button>
 
 								<div class="tables" id="samples-table"></div>
 								<p align="center">
@@ -949,6 +959,9 @@
 			$("#attri-table").tabulator("redraw",true);
 			$("#samples-table").tabulator("redraw",true);
 		});
+
+
+
 
 
 	</script>

@@ -219,6 +219,19 @@ function uncheck() {
 	});
 }
 
+function selectProcess() {
+	let x = Number($("#range1").val());
+	let y = Number($("#range2").val());
+
+	let z = $('#samples-table  input:checkbox');
+
+	for(let xy = x;xy<=y;xy++){
+		z[xy].checked = true;
+	}
+
+
+
+}
 // return all attributeNames of a nodeID's process in a tabulator column structure for the samples table
 function getProcessAttributeNames(nodeID, callback) {
 	db.findOne({ _id : nodeID }, function (err, node) {
