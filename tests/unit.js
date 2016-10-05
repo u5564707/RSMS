@@ -1,3 +1,5 @@
+// Tomasz J Kocik (u5564707), 2016
+
 function newProjectTest() {
 	testDb = new Datastore({ filename: 'userData', autoload: true });
 
@@ -83,7 +85,7 @@ function saveTest(location) {
 					}
 					
 					if (!matchFound) {
-						console.log("'Save Project' test failed: the saved file does not contain all documents that userData contains", function() {
+						console.log("'Save Project' test failed: the saved file does not contain all documents that userData contains", function () {
 							callback();
 						});
 					}

@@ -105,16 +105,16 @@
 								<p style="font-size:70%;">To start a new project select File > New Project</p>
 							</div>
 						</div>
-	
+
 						<div class="uk-width" style="width: 70%">
 							<div class="uk-panel uk-panel-box uk-panel-box-primary" style="overflow:scroll">
-	
+
 								<!--filter example-->
 								<div id="table-filters" style="display: none">
 								<p>
 								<fieldset>
 									<legend>Filter Parameters</legend>
-	
+
 									<label>Field: </label>
 									<select id="filter-field">
 										<option></option>
@@ -127,7 +127,7 @@
 										<!--<option value="cheese">Likes Cheese</option>-->
 										<!--<option value="function">Likes Cheese &amp; height &lt; 3</option>-->
 									</select>
-	
+
 									<label>Type:</label>
 									<select id="filter-type">
 										<option value="=">=</option>
@@ -138,38 +138,38 @@
 										<option value="!=">!=</option>
 										<option value="like">like</option>
 									</select>
-	
+
 									<label>Value: </label><input id="filter-value" type="text" placeholder="value to filter">
-	
+
 									<input id="filter-clear" type="button" value="Clear Filter" style="margin-left:40px; font-family: 'Trebuchet MS'">
-	
+
 								</fieldset>
 								</p>
 								</div>
-								
+
 								<div id="example-table-filters" ></div>
-	
+
 								<div class="tables" id="samples-table"></div>
 								<p align="center">
 	                <button id="add_table" class="buttons uk-button-primary" style="display: none">New row</button>
 	              </p>
 							</div>
 						</div>
-	
+
 						<div class="uk-width " style="width: 15%">
 							<div class="uk-panel uk-panel-box uk-panel-box-primary">
 								<h3 style="font-family: 'Trebuchet MS'">Buttons</h3>
-	
+
 								<!--<form class="forms" id='form2' style="display: none">
 									<input type="text" id="col_name" class="uk-form-success" name="add_col" placeholder="new column name">
 								</form>-->
-	
+
 								<button class="buttons uk-button-primary" id="add_col" style="display: none">New column</button>
 								<p></p>
 								<!--<form class="forms" id='form3' style="display: none">
 								<input type="text" class="uk-form-danger" id="col_del" name="del_col" placeholder="Choose column name">
 								</form>-->
-	
+
 								<button class="buttons uk-button-danger" id="del_col" style="display: none">Delete column</button>
 							</div>
 						</div>
@@ -193,7 +193,7 @@
 									<!--<li><a href="#">Item2</a></li>-->
 								</ul>
 							</div>
-	
+
 							<div class="uk-width-large-1-3 uk-width-1-2 uk-text-right">
 								<h4 style="font-family: 'Trebuchet MS'">Process Attributes</h4>
 								<div>
@@ -285,14 +285,14 @@
 				setOpenedFileLocation(null);
 				setLastClickedNode(null);
 				projectOpened = true;
-				
+
 				$("#add_table").hide();
 				$("#form2").hide();
         $("#add_col").hide();
         $("#form3").hide();
         $("#del_col").hide();
 				$("#samples-table").hide();
-				
+
 				$("#processID").show();
 				$("#addNewProcess").show();
 
@@ -312,10 +312,10 @@
 				console.log("browsing files...");
 				chooser.addEventListener("change", function(evt) {
 					console.log(this.value + " selected!");
-					
+
 					document.getElementById("file-name").innerText = this.value;
 					document.title = this.value;
-					
+
 					console.log("checking file...");
 					//if (this.value.includes(".") || this.value == "") {
 					if (this.value == "") {
@@ -329,7 +329,7 @@
 						setOpenedFileLocation(this.value);
 						setLastClickedNode(null);
 						projectOpened = true;
-						
+
 						$("#add_table").hide();
 						$("#form2").hide();
 		        $("#add_col").hide();
@@ -339,7 +339,7 @@
 						$("#table-filters").hide();
 		        $("#processID").show();
 		        $("#addNewProcess").show();
-		        
+
 		        $("#attri-table").hide();
 		        $("#attriID").hide();
 		        $("#addNewAttribute").hide();
@@ -364,12 +364,12 @@
 	            getOpenedFileLocation(function(location) {
 	              if (location == null) {
 	                var chooser = document.querySelector('#saveAsFileDialog');
-	    
+
 	                chooser.addEventListener("change", function(evt) {
 	                  copyFromUserData(this.value);
 	                  this.value = null; // reset file location
 	                }, false);
-	  
+
 	                chooser.click();
 	              } else {
 	                copyFromUserData(location);
@@ -391,7 +391,7 @@
 	            alert("No project opened!");
 	          } else {
 	            var chooser = document.querySelector('#saveAsFileDialog');
-	  
+
 	            chooser.addEventListener("change", function(evt) {
 	              if (this.value != "") {
 	                copyFromUserData(this.value);
@@ -399,7 +399,7 @@
 	                this.value = null; // reset file location
 	              }
 	            }, false);
-	  
+
 	            chooser.click();
 	          }
 	        });
@@ -414,7 +414,7 @@
         win.close();
       }
     }));
-		
+
 		// Assign to window
 		nw.Window.get().menu = windowMenu;
 
@@ -444,27 +444,27 @@
 									// update columns
                   getProcessAttributeNames(opt.$trigger.attr("id"), function(columns) {
                     $("#samples-table").tabulator("setColumns", columns, false);
-                    
+
                     // update samples (relies on columns to be set)
                     getNodeSamples(opt.$trigger.attr("id"), function(samples) {
                       $("#samples-table").tabulator("setData", samples);
                     });
                   });
-                  
+
                   setLastClickedNode(opt.$trigger.attr("id"));
 								} else {
 									saveTable(nodeID, function() {
-										
+
 										// update columns
 			              getProcessAttributeNames(opt.$trigger.attr("id"), function(columns) {
 			                $("#samples-table").tabulator("setColumns", columns, false);
-			                
+
 			                // update samples (relies on columns to be set)
 			                getNodeSamples(opt.$trigger.attr("id"), function(samples) {
 		                    $("#samples-table").tabulator("setData", samples);
 			                });
 			              });
-										
+
 										setLastClickedNode(opt.$trigger.attr("id"));
 									});
 								}
@@ -487,7 +487,7 @@
 							$("#form3").show();
 							$("#del_col").show();
 							$("#table-filters").show();
-							
+
 							//document.getElementsByClassName("forms").style.display = "block";
 							//document.getElementById("forms").style.visibility = "visible";
 							//document.getElementById("buttons").style.display = "block";
@@ -502,16 +502,17 @@
 								callback : function(key, opt) {
 									var processName = prompt("Process name:"),
 									    samplesString = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
-		
+
 									if (processName != null && samplesString != null) {
 										processSamples(processName, opt.$trigger.attr("id"),
 												samplesString);
 									}
-		
+
 									// update tree
-									$("#tree").empty();
 									getTreeConfig(function(config) {
+										$("#tree").empty();
 										new Treant(config);
+										this.clearQueue();
 									});
 								}
 							}
@@ -657,9 +658,9 @@
 					tmp = prompt("Please enter the name of the column to delete");
 				}
 				$("#samples-table").tabulator("deleteColumn", tmp);*/
-				
+
 				$("#samples-table").tabulator("deleteColumn", prompt("Please enter the name of the column to delete"));
-				
+
 				/*var thiscolumns = $("#samples-table").tabulator('getColumns');
 				var temp1 = $("#samples-table").tabulator("getData");
 
@@ -703,7 +704,7 @@
 				$("#samples-table").tabulator("setData", x);
 				console.log(tosource(x));
 			});*/
-			
+
 			// populate process list
 	    getAllProcessIDs(function(ids) {
 	      $("#ProcessList").empty();
@@ -721,7 +722,7 @@
         console.log("saving column headers for node "+nodeID+"...");
         updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
         console.log("saved!");
-        
+
         console.log("saving sample data for node "+nodeID+"...");
         updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
         console.log("saved!");
@@ -729,7 +730,7 @@
 
       callback();
     }
-		
+
 		//click the first list demo
 //		$("#attriID-1").one('click',function() {
 //			$("#attri-table").tabulator({
@@ -743,7 +744,7 @@
 //				{id: 1, name: "Billy Bob"}
 //			]);
 //		});
-		
+
 		// add new attribute
 		$("#addNewAttribute").click(function() {
 			$("#attri-table").tabulator("addRow", { id: attriTableRowCount, name: "attr"+attriTableRowCount++ });
@@ -788,8 +789,9 @@
 			addProcess(t1);
 
 			// update tree
-			$("#tree").empty();
+
 			getTreeConfig(function (config) {
+				$("#tree").empty();
 				new Treant(config);
 			});
 		}
@@ -859,7 +861,7 @@
 			$("#attri-table").tabulator("setData", x);
 			console.log(tosource(x));
 		});*/
-		
+
 		// save list of attributes
 		$("#saveAttributes").on('click',function() {
 			getLastClickedProcess(function(processID) {
@@ -891,7 +893,7 @@
 
 			$("#example-table-filters").tabulator("setFilter", filter, $("#filter-type").val(), $("#filter-value").val());
 		}
-		
+
 		//Update filters on value change
 		$("#filter-field, #filter-type").change(updateFilter);
 		$("#filter-value").keyup(updateFilter);
