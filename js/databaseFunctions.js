@@ -2,7 +2,7 @@
 
 /* Datastore schema
 	Process: { _id, attributeNames: [] }
-	Node:    { _id, parentID, processName }
+	Node:    { _id, name, parentID, processName }
 	Sample:  { _id, nodeID, sampleID, attr_1, attr_2, ... , attr_n }
 */
 
@@ -84,7 +84,7 @@ function getChildNodes(nodeID, callback) {
 			callback(children);
 		} else {
 			for (let i = 0; i < nodes.length; i++) {
-				children.push({ text : { name : nodes[i].processName }, HTMLid : nodes[i]._id });
+				children.push({ text : { name : nodes[i].name }, HTMLid : nodes[i]._id });
 
 				// recursively find grandchildren
 				getChildNodes(nodes[i]._id, function (grandchildren) {
@@ -249,11 +249,15 @@ function updateProcessAttributes(processName, tableData) {
 
 // adds new node and samples
 function processSamples(processName, parentID, sampleIDs) {
-	db.insert({ parentID : parentID, processName : processName, }, function (err, newNode) {
-		for (let i = 0; i < sampleIDs.length; i++) {
-			db.insert({ nodeID : newNode._id, sampleID : sampleIDs[i] });
-		}
+	db.find({ processName : processName }, function (err, docs) {
+		name = processName + (docs.length + 1);
 		
-		initialProject();
+		db.insert({ parentID : parentID, name : name, processName : processName }, function (err, newNode) {
+			for (let i = 0; i < sampleIDs.length; i++) {
+				db.insert({ nodeID : newNode._id, sampleID : sampleIDs[i] });
+			}
+			
+			initialProject();
+		});
 	});
 }
