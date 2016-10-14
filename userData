@@ -1,7 +1,16 @@
-{"_id":"1","attributeNames":[]}
-{"_id":"2","attributeNames":[]}
-{"_id":"3","attributeNames":[]}
-{"attributeNames":[],"_id":"Source samples"}
+{"_id":"Source samples","attributeNames":[]}
 {"_id":"rootNode","parentID":null,"processName":"Source samples"}
+{"_id":"asd","attributeNames":[]}
+{"_id":"sdf","attributeNames":[]}
+{"parentID":"rootNode","name":"asd1","processName":"asd","_id":"ttLVqndr0joB0pD5"}
+{"parentID":"rootNode","name":"asd2","processName":"asd","_id":"oeiQJZoPZYVVXbpW"}
 {"attributeNames":[],"_id":"Source samples"}
-{"nodeID":"rootNode","sampleID":"3","undefined":"","_id":"peihSGTPmraaDXoS"}
+{"parentID":"oeiQJZoPZYVVXbpW","name":"asd3","processName":"asd","_id":"wScTKYlnHMA0C20F"}
+{"parentID":"oeiQJZoPZYVVXbpW","name":"asd4","processName":"asd","_id":"2PZTpst6X5xwUsMj"}
+{"attributeNames":[],"_id":"asd"}
+{"parentID":"rootNode","name":"asd5","processName":"asd","_id":"roL7p1gzmquVYSCG"}
+{"parentID":"rootNode","name":"sdf1","processName":"sdf","_id":"TENBvRrB2VXDVSva"}
+{"attributeNames":[],"_id":"Source samples"}
+{"parentID":"wScTKYlnHMA0C20F","name":"sdf2","processName":"sdf","_id":"GP5dpwHITbYLyO6u"}
+{"attributeNames":[],"_id":"asd"}
+{"parentID":"rootNode","name":"sdf3","processName":"sdf","_id":"MdpJ7nubAt8E5Pew"}
