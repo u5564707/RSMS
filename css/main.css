@@ -5,6 +5,9 @@
 }
 .node p { font-size: 20px; line-height: 20px; height: 20px; font-weight: bold; padding: 3px; margin: 0; }
 
+.nodeHightLight {background-color: #EBF7FD;
+	color: #317190;}
+
 .tooltip {
 	display:none;
 	position:absolute;

@@ -249,7 +249,7 @@ function updateProcessAttributes(processName, tableData) {
 
 // adds new node and samples
 function processSamples(processName, parentID, sampleIDs) {
-	db.insert({ parentID : parentID, processName : processName }, function (err, newNode) {
+	db.insert({ parentID : parentID, processName : processName, }, function (err, newNode) {
 		for (let i = 0; i < sampleIDs.length; i++) {
 			db.insert({ nodeID : newNode._id, sampleID : sampleIDs[i] });
 		}

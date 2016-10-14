@@ -449,6 +449,8 @@
 						name : "View Samples",
 						callback : function (key, opt) {
 
+							$('.nodeHightLight').removeClass('nodeHightLight');
+							$(this).addClass('nodeHightLight');
 							// save table then update data
 							getLastClickedNode(function (nodeID) {
 								if (nodeID == null) {
@@ -995,6 +997,27 @@
 					processSamples(lastClickedNewProcessListElement, nodeID, checkedSampleIDs);				
 				});
 			}
+		});
+
+		//get the date
+		Date.prototype.ymdhm = function() {
+			var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
+			var dd = this.getDate().toString();
+			var minute = this.getMinutes().toString();
+			var hour = this.getHours().toString();
+
+			return [this.getFullYear(), mm.length===2 ? '-' : '-0', mm, dd.length===2 ? '-' : '-0', dd,hour.length===2 ? ' ':' 0',hour,minute.length ===2 ? ':':':0',minute].join('');
+		};
+
+		var date = new Date();
+		var todayString = date.ymdhm();
+
+
+		//heightlight selected nodes
+		$('.node p').click(function(){
+			$('.nodeHightLight').removeClass('nodeHightLight');
+			$(this).addClass('nodeHightLight');
+
 		});
 	</script>
 </body>
