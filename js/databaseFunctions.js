@@ -2,9 +2,10 @@
 
 /* Datastore schema
 	Process: { _id, attributeNames: [] }
-	Node:    { _id, name, parentID, processName }
+	Node:    { _id, name, parentID, processName,dateTitle }
 	Sample:  { _id, nodeID, sampleID, attr_1, attr_2, ... , attr_n }
 */
+
 
 var Datastore = require('nedb'),
     db        = new Datastore({ filename : 'userData', autoload : true });
@@ -15,6 +16,8 @@ var Datastore = require('nedb'),
 
 // replaces all documents of userData file with the root node and root process
 function initialiseUserData() {
+	var date = new Date();
+	var todayString = date.ymdhm();
 	console.log("emptying userData...");
 	db.remove({}, { multi : true }, function () {
 		console.log("emptied!");
@@ -24,7 +27,7 @@ function initialiseUserData() {
 			console.log("inserted!");
 
 			console.log("inserting 'rootNode' node...");
-			db.insert({ _id : "rootNode", parentID : null, processName : "Source samples" }, function () {
+			db.insert({ _id : "rootNode", parentID : null, processName : "Source samples",createDate: date.ymdhm()}, function () {
 				console.log("inserted!");
 
 				newProjectTest();
@@ -84,7 +87,7 @@ function getChildNodes(nodeID, callback) {
 			callback(children);
 		} else {
 			for (let i = 0; i < nodes.length; i++) {
-				children.push({ text : { name : nodes[i].name }, HTMLid : nodes[i]._id });
+				children.push({ text : { name : nodes[i].name ,title:nodes[i].title}, HTMLid : nodes[i]._id });
 
 				// recursively find grandchildren
 				getChildNodes(nodes[i]._id, function (grandchildren) {
@@ -99,9 +102,10 @@ function getChildNodes(nodeID, callback) {
 
 // return Treant chart config in JSON structure
 function getTreeConfig(callback) {
+
 	let chart_config = {
 		chart : { container : "#tree", rootOrientation: 'WEST' },
-		nodeStructure : { HTMLid : "rootNode", text : { name : "Source samples" } }
+		nodeStructure : { HTMLid : "rootNode", text : { name : "Source samples" ,title:date.ymdhm()} }
 	};
 
 	getChildNodes(chart_config.nodeStructure.HTMLid, function (children) {
@@ -249,10 +253,12 @@ function updateProcessAttributes(processName, tableData) {
 
 // adds new node and samples
 function processSamples(processName, parentID, sampleIDs) {
+	var date = new Date();
+	var todayString = date.ymdhm();
 	db.find({ processName : processName }, function (err, docs) {
 		name = processName + (docs.length + 1);
 		
-		db.insert({ parentID : parentID, name : name, processName : processName }, function (err, newNode) {
+		db.insert({ parentID : parentID, name : name, processName : processName,title: date.ymdhm()}, function (err, newNode) {
 			for (let i = 0; i < sampleIDs.length; i++) {
 				db.insert({ nodeID : newNode._id, sampleID : sampleIDs[i] });
 			}

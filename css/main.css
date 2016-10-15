@@ -3,7 +3,11 @@
 .node {
 	cursor:pointer;
 }
-.node p { font-size: 20px; line-height: 20px; height: 20px; font-weight: bold; padding: 3px; margin: 0; }
+.node p {  line-height: 20px; height: 20px; font-weight: bold; padding: 3px; margin: 0; }
+
+.node-name { font-weight: bold;}
+.node-title {color: #6fac34;font-size: 80%;}
+
 
 .nodeHightLight {background-color: #EBF7FD;
 	color: #317190;}
