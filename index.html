@@ -541,6 +541,27 @@
 				rowFormatter : function (row, data) {
 					row.css({"height":"36px"});
 				},
+				cellEdited : function (id, field, value, oldValue, data, cell, row) {
+					console.log(field);
+					// prevent duplicate ids
+					if (field = "id") {
+						let data = $("#samples-table").tabulator("getData");
+						
+						for (let i = 0; i < data.length; i++) {
+							console.log(value);
+							if (data[i].id == value) {
+								alert("This id has already been used");
+							}
+						}
+					}
+			        //id - the id of the row
+			        //field - field of the cell
+			        //value - the new value for the cell
+			        //oldValue - the old value for the cell
+			        //data - the data for the row
+			        //cell - the DOM element of the cell
+			        //row - the DOM element of the row
+			  }
 				//pagination : true, // uncomment for final version
 			});
 		};
