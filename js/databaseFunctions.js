@@ -27,7 +27,8 @@ function initialiseUserData() {
 			console.log("inserted!");
 
 			console.log("inserting 'rootNode' node...");
-			db.insert({ _id : "rootNode", parentID : null, processName : "Source samples",createDate: date.ymdhm()}, function () {
+			db.insert({ _id : "rootNode", parentID : null, name : "Source samples", processName : "Source samples",
+					createDate: date.ymdhm() }, function () {
 				console.log("inserted!");
 
 				newProjectTest();

@@ -1006,19 +1006,31 @@
 			if (lastClickedNewProcessListElement == null) {
 				alert("No process selected!");
 			} else {
-				let tableData        = $("#samples-table").tabulator("getData"),
-				    checkboxes       = $('#samples-table  input:checkbox'),
-				    checkedSampleIDs = [];
-								
-				for (let i = 0; i < tableData.length; i++) {
-	        if (checkboxes[i].checked) {
-	        	checkedSampleIDs.push(tableData[i].id);
-	        }
-	      }
+				var allChecked = false;
 				
-				getLastClickedNode(function (nodeID) {
-					processSamples(lastClickedNewProcessListElement, nodeID, checkedSampleIDs);				
-				});
+				$('#samples-table  input:checkbox').each(function () {
+					if (this.checked) {
+						allChecked = true;
+					}
+			  });
+				
+				if (!allChecked) {
+					alert("No samples selected!");
+				} else {
+					let tableData        = $("#samples-table").tabulator("getData"),
+	            checkboxes       = $('#samples-table  input:checkbox'),
+	            checkedSampleIDs = [];
+	                
+	        for (let i = 0; i < tableData.length; i++) {
+	          if (checkboxes[i].checked) {
+	            checkedSampleIDs.push(tableData[i].id);
+	          }
+	        }
+	        
+	        getLastClickedNode(function (nodeID) {
+	          processSamples(lastClickedNewProcessListElement, nodeID, checkedSampleIDs);       
+	        });
+				}
 			}
 		});
 
