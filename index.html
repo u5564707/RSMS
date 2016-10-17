@@ -454,8 +454,11 @@
 						callback : function (key, opt) {
 
 							let x = document.getElementById('tableName') ;
-							x.innerText =
 
+
+							getNodeName(opt.$trigger.attr("id"),function (name) {
+								x.innerText = name;
+							});
 
 							$('.nodeHightLight').removeClass('nodeHightLight');
 							$(this).addClass('nodeHightLight');

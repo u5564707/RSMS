@@ -27,7 +27,7 @@ function initialiseUserData() {
 			console.log("inserted!");
 
 			console.log("inserting 'rootNode' node...");
-			db.insert({ _id : "rootNode", parentID : null, processName : "Source samples",createDate: date.ymdhm()}, function () {
+			db.insert({ _id : "rootNode", parentID : null, name : 'Source samples' ,processName : "Source samples",title: date.ymdhm()}, function () {
 				console.log("inserted!");
 
 				newProjectTest();
@@ -180,7 +180,7 @@ function getProcessAttributeNames(nodeID, callback) {
 // return the name of a node with nodeID
 function getNodeName(nodeID, callback) {
 	db.findOne({ _id : nodeID }, function (err, node) {
-		callback(node.name);
+		callback(node.name + '  '+ node.title);
 	});
 } 
 

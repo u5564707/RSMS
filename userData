@@ -1,29 +1,7 @@
 {"_id":"Source samples","attributeNames":[]}
-{"_id":"rootNode","parentID":null,"processName":"Source samples"}
-{"_id":"dna","attributeNames":[]}
-{"_id":"dna","attributeNames":["attr6","attr7","attr8","attr9"]}
-{"parentID":"rootNode","name":"dna1","processName":"dna","_id":"kkr5v3uojzkOiar3"}
-{"nodeID":"kkr5v3uojzkOiar3","sampleID":"4","_id":"ynuhZ4L1jn6SqvBS"}
-{"nodeID":"kkr5v3uojzkOiar3","sampleID":"3","_id":"uvtnQzhIAPiWOy83"}
-{"nodeID":"kkr5v3uojzkOiar3","sampleID":"2","_id":"9mzhQ2todrdBBFOq"}
-{"parentID":"rootNode","name":"dna2","processName":"dna","_id":"08yCZLC3un4mEyQT"}
-{"parentID":"rootNode","name":"dna3","processName":"dna","_id":"fgif0SJ9kEeO8dUy"}
-{"parentID":"rootNode","name":"dna4","processName":"dna","_id":"CgtoQiHpQ5hAPmFX"}
-{"attributeNames":["attr1","attr2","attr3","attr4","attr5"],"_id":"Source samples"}
-{"nodeID":"rootNode","sampleID":"4","undefined":"","attr1":"","attr2":"","attr3":"","attr4":"","attr5":"","_id":"A1SxHmDwIBehnj9B"}
-{"nodeID":"rootNode","sampleID":"3","undefined":"","attr1":"","attr2":"","attr3":"","attr4":"","attr5":"","_id":"jfyw8ti7GzwNyxsX"}
-{"nodeID":"rootNode","sampleID":"2","undefined":"","attr1":"","attr2":"","attr3":"","attr4":"","attr5":"","_id":"WfEZXliLGoklnyYl"}
-{"nodeID":"rootNode","sampleID":"1","undefined":"","attr1":"","attr2":"","attr3":"","attr4":"","attr5":"","_id":"WSAE4aSQXgyEqGMd"}
-{"parentID":"CgtoQiHpQ5hAPmFX","name":"dna5","processName":"dna","_id":"DAUYSygxHC1z68Kz"}
-{"parentID":"CgtoQiHpQ5hAPmFX","name":"dna6","processName":"dna","_id":"dOGOKwOVEobPaMNe"}
-{"parentID":"CgtoQiHpQ5hAPmFX","name":"dna7","processName":"dna","_id":"qPM5TX26RGH0Zzfe"}
-{"parentID":"CgtoQiHpQ5hAPmFX","name":"dna8","processName":"dna","_id":"05ImKD1FPas4D5uu"}
-{"attributeNames":["attr6","attr7","attr8","attr9"],"_id":"dna"}
-{"parentID":"DAUYSygxHC1z68Kz","name":"dna9","processName":"dna","_id":"4rbsc78YLoYUaFvo"}
-{"parentID":"DAUYSygxHC1z68Kz","name":"dna10","processName":"dna","_id":"aumHjg1UyEO2wpf3"}
-{"parentID":"DAUYSygxHC1z68Kz","name":"dna11","processName":"dna","_id":"2eIXQA1XT1OWV1ko"}
-{"parentID":"DAUYSygxHC1z68Kz","name":"dna12","processName":"dna","_id":"yFBNgAfKo5x6rgc6"}
-{"parentID":"DAUYSygxHC1z68Kz","name":"dna13","processName":"dna","_id":"V33ZvdIkkHA0IXUF"}
-{"parentID":"DAUYSygxHC1z68Kz","name":"dna14","processName":"dna","_id":"c2J81cB9eNEQcqhE"}
-{"parentID":"DAUYSygxHC1z68Kz","name":"dna14","processName":"dna","_id":"doyrcZPIivEYMRnu"}
-{"attributeNames":["attr6","attr7","attr8","attr9"],"_id":"dna"}
+{"_id":"rootNode","parentID":null,"name":"Source samples","processName":"Source samples","title":"2016-10-17 15:18"}
+{"_id":"good","attributeNames":[]}
+{"parentID":"rootNode","name":"good1","processName":"good","title":"2016-10-17 15:18","_id":"IEBbgTSiGfjkYcgg"}
+{"parentID":"rootNode","name":"good2","processName":"good","title":"2016-10-17 15:18","_id":"37ekAce8IziAOf7F"}
+{"attributeNames":[],"_id":"Source samples"}
+{"attributeNames":[],"_id":"good"}
