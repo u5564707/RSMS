@@ -75,8 +75,22 @@
 
 			pagination:false, //enable pagination
 			paginationSize:false, //size of pages
-			paginationAjax:false, //paginate internal or via ajax
 			paginationElement:false, //element to hold pagination numbers
+			paginationDataReceived:{ //pagination data received from the server
+				"current_page":"current_page",
+				"last_page":"last_page",
+				"data":"data",
+			},
+			paginationDataSent:{ //pagination data sent to the server
+				"page":"page",
+				"size":"size",
+				"sort":"sort",
+				"sort_dir":"sort_dir",
+				"filter":"filter",
+				"filter_value":"filter_value",
+				"filter_type":"fitler_type",
+			},
+			paginator:false, //pagination url string builder
 
 			progressiveRender:false, //enable progressive rendering
 			progressiveRenderSize:20, //block size for progressive rendering
@@ -101,7 +115,7 @@
 			groupBy:false, //enable table grouping and set field to group by
 
 			groupHeader:function(value, count, data){ //header layout function
-				return value + "<span>(" + count + " item)</span>";
+				return value + "<span>(" + count + " " + ((count === 1) ? "item" : "items") + ")</span>";
 			},
 
 			rowFormatter:false, //row formatter callback
@@ -117,17 +131,34 @@
 			loader:"<div class='tabulator-loading'>Loading Data</div>", //loader element
 			loaderError:"<div class='tabulator-error'>Loading Error</div>", //loader element
 
-			rowClick:function(){}, //do action on row click
-			rowAdded:function(){}, //do action on row add
-			rowEdit:function(){}, //do action on row edit
-			rowDelete:function(){}, //do action on row delete
-			rowContext:function(){}, //context menu action
-			dataLoaded:function(){}, //callback for when data has been Loaded
-			rowMoved:function(){}, //callback for when row has moved
-			colMoved:function(){}, //callback for when column has moved
-			pageLoaded:function(){}, //calback for when a page is loaded
-			dataFiltered:function(){}, //callback for when data is filtered
-			colTitleChanged:function(){}, //do action whel column title changed
+			//Callbacks from events
+			rowClick:function(){},
+			rowAdded:function(){},
+			rowDeleted:function(){},
+			rowContext:function(){},
+			rowMoved:function(){},
+			rowUpdated:function(){},
+
+			cellEdited:function(){},
+
+			colMoved:function(){},
+			colTitleChanged:function(){},
+
+			dataLoading:function(){},
+			dataLoaded:function(){},
+			dataLoadError:function(){},
+			dataEdited:function(){},
+
+			dataFiltering:function(){},
+			dataFiltered:function(){},
+
+			dataSorting:function(){},
+			dataSorted:function(){},
+
+			renderStarted:function(){},
+			renderComplete:function(){},
+
+			pageLoaded:function(){},
 		},
 
 		////////////////// Element Construction //////////////////
@@ -160,9 +191,11 @@
 					//create column array from headers
 					headers.each(function(index){
 
-						var col = {title:$(this).text(), field:$(this).text().toLowerCase().replace(" ", "_")};
+						var header = $(this);
 
-						var width = $(this).attr("width");
+						var col = {title:header.text(), field:header.text().toLowerCase().replace(" ", "_")};
+
+						var width = header.attr("width");
 
 						if(width){
 							col.width = width;
@@ -250,13 +283,16 @@
 			var scrollTop = 0;
 			var scrollLeft = 0;
 			self.tableHolder.scroll(function(){
+
+				var holder = $(this);
+
 				// if(scrollLeft != $(this).scrollLeft()){
-				self.header.css({"margin-left": "-1" * $(this).scrollLeft()});
+				self.header.css({"margin-left": "-1" * holder.scrollLeft()});
 				// }
 
 				//trigger progressive rendering on scroll
-				if(self.options.progressiveRender && scrollTop != $(this).scrollTop() && scrollTop < $(this).scrollTop()){
-					if($(this)[0].scrollHeight - $(this).innerHeight() - $(this).scrollTop() < self.options.progressiveRenderMargin){
+				if(self.options.progressiveRender && scrollTop != holder.scrollTop() && scrollTop < holder.scrollTop()){
+					if(holder[0].scrollHeight - holder.innerHeight() - holder.scrollTop() < self.options.progressiveRenderMargin){
 						if(self.paginationCurrentPage < self.paginationMaxPage){
 							self.paginationCurrentPage++;
 							self._renderTable(true);
@@ -264,7 +300,7 @@
 					}
 				}
 
-				scrollTop = $(this).scrollTop();
+				scrollTop = holder.scrollTop();
 			});
 
 			//create scrollable table holder
@@ -272,6 +308,10 @@
 
 			//build pagination footer if needed
 			if(options.pagination){
+
+				if(options.pagination === true){
+					options.pagination = "local"; //convert old pagination style to new
+				}
 
 				if(!options.paginationElement){
 					options.paginationElement = $("<div class='tabulator-footer'></div>");
@@ -361,7 +401,8 @@
 
 			//reposition loader if present
 			if(self.element.innerHeight() > 0){
-				$(".tabulator-loader-msg", self.loaderDiv).css({"margin-top":(self.element.innerHeight() / 2) - ($(".tabulator-loader-msg", self.loaderDiv).outerHeight()/2)})
+				var msg = $(".tabulator-loader-msg", self.loaderDiv);
+				msg.css({"margin-top":(self.element.innerHeight() / 2) - (msg.outerHeight()/2)})
 			}
 
 			//trigger row restyle
@@ -666,10 +707,13 @@
 				return false;
 			}else{
 				self.options.columns[column].visible = !self.options.columns[column].visible;
+
+				var cell = $(".tabulator-col[data-field=" + field + "], .tabulator-cell[data-field=" + field + "]", self.element);
+
 				if(self.options.columns[column].visible){
-					$(".tabulator-col[data-field=" + field + "], .tabulator-cell[data-field=" + field + "]", self.element).show();
+					cell.show();
 				}else{
-					$(".tabulator-col[data-field=" + field + "], .tabulator-cell[data-field=" + field + "]", self.element).hide();
+					cell.hide();
 				}
 
 				if(self.options.columnLayoutCookie){
@@ -696,7 +740,7 @@
 				rowData.tabulator_delete_row = true;
 
 				//remove from data
-				var line = self.data.find(function(rowData){
+				var line = self.data.find(function(item){
 					return item.tabulator_delete_row;
 				});
 
@@ -729,13 +773,14 @@
 
 				if(self.options.groupBy){
 
-					var length = $(".tabulator-row", group).length;
+					var rows = $(".tabulator-row", group);
+					var length = rows.length;
 
 					if(length){
 
 						var data = [];
 
-						$(".tabulator-row", group).each(function(){
+						rows.each(function(){
 							data.push($(this).data("data"));
 						});
 
@@ -744,7 +789,7 @@
 
 						header.empty();
 
-						header.append(arrow).append(self.options.groupHeader(group.data("value"), $(".tabulator-row", group).length, data));
+						header.append(arrow).append(self.options.groupHeader(group.data("value"), length, data));
 					}else{
 						group.remove();
 					}
@@ -756,11 +801,10 @@
 
 				//align column widths
 				self._colRender(!self.firstRender);
-				self._trigger("renderComplete");
 
-				self.options.rowDelete(id);
+				self.options.rowDeleted(id);
 
-				self._trigger("dataEdited");
+				self.options.dataEdited(self.data);
 			}
 		},
 
@@ -773,6 +817,9 @@
 			}else{
 				item = {id:0};
 			}
+
+			//Apply mutators if present
+			item = self._mutateData(item);
 
 			//create blank row
 			var row = self._renderRow(item);
@@ -790,54 +837,220 @@
 
 			//align column widths
 			self._colRender(!self.firstRender);
-			self._trigger("renderComplete");
 
 			//style table rows
 			self._styleRows();
 
 			//triger event
-			self.options.rowAdded(item);
+			self.options.rowAdded(item, row);
 
-			self._trigger("dataEdited");
+			self.options.dataEdited(self.data);
+		},
+
+		//update row data
+		updateRow:function(index, item, bulk){
+			var self = this;
+
+			var id = !isNaN(index) ? index : index.data("data")[self.options.index];
+
+			var row = !isNaN(index) ? $("[data-id=" + index + "]", self.element) : index;
+
+			if(row.length){
+				var rowData = row.data("data");
+
+				//Apply mutators if present
+				item = self._mutateData(item);
+
+				//makesure there are differences between the new and old data before updating
+				if(JSON.stringify(rowData) !== JSON.stringify(item)){
+
+					//update row data
+					for (var attrname in item) { rowData[attrname] = item[attrname]; }
+
+					//render new row
+					var newRow = self._renderRow(rowData);
+
+					//replace old row with new row
+					row.replaceWith(newRow);
+
+
+					if(!bulk){
+						//align column widths
+						self._colRender(!self.firstRender);
+
+						//style table rows
+						self._styleRows();
+					}
+
+
+					//triger event
+					self.options.rowUpdated(id, item, newRow);
+
+					if(!bulk){
+						self.options.dataEdited(self.data);
+					}
+				}
+
+				return true;
+			}
+
+			return false;
 		},
 
 		////////////////// Data Manipulation //////////////////
 
 		//get array of data from the table
-		getData:function(){
+		getData:function(filteredData){
 			var self = this;
-			return self.activeData;
+
+			//clone data array with deep copy to isolate internal data from returend result
+			var outputData = $.extend(true, [], filteredData === true ? self.activeData: self.data);
+
+			//check for accessors and return the processed data
+			return self._applyAccessors(outputData);
 		},
+
+		//update existing data
+		updateData:function(data){
+			var self = this;
+
+			if(data){
+				data.forEach(function(item){
+					//update each row in turn
+					self.updateRow(item[self.options.index], item, true);
+				});
+
+				//align column widths
+				self._colRender(!self.firstRender);
+
+				//style table rows
+				self._styleRows();
+				self.options.dataEdited(self.data);
+			}
+		},
+
+		//apply any column accessors to the data before returing the result
+		_applyAccessors:function(data){
+			var self = this;
+
+			self.options.columns.forEach(function(col, i){
+				if(col.accessor){
+					var accessor = typeof col.accessor === "function" ? col.accessor : self.accessors[col.accessor];
+
+					data.forEach(function(item, j){
+						item[col.field] = accessor(item[col.field], item);
+					});
+				}
+			});
+
+			return data;
+		},
+
+
+		///////////////// Pagination Data Loading //////////////////
+
+		//parse paginated data
+		_parsePageData:function(data){
+			var self = this;
+			var options = self.options;
+
+			self.paginationMaxPage = parseInt(data[options.paginationDataReceived.last_page]);
+
+			self._layoutPageSelector();
+
+			self._parseData(data[options.paginationDataReceived.data]);
+		},
+
+
+		_getRemotePageData:function(){
+			var self = this;
+			var options = self.options;
+
+			if(typeof options.paginator == "function"){
+				var url = options.paginator(options.ajaxURL, self.paginationCurrentPage, options.paginationSize, options.ajaxParams);
+				self._getAjaxData(url, {});
+			}else{
+				var pageParams = {};
+
+				//clone ajax params into page request params
+				for (var attrname in options.ajaxParams) { pageParams[attrname] = options.ajaxParams[attrname]; }
+
+				//set page number
+				pageParams[options.paginationDataSent.page] = self.paginationCurrentPage;
+
+				//set page size if defined
+				if(options.paginationSize){
+					pageParams[options.paginationDataSent.size] = options.paginationSize;
+				}
+
+				//set sort data if defined
+				if(self.sortCurCol && typeof self.sortCurCol.field === "string"){
+					pageParams[options.paginationDataSent.sort] = self.sortCurCol.field;
+					pageParams[options.paginationDataSent.sort_dir] = self.sortCurDir;
+				}
+
+				//set filter data if defined
+				if(self.filterField && typeof self.filterField === "string"){
+					pageParams[options.paginationDataSent.filter] = self.filterField;
+					pageParams[options.paginationDataSent.filter_value] = self.filterValue;
+					pageParams[options.paginationDataSent.filter_type] = self.filterType;
+				}
+
+				self._getAjaxData(options.ajaxURL, pageParams);
+			}
+
+		},
+
+		////////////////// Data Loading //////////////////
+
 
 		//load data
 		setData:function(data, params){
-			this._trigger("dataLoading");
+			var self = this;
+
+			self.options.dataLoading(data, params);
 
 			params = params ? params : {};
 
+			self.options.ajaxParams = params;
+
 			//show loader if needed
-			this._showLoader(this, this.options.loader);
+			self._showLoader(this, this.options.loader);
 
 			if(typeof(data) === "string"){
 				if (data.indexOf("{") == 0 || data.indexOf("[") == 0){
 					//data is a json encoded string
-					this._parseData(jQuery.parseJSON(data));
+					self._parseData(jQuery.parseJSON(data));
 				}else{
-					//assume data is url, make ajax call to url to get data
-					this._getAjaxData(data, params);
+
+					self.options.ajaxURL = data;
+
+					if(self.options.pagination == "remote"){
+						self.setPage(1);
+					}else{
+						//assume data is url, make ajax call to url to get data
+						self._getAjaxData(data, params);
+					}
+
 				}
 			}else{
 				if(data){
 					//asume data is already an object
-					this._parseData(data);
+					self._parseData(data);
 
 				}else{
 					//no data provided, check if ajaxURL is present;
 					if(this.options.ajaxURL){
-						this._getAjaxData(this.options.ajaxURL, params);
+
+						if(self.options.pagination == "remote"){
+							self.setPage(1);
+						}else{
+							self._getAjaxData(this.options.ajaxURL, params);
+						}
+
 					}else{
 						//empty data
-						this._parseData([]);
+						self._parseData([]);
 					}
 				}
 			}
@@ -858,16 +1071,22 @@
 			$.ajax({
 				url: url,
 				type: "GET",
-				data:params,
+				data:params ? params : self.options.ajaxParams,
 				async: true,
 				dataType:"json",
 				success: function (data){
-					self._parseData(data);
-				},
-				error: function (xhr, ajaxOptions, thrownError){
-					console.log("Tablulator ERROR (ajax get): " + xhr.status + " - " + thrownError);
-					self._trigger("dataLoadError", xhr, thrownError);
 
+					if(self.options.pagination == "remote"){
+						self._parsePageData(data);
+					}else{
+						self._parseData(data);
+					}
+
+				},
+				error: function (xhr, textStatus, errorThrown){
+					console.error("Tablulator ERROR (ajax get): " + xhr.status + " - " + errorThrown);
+
+					self.options.dataLoadError(xhr, textStatus, errorThrown);
 					self._showLoader(self, self.options.loaderError);
 				},
 			});
@@ -895,9 +1114,9 @@
 					}
 				}
 
-				self.data = newData;
+				self.options.dataLoaded(newData);
 
-				self.options.dataLoaded(data);
+				self.data = self._mutateData(newData);
 
 				//filter incomming data
 				self._filterData();
@@ -905,13 +1124,37 @@
 
 		},
 
+		//applu mutators if present
+		_mutateData:function(data){
+			var self = this;
+
+			self.options.columns.forEach(function(col, i){
+				if(col.mutator && col.mutateType !== "edit"){
+
+					var mutator = typeof col.mutator === "function" ? col.mutator : self.mutators[col.mutator];
+
+					if(Array.isArray(data)){
+						data.forEach(function(item, j){
+							item[col.field] = mutator(item[col.field], "data", item);
+						});
+					}else{
+						data[col.field] = mutator(data[col.field], "data", data);
+					}
+				}
+			});
+
+			return data;
+		},
+
+
+
 		////////////////// Data Filtering //////////////////
 
 		//filter data in table
 		setFilter:function(field, type, value){
 			var self = this;
 
-			self._trigger("filterStarted");
+			self.options.dataFiltering(field, type, value);
 
 			//set filter
 			if(field){
@@ -975,18 +1218,18 @@
 			}
 
 			//set the max pages available given the filter results
-			if(self.options.pagination){
+			if(self.options.pagination == "local"){
 				self.paginationMaxPage = Math.ceil(self.activeData.length/self.options.paginationSize);
 			}
 
-			self.options.dataFiltered(self.activeData);
+			self.options.dataFiltered(self.activeData, self.filterField, self.filterType, self.filterValue);
 
 			//sort or render data
-			if(self.sortCurCol){
+			if(self.sortCurCol && self.options.pagination != "remote"){
 				self.sort(self.sortCurCol, self.sortCurDir);
 			}else{
 				//determine pagination information / render table
-				if(self.options.pagination){
+				if(self.options.pagination == "local"){
 					self.setPage(1);
 				}else{
 					self._renderTable();
@@ -1096,17 +1339,19 @@
 
 				var element = $(".tabulator-col[data-field='" + item.field.field + "']", header);
 
+				var arrow = $(".tabulator-arrow", element);
+
 				if (dir == "asc"){
-					$(".tabulator-arrow", element).removeClass("desc").addClass("asc");
+					arrow.removeClass("desc").addClass("asc");
 				}else{
-					$(".tabulator-arrow", element).removeClass("asc").addClass("desc");
+					arrow.removeClass("asc").addClass("desc");
 				}
 
 				self._sorter(item.field, item.dir, sortList, i);
 
 			});
 
-			self._trigger("sortComplete");
+			self.options.dataSorted(self.data, sortList, dir);
 
 			//determine pagination information / render table
 			if(self.options.pagination){
@@ -1123,7 +1368,7 @@
 			var options = self.options;
 			var data = self.data;
 
-			self._trigger("sortStarted");
+			self.options.dataSorting(sortList, dir);
 
 			self.sortCurCol = column;
 			self.sortCurDir = dir;
@@ -1168,7 +1413,7 @@
 			var sorter = typeof(column.sorter) == "undefined" ? "string" : column.sorter;
 			sorter = typeof(sorter) == "string" ? self.sorters[sorter] : sorter;
 
-			return sorter.call(self, a, b);
+			return sorter.call(self, a, b, el1, el2);
 		},
 
 		////////////////// Data Pagination //////////////////
@@ -1209,9 +1454,13 @@
 				}
 			}
 
-			self._layoutPageSelector();
+			if(self.options.pagination == "local"){
+				self._layoutPageSelector();
+				self._renderTable();
+			}else{
+				self._getRemotePageData();
+			}
 
-			self._renderTable();
 		},
 
 		//set page size for the table
@@ -1283,8 +1532,9 @@
 		_renderTable:function(progressiveRender){
 			var self = this;
 			var options = self.options;
+			var hozScrollPos = 0;
 
-			this._trigger("renderStarted");
+			self.options.renderStarted();
 
 			//show loader if needed
 			self._showLoader(self, self.options.loader);
@@ -1292,6 +1542,9 @@
 			if(!progressiveRender){
 
 				clearTimeout(self.progressiveRenderTimer);
+
+				//get current left scroll position
+				hozScrollPos = self.tableHolder.scrollLeft();
 
 				//clear data from table before loading new
 				self.table.empty();
@@ -1306,7 +1559,7 @@
 				progressiveRender = true;
 			}
 
-			var renderData = options.pagination || options.progressiveRender ? self.activeData.slice((self.paginationCurrentPage-1) * self.options.paginationSize, ((self.paginationCurrentPage-1) * self.options.paginationSize) + self.options.paginationSize) : self.activeData;
+			var renderData = options.pagination == "local" || options.progressiveRender ? self.activeData.slice((self.paginationCurrentPage-1) * self.options.paginationSize, ((self.paginationCurrentPage-1) * self.options.paginationSize) + self.options.paginationSize) : self.activeData;
 
 			//build rows of table
 			renderData.forEach(function(item, i){
@@ -1340,29 +1593,16 @@
 			//enable movable rows
 			if(options.movableRows){
 
-				var moveBackground ="";
-				var moveBorder ="";
-
 				//sorter options
 				var config = {
 					handle:".tabulator-row-handle",
 					opacity: 1,
 					axis: "y",
 					start: function(event, ui){
-						moveBorder = ui.item.css("border");
-						moveBackground = ui.item.css("background-color");
-
-						ui.item.css({
-							"border":"1px solid #000",
-							"background":"#fff",
-						});
-
+						ui.item.addClass("tabulator-row-moving");
 					},
 					stop: function(event, ui){
-						ui.item.css({
-							"border": moveBorder,
-							"background":moveBackground,
-						});
+						ui.item.removeClass("tabulator-row-moving");
 					},
 					update: function(event, ui){
 						//restyle rows
@@ -1377,7 +1617,6 @@
 						$(".tabulator-row", self.table).each(function(){
 							self.activeData.push($(this).data("data"));
 						});
-
 
 						//trigger callback
 						options.rowMoved(ui.item.data("id"), ui.item.data("data"), ui.item,ui.item.prevAll(".tabulator-row").length);
@@ -1418,16 +1657,15 @@
 				//hide loader div
 				self._hideLoader(self);
 
-				//trigger callbacks
-				self._trigger("renderComplete");
-
-				if(self.filterField){
-					self._trigger("filterComplete");
-				}
 
 				if(self.options.pagination){
 					self.options.pageLoaded(self.paginationCurrentPage);
 				}
+			}
+
+			if(!progressiveRender){
+				//get current left scroll position
+				self.tableHolder.scrollLeft(hozScrollPos);
 			}
 
 			self.firstRender = false;
@@ -1492,6 +1730,8 @@
 				cell.data("formatterParams", column.formatterParams);
 				cell.html(self._formatCell(column.formatter, value, item, cell, row, column.formatterParams));
 
+
+
 				//bind cell click function
 				if(typeof(column.onClick) == "function"){
 					cell.on("click", function(e){self._cellClick(e, cell)});
@@ -1511,7 +1751,7 @@
 							//Load editor
 							var editorFunc = typeof(cell.data("editor")) == "string" ? self.editors[cell.data("editor")] : cell.data("editor");
 
-							var cellEditor = editorFunc.call(self, cell, cell.data("value"));
+							var cellEditor = editorFunc.call(self, cell, cell.data("value"), cell.closest(".tabulator-row").data("data"));
 
 							//if editor returned, add to DOM, if false, abort edit
 							if(cellEditor !== false){
@@ -1528,6 +1768,13 @@
 							}
 
 						});
+
+						//assign cell mutator function if needed
+						if(column.mutator && column.mutateType !== "data"){
+							var mutator = typeof column.mutator === "function" ? column.mutator : self.mutators[column.mutator];
+
+							cell.data("mutator", mutator);
+						}
 					}
 				}
 
@@ -1633,6 +1880,22 @@
 					});
 				}
 			}
+
+			//allow for scrolling of headers if table is empty
+			if(self.table.is(":empty") && self.header[0].scrollWidth > self.header.outerHeight()){
+				self.table.css({
+					"min-width":self.header[0].scrollWidth + "px",
+					"min-height":"1px",
+					"visibility":"hidden",
+				});
+			}else{
+				self.table.css({
+					"min-width":"",
+					"min-height":"",
+					"visibility":"",
+				});
+			}
+
 		},
 
 		//layout columns
@@ -1750,7 +2013,7 @@
 
 					for(var field in filters){
 						if(typeof data[field] == "string"){
-							if(data[field].toLowerCase().indexOf(filters[field]) == -1){
+							if(data[field].toLowerCase().indexOf(filters[field].toLowerCase()) == -1){
 								match = false;
 							}
 						}else{
@@ -1911,14 +2174,16 @@
 				var handle = $("<div class='tabulator-handle'></div>");
 				var prevHandle = $("<div class='tabulator-handle prev'></div>");
 
-				$(".tabulator-col", self.header).append(handle);
-				$(".tabulator-col", self.header).append(prevHandle);
+				$(".tabulator-col", self.header).append(handle)
+					.append(prevHandle);
 
 				$(".tabulator-col .tabulator-handle", self.header).on("mousedown", function(e){
 
 					e.stopPropagation(); //prevent resize from interfereing with movable columns
 
-					var colElement = !$(this).hasClass("prev") ? $(this).closest(".tabulator-col") : $(this).closest(".tabulator-col").prev(".tabulator-col");
+					var colHandle = $(this);
+
+					var colElement = !colHandle.hasClass("prev") ? colHandle.closest(".tabulator-col") : colHandle.closest(".tabulator-col").prev(".tabulator-col");
 
 					if(colElement){
 						self.mouseDrag = e.screenX;
@@ -1990,7 +2255,7 @@
 			}
 
 			//set paginationSize if pagination enabled, height is set but no pagination number set, else set to ten;
-			if(self.options.pagination && !self.options.paginationSize){
+			if(self.options.pagination == "local" && !self.options.paginationSize){
 				if(self.options.height){
 					self.options.paginationSize = Math.floor(self.tableHolder.outerHeight() / (self.header.outerHeight() - 1));
 				}else{
@@ -1999,8 +2264,9 @@
 			}
 
 			element.on("editval", ".tabulator-cell", function(e, value){
-				if($(this).is(":focus")){$(this).blur()}
-				self._cellDataChange($(this), value);
+				var element = $(this);
+				if(element.is(":focus")){element.blur()}
+				self._cellDataChange(element, value);
 			});
 
 			element.on("editcancel", ".tabulator-cell", function(e, value){
@@ -2015,10 +2281,20 @@
 			//render column headings
 			self._colRender(false, forceRedraw);
 
-			if(self.firstRender && self.options.data){
-				setTimeout(function(){ //give columns time to render before aloding data set
-					self._parseData(self.options.data);
-				}, 100);
+			if(self.firstRender){
+				if(self.options.data){
+					setTimeout(function(){ //give columns time to render before aloding data set
+						self._parseData(self.options.data);
+					}, 100);
+				}else{
+					if(self.options.ajaxURL){
+						if(self.options.pagination === "remote"){
+							self.setPage(1);
+						}else{
+							self._getAjaxData(self.options.ajaxURL, self.options.ajaxParams);
+						}
+					}
+				}
 			}
 
 		},
@@ -2044,7 +2320,7 @@
 					//resize columns to fit in window
 
 					//remove right edge border on table if fitting to width to prevent double border
-					$(".tabulator-row .tabulator-cell:last-child, .tabulator-col:last",element).css("border-right","none");
+					$(".tabulator-row .tabulator-cell:last-child, .tabulator-col:last", element).css("border-right","none");
 
 					if(self.options.fitColumns){
 						$(".tabulator-row", self.table).css({
@@ -2090,7 +2366,7 @@
 							if(column.visible){
 								var newWidth = column.width ? column.width : proposedWidth;
 
-								var col = $(".tabulator-cell[data-index=" + i + "], .tabulator-col[data-index=" + i + "]",element);
+								var col = $(".tabulator-cell[data-index=" + i + "], .tabulator-col[data-index=" + i + "]", element);
 
 								if(column.field == lastVariableCol){
 									col.css({width:newWidth + gapFill});
@@ -2111,7 +2387,7 @@
 					//free sized table
 					$.each(options.columns, function(i, column){
 
-						var col = $(".tabulator-cell[data-index=" + i + "], .tabulator-col[data-index=" + i+ "]",element);
+						var col = $(".tabulator-cell[data-index=" + i + "], .tabulator-col[data-index=" + i+ "]", element);
 
 						if(column.width){
 							//reseize to match specified column width
@@ -2173,15 +2449,18 @@
 			//resize cells vertically to fit row contents
 			if(self.element.is(":visible")){
 				$(".tabulator-row", self.table).each(function(){
-					$(".tabulator-cell, .tabulator-row-handle", $(this)).css({"height":$(this).outerHeight() + "px"});
+					$(".tabulator-cell, .tabulator-row-handle", $(this)).css({"height":$(this).innerHeight() + "px"});
 				});
 			}
+
+			//trigger callbacks
+			self.options.renderComplete();
 		},
 
 		//resize row to match contents
-		_resizeRow(row){
+		_resizeRow:function(row){
 			$(".tabulator-cell, .tabulator-row-handle", row).css({"height":""});
-			$(".tabulator-cell, .tabulator-row-handle", row).css({"height":row.outerHeight() + "px"});
+			$(".tabulator-cell, .tabulator-row-handle", row).css({"height":row.innerHeight() + "px"});
 		},
 
 		//format cell contents
@@ -2203,7 +2482,6 @@
 
 		//carry out action on row context
 		_rowContext: function(e, row, data){
-			e.preventDefault();
 			this.options.rowContext(e, row.data("id"), data, row);
 		},
 
@@ -2223,27 +2501,38 @@
 
 			cell.removeClass("tabulator-editing");
 
-			//update cell data value
-			cell.data("value", value);
-
 			//update row data
 			var rowData = row.data("data");
 			var hasChanged = rowData[cell.data("field")] != value;
-			rowData[cell.data("field")] = value;
-			row.data("data", rowData);
+			var oldVal = rowData[cell.data("field")];
+
+			if(hasChanged){
+				//handle cell mutation if needed
+				var mutator = cell.data("mutator");
+
+				if(mutator){
+					value = mutator(value, "edit", rowData);
+				}
+
+				//update cell data value
+				cell.data("value", value);
+
+				rowData[cell.data("field")] = value;
+				row.data("data", rowData);
+			}
 
 			//reformat cell data
 			cell.html(self._formatCell(cell.data("formatter"), value, rowData, cell, row, cell.data("formatterParams")));
 
 			if(hasChanged){
 				//triger event
-				self.options.rowEdit(rowData[self.options.index], rowData, row);
+				self.options.cellEdited(rowData[self.options.index], cell.data("field"), value, oldVal, rowData, cell, row);
 				self._generateTooltip(cell, rowData, self._findColumn(cell.data("field")).tooltip);
 			}
 
 			self._styleRows();
 
-			self._trigger("dataEdited");
+			self.options.dataEdited(self.data);
 		},
 
 		////////////////// Formatter/Sorter Helpers //////////////////
@@ -2293,7 +2582,7 @@
 
 				return el1 - el2;
 			},
-			alphanum:function(as, bs){
+			alphanum:function(as, bs){//sort alpha numeric strings
 				var a, b, a1, b1, i= 0, L, rx = /(\d+)|(\D+)/g, rd = /\d/;
 
 				if(isFinite(as) && isFinite(bs)) return as - bs;
@@ -2318,6 +2607,14 @@
 				}
 				return a.length > b.length;
 			},
+			time:function(a, b){ //sort hh:mm formatted times
+				a = a.split(":");
+				b = b.split(":");
+
+				a = (a[0]*60) + a[1];
+				b = (b[0]*60) + b[1];
+				return a > b;
+			},
 		},
 
 		//custom data formatters
@@ -2330,7 +2627,14 @@
 				return value;
 			},
 			money:function(value, data, cell, row, options, formatterParams){
-				var number = parseFloat(value).toFixed(2);
+
+				var floatVal = parseFloat(value);
+
+				if(isNaN(floatVal)){
+					return value;
+				}
+
+				var number = floatVal.toFixed(2);
 
 				var number = number.split(".");
 
@@ -2430,7 +2734,7 @@
 
 		//custom data editors
 		editors:{
-			input:function(cell, value){
+			input:function(cell, value, data){
 				//create and style input
 				var input = $("<input type='text'/>");
 				input.css({
@@ -2460,7 +2764,7 @@
 
 				return input;
 			},
-			textarea:function(cell, value){
+			textarea:function(cell, value, data){
 				var self = this;
 
 				var count = (value.match(/(?:\r\n|\r|\n)/g) || []).length + 1;
@@ -2500,22 +2804,17 @@
 					if(newCount != count){
 						var line = input.innerHeight() / count;
 
-						console.log("lines", line);
-
 						input.css({"height": (line * newCount) + "px"});
 
 						self._resizeRow(row);
 
 						count = newCount;
 					}
-
-
-
 				});
 
 				return input;
 			},
-			number:function(cell, value){
+			number:function(cell, value, data){
 				//create and style input
 				var input = $("<input type='number'/>");
 				input.css({
@@ -2545,7 +2844,7 @@
 
 				return input;
 			},
-			star:function(cell, value){
+			star:function(cell, value, data){
 
 				var maxStars = $("svg", cell).length;
 				maxStars = maxStars ?maxStars : 5;
@@ -2629,7 +2928,7 @@
 
 				return stars;
 			},
-			progress:function(cell, value){
+			progress:function(cell, value, data){
 				//set default parameters
 				var max = $("div", cell).data("max");
 				var min = $("div", cell).data("min");
@@ -2709,8 +3008,7 @@
 				return bar;
 			},
 
-
-			tickCross:function(cell, value){
+			tickCross:function(cell, value, data){
 				//create and style input
 				var input = $("<input type='checkbox'/>");
 				input.css({
@@ -2746,7 +3044,7 @@
 				return input;
 			},
 
-			tick:function(cell, value){
+			tick:function(cell, value, data){
 				//create and style input
 				var input = $("<input type='checkbox'/>");
 				input.css({
@@ -2782,6 +3080,12 @@
 				return input;
 			},
 		},
+
+		//custom mutators
+		mutators:{},
+
+		//custom accessors
+		accessors:{},
 
 		////////////////// Tabulator Desconstructor //////////////////
 
