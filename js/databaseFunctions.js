@@ -2,7 +2,7 @@
 
 /* Datastore schema
 	Process: { _id, attributeNames: [] }
-	Node:    { _id, name, parentID, processName,dateTitle }
+	Node:    { _id, name, parentID, processName, dateTitle }
 	Sample:  { _id, nodeID, sampleID, attr_1, attr_2, ... , attr_n }
 */
 
@@ -176,6 +176,13 @@ function getProcessAttributeNames(nodeID, callback) {
 		});
 	});
 }
+
+// return the name of a node with nodeID
+function getNodeName(nodeID, callback) {
+	db.findOne({ _id : nodeID }, function (err, node) {
+		callback(node.name);
+	});
+} 
 
 // return all samples with nodeID in a tabulator array structure
 function getNodeSamples(nodeID, callback) {
