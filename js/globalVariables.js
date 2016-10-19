@@ -1,4 +1,4 @@
-// Tomasz J Kocik (u5564707), 2016
+// Tomasz J Kocik (u5564707), ANU Techlauncher 2016
 
 var projectOpened                    = false,
     samplesTableRowCount             = 1,
@@ -6,7 +6,8 @@ var projectOpened                    = false,
     lastClickedNewProcessListElement = null,
     openedFileLocation,
     lastClickedNode,
-    lastClickedProcess;
+    lastClickedProcess, // for process view
+	lastClickedProcess2; // for main view
 
 function getOpenedFileLocation(callback) {
 	callback(openedFileLocation);
@@ -29,5 +30,13 @@ function getLastClickedProcess(callback) {
 }
 
 function setLastClickedProcess(process) {
+	lastClickedProcess = process;
+}
+
+function getLastClickedProcess2(callback) {
+	callback(lastClickedProcess);
+}
+
+function setLastClickedProcess2(process) {
 	lastClickedProcess = process;
 }

@@ -1,4 +1,4 @@
-// Tomasz J Kocik (u5564707), 2016
+// Tomasz J Kocik (u5564707), ANU Techlauncher 2016
 
 function newProjectTest() {
 	testDb = new Datastore({ filename: 'userData', autoload: true });

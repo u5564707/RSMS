@@ -1,23 +1,23 @@
-// Tomasz J Kocik (u5564707) and Bo Shi, 2016
+// Tomasz J Kocik (u5564707) and Bo Shi, ANU Techlauncher 2016
 
 /* Datastore schema
-	Process: { _id, attributeNames: [] }
-	Node:    { _id, name, parentID, processName, dateTitle }
-	Sample:  { _id, nodeID, sampleID, attr_1, attr_2, ... , attr_n }
-*/
+ * Process: { _id, attributeNames: [] }
+ * Node:    { _id, parentID, processName, name, date }
+ * Sample:  { _id, nodeID, sampleID, attr_1, attr_2, ... , attr_n }
+ */
 
+/* Tips:
+ * var is global, let is local.
+ * Research js callbacks before modifying the following.
+ */
 
 var Datastore = require('nedb'),
     db        = new Datastore({ filename : 'userData', autoload : true });
 
-    deleteButton = function (value, data, cell, row, options) {
-    	return "<button>x</button>";
-    };
-
 // replaces all documents of userData file with the root node and root process
 function initialiseUserData() {
-	var date = new Date();
-	var todayString = date.ymdhm();
+	let date = new Date();
+	
 	console.log("emptying userData...");
 	db.remove({}, { multi : true }, function () {
 		console.log("emptied!");
@@ -27,7 +27,8 @@ function initialiseUserData() {
 			console.log("inserted!");
 
 			console.log("inserting 'rootNode' node...");
-			db.insert({ _id : "rootNode", parentID : null, name : 'Source samples' ,processName : "Source samples",title: date.ymdhm()}, function () {
+			db.insert({ _id : "rootNode", parentID : null, processName : "Source samples",
+					name : "Source samples", date : date.ymdhm() }, function () {
 				console.log("inserted!");
 
 				newProjectTest();
@@ -87,9 +88,9 @@ function getChildNodes(nodeID, callback) {
 			callback(children);
 		} else {
 			for (let i = 0; i < nodes.length; i++) {
-				children.push({ text : { name : nodes[i].name ,title:nodes[i].title}, HTMLid : nodes[i]._id });
+				children.push({ text : { name : nodes[i].name, title: nodes[i].date }, HTMLid : nodes[i]._id });
 
-				// recursively find grandchildren
+				// recursively find further descendants
 				getChildNodes(nodes[i]._id, function (grandchildren) {
 					children[i].children = grandchildren;
 
@@ -102,24 +103,24 @@ function getChildNodes(nodeID, callback) {
 
 // return Treant chart config in JSON structure
 function getTreeConfig(callback) {
+	db.findOne({ _id : "rootNode" }, function (err, node) {
+		let chart_config = {
+			chart : { container : "#tree", rootOrientation: 'WEST' },
+			nodeStructure : { HTMLid : node._id, text : { name : node.name, title: node.date } } // add rootNode to config
+		};
 
-	let chart_config = {
-		chart : { container : "#tree", rootOrientation: 'WEST' },
-		nodeStructure : { HTMLid : "rootNode", text : { name : "Source samples" ,title:date.ymdhm()} }
-	};
+		getChildNodes(chart_config.nodeStructure.HTMLid, function (children) {
+			chart_config.nodeStructure.children = children;
 
-	getChildNodes(chart_config.nodeStructure.HTMLid, function (children) {
-		chart_config.nodeStructure.children = children;
-
-		console.log(tosource(chart_config));
-		callback(chart_config);
+			callback(chart_config);
+		});
 	});
 }
 
 // return an array of all process IDs except the "Source samples"
 function getAllProcessIDs(callback) {
 
-	// find all process docs except "Source samples" - "attributeNames : { $exists : true }" wasn't working for some reason
+	// find all process docs except "Source samples". "attributeNames : { $exists : true }" wasn't working for some reason
 	db.find({ parentID : { $exists : false }, nodeID : { $exists : false }, _id : { $ne : "Source samples" } },
 			function (err, processIDs) {
 		var processIDList = [];
@@ -149,16 +150,19 @@ function getAttributeNames(processID, callback) {
 function getProcessAttributeNames(nodeID, callback) {
 	db.findOne({ _id : nodeID }, function (err, node) {
 		db.findOne({ _id : node.processName }, function (err, process) {
+			var deleteButton = function (value, data, cell, row, options) {
+		    	return "<button>x</button>";
+		    };
+
 			var columns = [{ formatter : deleteButton, align : "center", width : 30,
 				onClick : function (e, cell, val, data) {
 			    	$("#samples-table").tabulator("deleteRow", data.id);
 			    } }, { formatter : tickbox, width : 30, align : "center", onClick : function (e, cell, val, row) {
 					var checkboxes = document.getElementById('myCheck');
-
-			    	//alert("Printing row data for: " + row.id);
-					//alert(document.getElementById("myCheck").id)
 				}},
 			];
+			
+			// only ids in the source samples node should be editable
 			if (nodeID == "rootNode") {
 				columns.push({ title : "Id", field : "id", sortable : true, sorter : function(a, b){
 					//a and b are the two values being compared
@@ -185,10 +189,39 @@ function getProcessAttributeNames(nodeID, callback) {
 	});
 }
 
+// add a process with no attributes
+function addProcess(processName) {
+	db.insert({ _id : processName, attributeNames : [] });
+}
+
+// update the process of nodeID given tabulator tableColumns
+function updateProcess(nodeID, tableColumns) {
+	var columns = [];
+
+	for (i = 3; i < tableColumns.length; i++) { // i = 3 since the first 3 cols are not attributes
+		columns.push(tableColumns[i].date);
+	}
+
+	db.findOne({ _id : nodeID }, function (err, node) {
+		db.update({ _id : node.processName }, { attributeNames : columns }, {});
+	});
+}
+
+// update processName's attributeNames given tabulator tableData
+function updateProcessAttributes(processName, tableData) {
+	var attributeNames = [];
+
+	for (var i = 0; i < tableData.length; i++) {
+		attributeNames[i] = tableData[i].name;
+	}
+
+	db.update({ _id : processName }, { $set: { attributeNames : attributeNames } });
+}
+
 // return the name of a node with nodeID
 function getNodeName(nodeID, callback) {
 	db.findOne({ _id : nodeID }, function (err, node) {
-		callback(node.name + '      '+ node.title);
+		callback(node.name + '      ' + node.date);
 	});
 } 
 
@@ -216,19 +249,6 @@ function getNodeSamples(nodeID, callback) {
 	});
 }
 
-// update the process of nodeID given tabulator tableColumns
-function updateProcess(nodeID, tableColumns) {
-	var columns = [];
-
-	for (i = 3; i < tableColumns.length; i++) { // i = 3 since the first 3 cols are not attributes
-		columns.push(tableColumns[i].title);
-	}
-
-	db.findOne({ _id : nodeID }, function (err, node) {
-		db.update({ _id : node.processName }, { attributeNames : columns }, {});
-	});
-}
-
 // update samples with nodeID given tabulator tableData
 function updateNodeSamples(nodeID, tableData) {
 
@@ -239,7 +259,7 @@ function updateNodeSamples(nodeID, tableData) {
 		for (var i = 0; i < tableData.length; i++) {
 			var sample = { nodeID : nodeID, sampleID : tableData[i].id };
 
-			for ( var key in tableData[i]) {
+			for (var key in tableData[i]) {
 				if (Object.prototype.hasOwnProperty.call(tableData[i], key) && key != "_id" && key != "id") {
 					sample[key] = tableData[i][key];
 				}
@@ -250,30 +270,17 @@ function updateNodeSamples(nodeID, tableData) {
 	});
 }
 
-// add a process with no attributes
-function addProcess(processName) {
-	db.insert({ _id : processName, attributeNames : [] });
-}
-
-// update the process' attributeNames with attributeNames
-function updateProcessAttributes(processName, tableData) {
-	var attributeNames = [];
-
-	for (var i = 0; i < tableData.length; i++) {
-		attributeNames[i] = tableData[i].name;
-	}
-
-	db.update({ _id : processName }, { $set: { attributeNames : attributeNames } });
-}
-
 // adds new node and samples
 function processSamples(processName, parentID, sampleIDs) {
 	var date = new Date();
-	var todayString = date.ymdhm();
+	
 	db.find({ processName : processName }, function (err, docs) {
 		name = processName + (docs.length + 1);
 		
-		db.insert({ parentID : parentID, name : name, processName : processName,title: date.ymdhm()}, function (err, newNode) {
+		// add new node
+		db.insert({ parentID : parentID, name : name, processName : processName, date : date.ymdhm() }, function (err, newNode) {
+			
+			// add new samples
 			for (let i = 0; i < sampleIDs.length; i++) {
 				db.insert({ nodeID : newNode._id, sampleID : sampleIDs[i] });
 			}
