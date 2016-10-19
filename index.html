@@ -121,39 +121,39 @@
 									Hello World
 								</p>
 								<!--filter example-->
-								<!--<div id="table-filters" style="display: none">-->
-									<!--<fieldset>-->
-										<!--<legend>Filter Parameters</legend>-->
-	<!---->
-										<!--<label>Field: </label>-->
-										<!--<select id="filter-field">-->
-											<!--&lt;!&ndash;<option value="name">Name</option>&ndash;&gt;-->
-											<!--&lt;!&ndash;<option value="age">Age</option>&ndash;&gt;-->
-											<!--&lt;!&ndash;<option value="gender">Gender</option>&ndash;&gt;-->
-											<!--&lt;!&ndash;<option value="height">Height</option>&ndash;&gt;-->
-											<!--&lt;!&ndash;<option value="col">Favourite Colour</option>&ndash;&gt;-->
-											<!--&lt;!&ndash;<option value="dob">Date Of Birth</option>&ndash;&gt;-->
-											<!--&lt;!&ndash;<option value="cheese">Likes Cheese</option>&ndash;&gt;-->
-											<!--&lt;!&ndash;<option value="function">Likes Cheese &amp; height &lt; 3</option>&ndash;&gt;-->
-										<!--</select>-->
-	<!---->
-										<!--<label>Type:</label>-->
-										<!--<select id="filter-type">-->
-											<!--<option value="=">=</option>-->
-											<!--<option value="<">&lt;</option>-->
-											<!--<option value="<=">&lt;=</option>-->
-											<!--<option value=">">&gt;</option>-->
-											<!--<option value=">=">&gt;=</option>-->
-											<!--<option value="!=">!=</option>-->
-											<!--<option value="like">like</option>-->
-										<!--</select>-->
-	<!---->
-										<!--<label>Value: </label><input id="filter-value" type="text" placeholder="value to filter">-->
-										<!---->
-										<!--<button class="uk-button-primary" onclick="someFunction()">Clear filter</button>-->
-										<!--&lt;!&ndash;<input id="filter-clear" type="button" value="Clear Filter" style="margin-left:40px; font-family: 'Trebuchet MS'">&ndash;&gt;-->
-									<!--</fieldset>-->
-								<!--</div>-->
+								<div id="table-filters" style="display: none">
+									<fieldset>
+										<legend>Filter Parameters</legend>
+
+										<label>Field: </label>
+										<select id="filter-field">
+											<!--<option value="name">Name</option>-->
+											<!--<option value="age">Age</option>-->
+											<!--<option value="gender">Gender</option>-->
+											<!--<option value="height">Height</option>-->
+											<!--<option value="col">Favourite Colour</option>-->
+											<!--<option value="dob">Date Of Birth</option>-->
+											<!--<option value="cheese">Likes Cheese</option>-->
+											<!--<option value="function">Likes Cheese &amp; height &lt; 3</option>-->
+										</select>
+
+										<label>Type:</label>
+										<select id="filter-type">
+											<option value="=">=</option>
+											<option value="<">&lt;</option>
+											<option value="<=">&lt;=</option>
+											<option value=">">&gt;</option>
+											<option value=">=">&gt;=</option>
+											<option value="!=">!=</option>
+											<option value="like">like</option>
+										</select>
+
+										<label>Value: </label><input id="filter-value" type="text" placeholder="value to filter">
+
+										<button class="uk-button-primary" onclick="someFunction()">Clear filter</button>
+										<!--<input id="filter-clear" type="button" value="Clear Filter" style="margin-left:40px; font-family: 'Trebuchet MS'">-->
+									</fieldset>
+								</div>
 
 								<div id="example-table-filters" ></div>
 
@@ -175,7 +175,7 @@
 
 						<div class="uk-width " style="width: 15%">
 							<div class="uk-panel uk-panel-box uk-panel-box-primary">
-								<p>Buttons</p>
+								<p>Manipulation</p>
                 <button id="add_table" class="buttons uk-button-primary" style="display: none">New row</button>
                 <br><br>
 
@@ -550,15 +550,22 @@
 			$("#samples-table").tabulator({
 				fitColumns : true,
 				columns : [],
+
 				rowFormatter : function (row, data) {
 					row.css({"height":"36px"});
 				},
+
 				cellEdited : function (id, field, value, oldValue, data, cell, row) {
-					console.log("adsas");
+
+					console.log('this is the field'+field);
+					console.log('this is oldvalue'+oldValue);
+					console.log('this is new value'+value);
+
 					// prevent duplicate ids
+
 					if (field = "id") {
 						let data = $("#samples-table").tabulator("getData");
-						
+
 						for (let i = 0; i < data.length; i++) {
 							console.log(value);
 							if (data[i].id == value) {
@@ -573,7 +580,15 @@
 			        //data - the data for the row
 			        //cell - the DOM element of the cell
 			        //row - the DOM element of the row
-			  }
+			  },
+
+				rowUpdated:function(index, data, row){
+					//index - the index for the updated row
+					//data - the updated data for the row
+					//row - DOM element for the updated row
+					//alert('Updated');
+
+				},
 				//pagination : true, // uncomment for final version
 			});
 		};
@@ -1005,8 +1020,11 @@
 		  let y = Number($("#range2").val());
 		
 		  let z = $('#samples-table  input:checkbox');
-		
-		  for(let xy = x;xy<=y;xy++){
+
+			//let rowId = $("#samples-table").tabulator("getData");
+			//console.log(rowId[1].id);
+
+		  for(let xy = x-1;xy<=y-1;xy++){
 		    z[xy].checked = true;
 		  }
 		}

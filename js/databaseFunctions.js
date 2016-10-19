@@ -180,7 +180,7 @@ function getProcessAttributeNames(nodeID, callback) {
 // return the name of a node with nodeID
 function getNodeName(nodeID, callback) {
 	db.findOne({ _id : nodeID }, function (err, node) {
-		callback(node.name + '  '+ node.title);
+		callback(node.name + '      '+ node.title);
 	});
 } 
 
