@@ -1,4 +1,10 @@
-<!-- Tomasz J Kocik (u5564707) and Bo Shi, 2016 --><!doctype html>
+<!-- Tomasz J Kocik (u5564707) and Bo Shi, ANU Techlauncher 2016 -->
+
+<!-- Tips:
+  Recommend modularizing before making major changes
+-->
+
+<!doctype html>
 <html>
 <head>
 <title>Research Sample Management System</title>
@@ -67,8 +73,6 @@
 	color:#fff;
 	background: #007aff;
 }
-
-
 </style>
 </head>
 
@@ -96,7 +100,7 @@
 	<div class="swiper-container">
 		<div class="swiper-wrapper">
 			<div class="swiper-slide">
-        <div style="margin-left: 10px;margin-right: 10px">
+        <div style="margin-left: 10px; margin-right: 10px">
 				  <div class="uk-grid uk-grid-collapse uk-grid-small">
 					  <div class="chart uk-width-1-1 " id="tree"></div>
 
@@ -117,9 +121,7 @@
 						<div class="uk-width" style="width: 70%">
 							<div class="uk-panel uk-panel-box uk-panel-box-primary" style="overflow:scroll">
 								<!--<button id="selectButton" class="uk-button" onclick="selectProcess()">Select</button>-->
-								<p id="tableName">
-									Hello World
-								</p>
+								<p id="tableName"></p>
 								<!--filter example-->
 								<div id="table-filters" style="display: none">
 									<fieldset>
@@ -175,19 +177,13 @@
 
 						<div class="uk-width " style="width: 15%">
 							<div class="uk-panel uk-panel-box uk-panel-box-primary">
-								<p>Manipulation</p>
+								<p>Table Operations</p>
                 <button id="add_table" class="buttons uk-button-primary" style="display: none">New row</button>
                 <br><br>
 
-								<!--<form class="forms" id='form2' style="display: none">
-									<input type="text" id="col_name" class="uk-form-success" name="add_col" placeholder="new column name">
-								</form>-->
 								<button class="buttons uk-button-primary" id="add_col" style="display: none">New column</button>
 								<br><br>
 								
-								<!--<form class="forms" id='form3' style="display: none">
-								<input type="text" class="uk-form-danger" id="col_del" name="del_col" placeholder="Choose column name">
-								</form>-->
 								<button class="buttons uk-button-danger" id="del_col" style="display: none">Delete column</button>
 							</div>
 						</div>
@@ -371,6 +367,8 @@
 		            alert("No project opened!");
 		          } else {
 		            getOpenedFileLocation(function (location) {
+		            	
+		            	// save as if no project opened yet
 		              if (location == null) {
 		                var chooser = document.querySelector('#saveAsFileDialog');
 	
@@ -453,16 +451,13 @@
 					view : {
 						name : "View Samples",
 						callback : function (key, opt) {
-
-							let x = document.getElementById('tableName') ;
-
-
 							getNodeName(opt.$trigger.attr("id"),function (name) {
-								x.innerText = name;
+								document.getElementById('tableName').innerText = name;
 							});
 
 							$('.nodeHightLight').removeClass('nodeHightLight');
 							$(this).addClass('nodeHightLight');
+							
 							// save table then update data
 							getLastClickedNode(function (nodeID) {
 								if (nodeID == null) {
@@ -518,31 +513,7 @@
 							$("#add_col").show();
 				      $("#del_col").show();
 						}
-					},
-					/*processSamples : {
-						name : "Process Samples",
-						items : {
-							processNew : {
-								name : "New",
-								callback : function (key, opt) {
-									var processName = prompt("Process name:"),
-									    samplesString = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
-
-									if (processName != null && samplesString != null) {
-										processSamples(processName, opt.$trigger.attr("id"),
-												samplesString);
-									}
-
-									// update tree
-									getTreeConfig(function (config) {
-										$("#tree").empty();
-										new Treant(config);
-										this.clearQueue();
-									});
-								}
-							}
-						}
-					}*/
+					}
 				}
 			});
 
@@ -557,39 +528,25 @@
 
 				cellEdited : function (id, field, value, oldValue, data, cell, row) {
 
-					console.log('this is the field'+field);
-					console.log('this is oldvalue'+oldValue);
-					console.log('this is new value'+value);
-
 					// prevent duplicate ids
+					if (field == "id") {
+						let data             = $("#samples-table").tabulator("getData"),
+						    duplicateIdCount = 0;
 
-					if (field = "id") {
-						let data = $("#samples-table").tabulator("getData");
-
-						for (let i = 0; i < data.length; i++) {
-							console.log(value);
-							if (data[i].id == value) {
-								alert("This id has already been used");
-							}
-						}
+						for (var key in data) {
+							
+							// make sure key is not metadata
+			        if (Object.prototype.hasOwnProperty.call(data, key) && data[key].id == value) {
+			        	duplicateIdCount++;
+			        	
+			        	if (duplicateIdCount > 1) {
+			        		  alert("This id has already been used!");
+			        	}
+			        }
+			      }
 					}
-			        //id - the id of the row
-			        //field - field of the cell
-			        //value - the new value for the cell
-			        //oldValue - the old value for the cell
-			        //data - the data for the row
-			        //cell - the DOM element of the cell
-			        //row - the DOM element of the row
 			  },
-
-				rowUpdated:function(index, data, row){
-					//index - the index for the updated row
-					//data - the updated data for the row
-					//row - DOM element for the updated row
-					//alert('Updated');
-
-				},
-				//pagination : true, // uncomment for final version
+				//pagination : true // uncomment for final version
 			});
 		};
 		
@@ -810,7 +767,7 @@
 			$("#attri-table").tabulator("redraw",true);
 		});
 
-		//add new process
+		// add new process
 		$("#addNewProcess").click(function() {
 
 			//var ul = document.getElementById("ProcessList");

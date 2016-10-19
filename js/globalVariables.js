@@ -1,4 +1,4 @@
-// Tomasz J Kocik (u5564707), 2016
+// Tomasz J Kocik (u5564707), ANU Techlauncher 2016
 
 var projectOpened                    = false,
     samplesTableRowCount             = 1,
