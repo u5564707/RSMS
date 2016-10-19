@@ -213,7 +213,6 @@
 								<h4 style="font-family: 'Trebuchet MS'">Process Attributes</h4>
 								<div>
 									<button id="addNewAttribute" class="uk-button-primary" style="display: none; font-family: 'Trebuchet MS'">New Attribute</button>
-									<button id="saveAttributes" class="uk-button-success" style="display: none; font-family: 'Trebuchet MS'">Save Attributes</button>
 									<br><br>
 									<div class="attri-tables" id="attri-table"></div>
 								</div>
@@ -306,7 +305,6 @@
 				$("#attri-table").hide();
 	      $("#attriID").hide();
 	      $("#addNewAttribute").hide();
-	      $("#saveAttributes").hide();
 			}
 		}));
 
@@ -353,7 +351,6 @@
 		        $("#attri-table").hide();
 		        $("#attriID").hide();
 		        $("#addNewAttribute").hide();
-		        $("#saveAttributes").hide();
 					}
 					
 					this.value = null; // reset file location
@@ -367,26 +364,28 @@
 		fileMenu.append(new nw.MenuItem({
 			label : 'Save',
 			click : function () {
-				getLastClickedNode(function (nodeID) {
-					saveTable(nodeID, function () {
-	          if (!projectOpened) {
-	            alert("No project opened!");
-	          } else {
-	            getOpenedFileLocation(function (location) {
-	              if (location == null) {
-	                var chooser = document.querySelector('#saveAsFileDialog');
-
-	                chooser.addEventListener("change", function (evt) {
-	                  copyFromUserData(this.value);
-	                  this.value = null; // reset file location
-	                }, false);
-
-	                chooser.click();
-	              } else {
-	                copyFromUserData(location);
-	              }
-	            });
-	          }
+				getLastClickedProcess (function (processID) {
+					getLastClickedNode(function (nodeID) {
+						saveTables(processID, nodeID, function () {
+		          if (!projectOpened) {
+		            alert("No project opened!");
+		          } else {
+		            getOpenedFileLocation(function (location) {
+		              if (location == null) {
+		                var chooser = document.querySelector('#saveAsFileDialog');
+	
+		                chooser.addEventListener("change", function (evt) {
+		                  copyFromUserData(this.value);
+		                  this.value = null; // reset file location
+		                }, false);
+	
+		                chooser.click();
+		              } else {
+		                copyFromUserData(location);
+		              }
+		            });
+		          }
+						});
 					});
 				});
 			}
@@ -396,23 +395,25 @@
 		fileMenu.append(new nw.MenuItem({
 			label : 'Save As',
 			click : function() {
-				getLastClickedNode(function (nodeID) {
-					saveTable(nodeID, function () {
-						if (!projectOpened) {
-	            alert("No project opened!");
-	          } else {
-	            var chooser = document.querySelector('#saveAsFileDialog');
-
-	            chooser.addEventListener("change", function (evt) {
-	              if (this.value != "") {
-	                copyFromUserData(this.value);
-	                setOpenedFileLocation(this.value);
-	                this.value = null; // reset file location
-	              }
-	            }, false);
-
-	            chooser.click();
-	          }
+				getLastClickedProcess(function (processID) {
+					getLastClickedNode(function (nodeID) {
+						saveTables(processID, nodeID, function () {
+							if (!projectOpened) {
+		            alert("No project opened!");
+		          } else {
+		            var chooser = document.querySelector('#saveAsFileDialog');
+	
+		            chooser.addEventListener("change", function (evt) {
+		              if (this.value != "") {
+		                copyFromUserData(this.value);
+		                setOpenedFileLocation(this.value);
+		                this.value = null; // reset file location
+		              }
+		            }, false);
+	
+		            chooser.click();
+		          }
+						});
 	        });
 				});
 			}
@@ -478,19 +479,21 @@
 
                   setLastClickedNode(opt.$trigger.attr("id"));
 								} else {
-									saveTable(nodeID, function () {
-
-										// update columns
-			              getProcessAttributeNames(opt.$trigger.attr("id"), function (columns) {
-			                $("#samples-table").tabulator("setColumns", columns, false);
-
-			                // update samples (relies on columns to be set)
-			                getNodeSamples(opt.$trigger.attr("id"), function (samples) {
-		                    $("#samples-table").tabulator("setData", samples);
-			                });
-			              });
-
-										setLastClickedNode(opt.$trigger.attr("id"));
+									getLastClickedProcess(function (processID) {
+										saveTables(processID, nodeID, function () {
+	
+											// update columns
+				              getProcessAttributeNames(opt.$trigger.attr("id"), function (columns) {
+				                $("#samples-table").tabulator("setColumns", columns, false);
+	
+				                // update samples (relies on columns to be set)
+				                getNodeSamples(opt.$trigger.attr("id"), function (samples) {
+			                    $("#samples-table").tabulator("setData", samples);
+				                });
+				              });
+	
+											setLastClickedNode(opt.$trigger.attr("id"));
+										});
 									});
 								}
 							});
@@ -551,7 +554,7 @@
 					row.css({"height":"36px"});
 				},
 				cellEdited : function (id, field, value, oldValue, data, cell, row) {
-					console.log(field);
+					console.log("adsas");
 					// prevent duplicate ids
 					if (field = "id") {
 						let data = $("#samples-table").tabulator("getData");
@@ -757,16 +760,16 @@
 
     });
 		
-		// saves the current state of samples-table
-		function saveTable(nodeID, callback) {
-      if (nodeID != null) {
-        console.log("saving column headers for node "+nodeID+"...");
+		// saves the current state of samples and attributes table
+		// processID here is highlighted processID NOT processName of nodeID!
+		function saveTables(processID, nodeID, callback) {
+			if (processID != null) {
+				updateProcessAttributes(processID, $("#attri-table").tabulator("getData"));
+			}
+			
+			if (nodeID != null) {
         updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
-        console.log("saved!");
-
-        console.log("saving sample data for node "+nodeID+"...");
         updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
-        console.log("saved!");
       }
 
       callback();
@@ -864,9 +867,18 @@
 			$(".originalProcessList a").on("click",function() {
 				console.log("list element clicked");
 
-
+				var listElement = this.innerText; 
+				
+				getLastClickedProcess2(function (processID) {
+					getLastClickedNode(function (nodeID) {
+						saveTables(processID, nodeID, function () {
+							console.log("old process: "+processID+", new process: "+listElement)
+							setLastClickedProcess2(listElement);
+						});
+					});
+				});
+				
 				// define table
-
 	      $("#attri-table").tabulator({
 			  fitColumns:true,
 	        columns : [],
@@ -900,7 +912,6 @@
 				$("#attri-table").show();
 				$("#attriID").show();
         $("#addNewAttribute").show();
-        $("#saveAttributes").show();
 
 				$("#newProcessList").clearQueue();
 			});
@@ -921,14 +932,14 @@
 		});*/
 
 		// save list of attributes
-		$("#saveAttributes").on('click', function () {
+		/*$("#saveAttributes").on('click', function () {
 			getLastClickedProcess(function (processID) {
         if (processID != undefined && confirm('Save data?')) {
           updateProcessAttributes(processID, $("#attri-table").tabulator("getData"));
           this.clearQueue();
         }
 			});
-		});
+		});*/
 
 		//Custom filter example
 		function customFilter(data){

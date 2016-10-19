@@ -231,7 +231,7 @@ function updateNodeSamples(nodeID, tableData) {
 		for (var i = 0; i < tableData.length; i++) {
 			var sample = { nodeID : nodeID, sampleID : tableData[i].id };
 
-			for ( var key in tableData[i]) {
+			for (var key in tableData[i]) {
 				if (Object.prototype.hasOwnProperty.call(tableData[i], key) && key != "_id" && key != "id") {
 					sample[key] = tableData[i][key];
 				}
