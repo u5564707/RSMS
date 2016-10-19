@@ -547,15 +547,20 @@
 			$("#samples-table").tabulator({
 				fitColumns : true,
 				columns : [],
+
 				rowFormatter : function (row, data) {
 					row.css({"height":"36px"});
 				},
+
 				cellEdited : function (id, field, value, oldValue, data, cell, row) {
-					console.log(field);
+					console.log('this is the field'+field);
+					console.log('this is oldvalue'+oldValue);
+					console.log('this is new value'+value);
 					// prevent duplicate ids
+
 					if (field = "id") {
 						let data = $("#samples-table").tabulator("getData");
-						
+
 						for (let i = 0; i < data.length; i++) {
 							console.log(value);
 							if (data[i].id == value) {
@@ -576,6 +581,7 @@
 					//index - the index for the updated row
 					//data - the updated data for the row
 					//row - DOM element for the updated row
+					//alert('Updated');
 
 				},
 				//pagination : true, // uncomment for final version
@@ -1001,8 +1007,11 @@
 		  let y = Number($("#range2").val());
 		
 		  let z = $('#samples-table  input:checkbox');
-		
-		  for(let xy = x;xy<=y;xy++){
+
+			//let rowId = $("#samples-table").tabulator("getData");
+			//console.log(rowId[1].id);
+
+		  for(let xy = x-1;xy<=y-1;xy++){
 		    z[xy].checked = true;
 		  }
 		}
