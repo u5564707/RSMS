@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="52dc558f-77da-4891-ac9d-ec41e25c1871" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/databaseFunctions.js" afterPath="$PROJECT_DIR$/js/databaseFunctions.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/userData" afterPath="$PROJECT_DIR$/userData" />
     </list>
     <ignored path="RSMS.iws" />
@@ -24,7 +24,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="256">
@@ -33,6 +33,16 @@
                 <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <marker date="1476850848000" expanded="true" signature="31852:31862" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="databaseFunctions.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/js/databaseFunctions.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="413">
+              <caret line="175" column="13" selection-start-line="175" selection-start-column="13" selection-end-line="175" selection-end-column="13" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -95,10 +105,10 @@
         <option value="$PROJECT_DIR$/js/jquery-3.1.js" />
         <option value="$PROJECT_DIR$/css/style.css" />
         <option value="$PROJECT_DIR$/css/main.css" />
-        <option value="$PROJECT_DIR$/js/databaseFunctions.js" />
         <option value="$PROJECT_DIR$/js/tabulator.js" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/js/databaseFunctions.js" />
       </list>
     </option>
   </component>
@@ -427,14 +437,7 @@
       <workItem from="1476522666091" duration="321000" />
       <workItem from="1476673669298" duration="7059000" />
       <workItem from="1476682441198" duration="2000" />
-      <workItem from="1476847346569" duration="1333000" />
-    </task>
-    <task id="LOCAL-00020" summary="add raw project header title">
-      <created>1470899791340</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1470899791340</updated>
+      <workItem from="1476847346569" duration="1675000" />
     </task>
     <task id="LOCAL-00021" summary="change">
       <created>1471081801970</created>
@@ -772,11 +775,18 @@
       <option name="project" value="LOCAL" />
       <updated>1476679935316</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="fix select samples">
+      <created>1476880154718</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1476880154718</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="108252000" />
+    <option name="totallyTimeSpent" value="108594000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -841,7 +851,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add simple theme" />
     <MESSAGE value="adjust styling" />
     <MESSAGE value="fix styling" />
     <MESSAGE value="change whole layout, ProcessList" />
@@ -866,7 +875,8 @@
     <MESSAGE value="add table title" />
     <MESSAGE value="add new version tabulator" />
     <MESSAGE value="no dulplicate id" />
-    <option name="LAST_COMMIT_MESSAGE" value="no dulplicate id" />
+    <MESSAGE value="fix select samples" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix select samples" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1242,14 +1252,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/databaseFunctions.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="182" column="35" selection-start-line="182" selection-start-column="35" selection-end-line="182" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/globalVariables.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
@@ -1302,6 +1304,14 @@
             <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <marker date="1476850848000" expanded="true" signature="31852:31862" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/databaseFunctions.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="413">
+          <caret line="175" column="13" selection-start-line="175" selection-start-column="13" selection-end-line="175" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
