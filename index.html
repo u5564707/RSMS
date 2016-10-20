@@ -363,7 +363,7 @@
 			click : function () {
 				getLastClickedProcess (function (processID) {
 					getLastClickedNode(function (nodeID) {
-						saveTables(processID, nodeID, function () {
+						//saveTables(processID, nodeID, function () {
 		          if (!projectOpened) {
 		            alert("No project opened!");
 		          } else {
@@ -384,7 +384,7 @@
 		              }
 		            });
 		          }
-						});
+						//});
 					});
 				});
 			}
@@ -396,7 +396,7 @@
 			click : function() {
 				getLastClickedProcess(function (processID) {
 					getLastClickedNode(function (nodeID) {
-						saveTables(processID, nodeID, function () {
+						//saveTables(processID, nodeID, function () {
 							if (!projectOpened) {
 		            alert("No project opened!");
 		          } else {
@@ -412,7 +412,7 @@
 	
 		            chooser.click();
 		          }
-						});
+						//});
 	        });
 				});
 			}
@@ -476,7 +476,7 @@
                   setLastClickedNode(opt.$trigger.attr("id"));
 								} else {
 									getLastClickedProcess(function (processID) {
-										saveTables(processID, nodeID, function () {
+										//saveTables(processID, nodeID, function () {
 	
 											// update columns
 				              getProcessAttributeNames(opt.$trigger.attr("id"), function (columns) {
@@ -489,7 +489,7 @@
 				              });
 	
 											setLastClickedNode(opt.$trigger.attr("id"));
-										});
+										//});
 									});
 								}
 							});
@@ -501,8 +501,12 @@
 							// show table operations
 							if (opt.$trigger.attr("id") == "rootNode") {
 								$("#add_table").show();
+								$("#add_col").show();
+								$("#del_col").show();
 							} else {
 								$("#add_table").hide();
+								$("#add_col").hide();
+				        $("#del_col").hide();
 							}
 
 							$("#new-ProcessList").show();
@@ -510,9 +514,6 @@
 					    
 							$("#table-filters").show();
 							$("#checkbox-filters").show();
-
-							$("#add_col").show();
-				      $("#del_col").show();
 						}
 					}
 				}
@@ -546,7 +547,11 @@
 			        }
 			      }
 					}
-			  },
+					
+					// save table
+					//console.log("nodeID: "+nodeID);
+					saveSamplesTable();
+				}
 				//pagination : true // uncomment for final version
 			});
 		};
@@ -565,57 +570,31 @@
 
 		// add rows
 		$("#add_table").click(function() {
-
 			$("#samples-table").tabulator("addRow", { id: ""+samplesTableRowCount++ });
 			$("#samples-table").tabulator("redraw",true);
+			
+			saveSamplesTable();
+			
 			this.clearQueue();
 		});
 
-		$("#add_col").on('click',function() {
-				var count = 1;
-				console.log("first time"+ count);
-				var thiscolumns = $("#samples-table").tabulator('getColumns');
-				var temp1 = $("#samples-table").tabulator("getData");
+		$("#add_col").on('click', function () {
+			$("#samples-table").tabulator('getColumns').push({
+        title : "attr"+attriTableRowCount,
+        field : "attr"+attriTableRowCount++,
+        fitColumns : true,
+        sorter : "string",
+        editable : true,
+        editableTitle : true
+      });
 
-				/*var newCol = $("#col_name").val();
+			// manipulate columns definition array
+			$('#samples-table').tabulator('setColumns', $("#samples-table").tabulator('getColumns'), false);
+			$("#samples-table").tabulator("setData", $("#samples-table").tabulator("getData"));
 
-				if ($("#col_name").val() == "") {
-					newCol = prompt("Please enter the column name");
-					count++;
-					console.log("Second time" + count);
-				}
-
-				if(newCol==null){
-					return;
-					count++;
-					console.log("Third time" + count);
-
-				}else {
-					thiscolumns.push({
-						title: "" + newCol,
-						field: "" + newCol,
-						fitColumns: true,
-						sorter: "string",
-						editable:true,
-						editableTitle:true
-					});
-				}*/
-
-				thiscolumns.push({
-           title: "attr"+attriTableRowCount,
-           field: "attr"+attriTableRowCount++,
-           fitColumns: true,
-           sorter: "string",
-           editable:true,
-           editableTitle:true
-         });
-
-				//manipulate columns definition array
-				$('#samples-table').tabulator('setColumns', thiscolumns,false);
-				$("#samples-table").tabulator("setData", temp1);
-				//newCol == "";
+			saveSamplesTable();
+			
 			this.clearQueue();
-
 		});
 
 			// add columns
@@ -733,19 +712,24 @@
 
     });
 		
-		// saves the current state of samples and attributes table
-		// processID here is highlighted processID NOT processName of nodeID!
-		function saveTables(processID, nodeID, callback) {
-			if (processID != null) {
-				updateProcessAttributes(processID, $("#attri-table").tabulator("getData"));
-			}
-			
-			if (nodeID != null) {
-        updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
-        updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
-      }
-
-      callback();
+		// saves the current state of attri-table
+		function saveAttributesTable() {
+			getLastClickedProcess2(function (processID) {
+				console.log("PROCESSID: "+processID);
+				if (processID != null) {
+					updateProcessAttributes(processID, $("#attri-table").tabulator("getData"));
+				}
+			});
+    }
+		
+		// saves the current state of samples-table
+    function saveSamplesTable() {
+    	getLastClickedNode(function (nodeID) {
+	      if (nodeID != null) {
+	        updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
+	        updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
+	      }
+    	});
     }
 
 		//click the first list demo
@@ -766,6 +750,8 @@
 		$("#addNewAttribute").click(function() {
 			$("#attri-table").tabulator("addRow", { id: attriTableRowCount, name: "attr"+attriTableRowCount++ });
 			$("#attri-table").tabulator("redraw",true);
+			
+			saveAttributesTable();
 		});
 
 		// add new process
@@ -819,7 +805,7 @@
 //			}
 			console.log("adding process" + t1);
 			addProcess(t1);
-
+			
 			// update tree
 
 			/*getTreeConfig(function (config) {
@@ -844,23 +830,25 @@
 
 				getLastClickedProcess2(function (processID) {
 					getLastClickedNode(function (nodeID) {
-						saveTables(processID, nodeID, function () {
+						//saveTables(processID, nodeID, function () {
 							console.log("old process: "+processID+", new process: "+listElement)
 							setLastClickedProcess2(listElement);
-						});
+						//});
 					});
 				});
 
 				// define table
-	      $("#attri-table").tabulator({
-			  fitColumns:true,
-	        columns : [],
-			  rowFormatter:function(row, data){
-				  //row - JQuery object for row
-				  //data - the data for the row
-
-				  row.css({"height":"36px"});
-			  },
+				$("#attri-table").tabulator({
+					fitColumns : true,
+					columns : [],
+					
+					rowFormatter : function (row, data) {
+						row.css({"height":"36px"});
+					},
+					
+					cellEdited : function (id, field, value, oldValue, data, cell, row) {
+						saveAttributesTable();
+					}
 	      });
 
 				console.log(this);

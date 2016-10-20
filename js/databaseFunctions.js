@@ -14,6 +14,10 @@
 var Datastore = require('nedb'),
     db        = new Datastore({ filename : 'userData', autoload : true });
 
+var deleteButton = function (value, data, cell, row, options) {
+	return "<button>x</button>";
+};
+
 // replaces all documents of userData file with the root node and root process
 function initialiseUserData() {
 	let date = new Date();
@@ -150,10 +154,6 @@ function getAttributeNames(processID, callback) {
 function getProcessAttributeNames(nodeID, callback) {
 	db.findOne({ _id : nodeID }, function (err, node) {
 		db.findOne({ _id : node.processName }, function (err, process) {
-			var deleteButton = function (value, data, cell, row, options) {
-		    	return "<button>x</button>";
-		    };
-
 			var columns = [{ formatter : deleteButton, align : "center", width : 30,
 				onClick : function (e, cell, val, data) {
 			    	$("#samples-table").tabulator("deleteRow", data.id);
@@ -199,7 +199,7 @@ function updateProcess(nodeID, tableColumns) {
 	var columns = [];
 
 	for (i = 3; i < tableColumns.length; i++) { // i = 3 since the first 3 cols are not attributes
-		columns.push(tableColumns[i].date);
+		columns.push(tableColumns[i].title);
 	}
 
 	db.findOne({ _id : nodeID }, function (err, node) {
