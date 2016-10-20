@@ -1,0 +1,10 @@
+{"_id":"Source samples","attributeNames":[]}
+{"_id":"rootNode","parentID":null,"processName":"Source samples","name":"Source samples","date":"2016-10-20 22:03"}
+{"_id":"asd","attributeNames":[]}
+{"_id":"dsa","attributeNames":[]}
+{"_id":"asd","attributeNames":["attr1"]}
+{"_id":"asd","attributeNames":["attr1","attr2"]}
+{"_id":"dsa","attributeNames":["attr3"]}
+{"_id":"dsa","attributeNames":["attr3","attr4"]}
+{"_id":"dsa","attributeNames":["attr3","attr4","attr5"]}
+{"_id":"dsa","attributeNames":["attr3","attr4","attr5","attr6"]}
