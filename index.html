@@ -108,6 +108,7 @@
 							<div class="uk-panel uk-panel-box uk-panel-box-primary" style="font-family: 'Trebuchet MS'">
 								<p>Getting started</p>
 								<p style="font-size:80%;">To start a new project select File > New Project</p>
+								<p id="helpText"></p>
 
                 <p>Processes</p>
 								<ul id="new-ProcessList" class="uk-nav uk-nav-side uk-panel uk-panel-box uk-panel-box-primary ProcessList"
@@ -826,21 +827,21 @@
 				new Treant(config);
 			});*/
 		}
-			/*$("#attri-table").show();
-      $("#attriID").hide();
-      $("#addNewAttribute").show();
-      $("#saveAttributes").show();*/
+//			$("#attri-table").show();
+//      $("#attriID").hide();
+//      $("#addNewAttribute").show();
+//      $("#saveAttributes").show();
 		});
 
 		// click process ul
-		$(".originalProcessList").on("click",function(){
-			console.log("list clicked");
+//		$(".originalProcessList").on("click",function(){
+//			console.log("list clicked");
 
 			$(".originalProcessList a").on("click",function() {
 				console.log("list element clicked");
 
-				var listElement = this.innerText; 
-				
+				var listElement = this.innerText;
+
 				getLastClickedProcess2(function (processID) {
 					getLastClickedNode(function (nodeID) {
 						saveTables(processID, nodeID, function () {
@@ -849,7 +850,7 @@
 						});
 					});
 				});
-				
+
 				// define table
 	      $("#attri-table").tabulator({
 			  fitColumns:true,
@@ -888,8 +889,8 @@
 				$("#newProcessList").clearQueue();
 			});
 
-			$("#newProcessList").clearQueue();
-		});
+//			$("#newProcessList").clearQueue();
+//		});
 
 		/*$("#del-attri-table").on('click',function() {
 			var bla2 = $("#txt_name").val();
