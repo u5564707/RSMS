@@ -37,7 +37,7 @@ function initialiseUserData() {
 
 				newProjectTest();
 
-				initialProject();
+				updateTree();
 			});
 		});
 	});
@@ -58,7 +58,7 @@ function copyToUserData(sourceFileLocation) {
 
 				openProjectTest(sourceFileLocation);
 
-				initialProject();
+				updateTree();
 			});
 		});
 	});
@@ -164,24 +164,25 @@ function getProcessAttributeNames(nodeID, callback) {
 			
 			// only ids in the source samples node should be editable
 			if (nodeID == "rootNode") {
-				columns.push({ title : "Id", field : "id", sortable : true, sorter : function(a, b){
-					//a and b are the two values being compared
-					//aData and bData are the row objects for the values being compared (useful if you need to access additional fields in the row data for the sort)
+				columns.push({ title : "Id", field : "id", sortable : true, sorter : function (a, b) {
 					return b-a;
-				},
-					fitColumns : true, editable : true });
+				}, fitColumns : true, editable : true });
+				
+				for (var i = 0; i < process.attributeNames.length; i++) {
+					columns.push({ title : process.attributeNames[i], field : process.attributeNames[i],
+						sortable : true, sorter : "string", fitColumns : true, editable : true, editableTitle : true });
+				}
 			} else {
 				columns.push({ title : "Id", field : "id", sortable : true, sorter : function(a, b){
 					//a and b are the two values being compared
 					//aData and bData are the row objects for the values being compared (useful if you need to access additional fields in the row data for the sort)
 					return b-a;
-				},
-					fitColumns : true, editable : false });
-			}
-
-			for (var i = 0; i < process.attributeNames.length; i++) {
-				columns.push({ title : process.attributeNames[i], field : process.attributeNames[i],
-					sortable : true, sorter : "string", fitColumns : true, editable : true, editableTitle : true });
+				}, fitColumns : true, editable : false });
+				
+				for (var i = 0; i < process.attributeNames.length; i++) {
+					columns.push({ title : process.attributeNames[i], field : process.attributeNames[i],
+						sortable : true, sorter : "string", fitColumns : true, editable : true, editableTitle : false });
+				}
 			}
 
 			callback(columns);
@@ -285,7 +286,7 @@ function processSamples(processName, parentID, sampleIDs) {
 				db.insert({ nodeID : newNode._id, sampleID : sampleIDs[i] });
 			}
 			
-			initialProject();
+			updateTree();
 		});
 	});
 }

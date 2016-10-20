@@ -120,16 +120,16 @@
 						</div>
 
 						<div class="uk-width" style="width: 70%">
-							<div class="uk-panel uk-panel-box uk-panel-box-primary" style="overflow:scroll">
-								<!--<button id="selectButton" class="uk-button" onclick="selectProcess()">Select</button>-->
+							<div class="uk-panel uk-panel-box uk-panel-box-primary" style="overflow:scroll">								
 								<p id="tableName"></p>
+								
 								<!--filter example-->
-								<div id="table-filters" style="display: none">
+								<!--<div id="table-filters" style="display: none">
 									<fieldset>
 										<legend>Filter Parameters</legend>
 
 										<label>Field: </label>
-										<select id="filter-field">
+										<select id="filter-field">-->
 											<!--<option value="name">Name</option>-->
 											<!--<option value="age">Age</option>-->
 											<!--<option value="gender">Gender</option>-->
@@ -138,7 +138,7 @@
 											<!--<option value="dob">Date Of Birth</option>-->
 											<!--<option value="cheese">Likes Cheese</option>-->
 											<!--<option value="function">Likes Cheese &amp; height &lt; 3</option>-->
-										</select>
+										<!--</select>
 
 										<label>Type:</label>
 										<select id="filter-type">
@@ -154,17 +154,17 @@
 										<label>Value: </label><input id="filter-value" type="text" placeholder="value to filter">
 
 										<button class="uk-button-primary" onclick="someFunction()">Clear filter</button>
-										<!--<input id="filter-clear" type="button" value="Clear Filter" style="margin-left:40px; font-family: 'Trebuchet MS'">-->
+										<input id="filter-clear" type="button" value="Clear Filter" style="margin-left:40px; font-family: 'Trebuchet MS'">
 									</fieldset>
 								</div>
 
-								<div id="example-table-filters" ></div>
+								<div id="example-table-filters" ></div>-->
 
                 <div id="checkbox-filters" style="display: none">
 									<legend>Select Samples</legend>
 									<input id="range1" type="text" placeholder="Range from">
 									<input id="range2" type="text" placeholder="Range to">
-									<button class="uk-button-primary" onclick="selectProcess()">Select</button>
+									<button class="uk-button-primary" onclick="selectRange()">Select</button>
 									<span> | </span>
 									
 									<button class="uk-button-primary" onclick="check()">Select all</button>
@@ -172,7 +172,7 @@
 								</div>
 								<br><br>
 
-								<div class="tables" id="samples-table"></div>
+								<div class="tables" id="samples-table" style="display: none"></div>
 							</div>
 						</div>
 
@@ -211,7 +211,7 @@
 								<div>
 									<button id="addNewAttribute" class="uk-button-primary" style="display: none; font-family: 'Trebuchet MS'">New Attribute</button>
 									<br><br>
-									<div class="attri-tables" id="attri-table"></div>
+									<div class="attri-tables" id="attri-table" style="display: none"></div>
 								</div>
 							</div>
 						</div>
@@ -361,60 +361,48 @@
 		fileMenu.append(new nw.MenuItem({
 			label : 'Save',
 			click : function () {
-				getLastClickedProcess (function (processID) {
-					getLastClickedNode(function (nodeID) {
-						//saveTables(processID, nodeID, function () {
-		          if (!projectOpened) {
-		            alert("No project opened!");
-		          } else {
-		            getOpenedFileLocation(function (location) {
-		            	
-		            	// save as if no project opened yet
-		              if (location == null) {
-		                var chooser = document.querySelector('#saveAsFileDialog');
-	
-		                chooser.addEventListener("change", function (evt) {
-		                  copyFromUserData(this.value);
-		                  this.value = null; // reset file location
-		                }, false);
-	
-		                chooser.click();
-		              } else {
-		                copyFromUserData(location);
-		              }
-		            });
-		          }
-						//});
-					});
-				});
+				if (!projectOpened) {
+					alert("No project opened!");
+				} else {
+					getOpenedFileLocation(function (location) {
+          	
+						// save as if no project opened yet
+            if (location == null) {
+            	var chooser = document.querySelector('#saveAsFileDialog');
+
+              chooser.addEventListener("change", function (evt) {
+                copyFromUserData(this.value);
+                this.value = null; // reset file location
+              }, false);
+
+              chooser.click();
+            } else {
+              copyFromUserData(location);
+            }
+          });
+        }
 			}
 		}));
 
 		// save as
 		fileMenu.append(new nw.MenuItem({
 			label : 'Save As',
-			click : function() {
-				getLastClickedProcess(function (processID) {
-					getLastClickedNode(function (nodeID) {
-						//saveTables(processID, nodeID, function () {
-							if (!projectOpened) {
-		            alert("No project opened!");
-		          } else {
-		            var chooser = document.querySelector('#saveAsFileDialog');
-	
-		            chooser.addEventListener("change", function (evt) {
-		              if (this.value != "") {
-		                copyFromUserData(this.value);
-		                setOpenedFileLocation(this.value);
-		                this.value = null; // reset file location
-		              }
-		            }, false);
-	
-		            chooser.click();
-		          }
-						//});
-	        });
-				});
+			click : function () {
+				if (!projectOpened) {
+           alert("No project opened!");
+         } else {
+           var chooser = document.querySelector('#saveAsFileDialog');
+
+           chooser.addEventListener("change", function (evt) {
+             if (this.value != "") {
+               copyFromUserData(this.value);
+               setOpenedFileLocation(this.value);
+               this.value = null; // reset file location
+             }
+           }, false);
+
+           chooser.click();
+         }
 			}
 		}));
 
@@ -439,7 +427,8 @@
       }
     });
 
-		var initialProject = function () {
+		// redefine tree to display
+		function updateTree() {
 			getTreeConfig(function (chart_config) {
 				$("#tree").empty();
 				new Treant(chart_config);
@@ -452,51 +441,28 @@
 					view : {
 						name : "View Samples",
 						callback : function (key, opt) {
-							getNodeName(opt.$trigger.attr("id"),function (name) {
+							getNodeName(opt.$trigger.attr("id"), function (name) {
 								document.getElementById('tableName').innerText = name;
 							});
 
 							$('.nodeHightLight').removeClass('nodeHightLight');
 							$(this).addClass('nodeHightLight');
-							
-							// save table then update data
-							getLastClickedNode(function (nodeID) {
-								if (nodeID == null) {
-									
-									// update columns
-                  getProcessAttributeNames(opt.$trigger.attr("id"), function (columns) {
-                    $("#samples-table").tabulator("setColumns", columns, false);
 
-                    // update samples (relies on columns to be set)
-                    getNodeSamples(opt.$trigger.attr("id"), function (samples) {
-                      $("#samples-table").tabulator("setData", samples);
-                    });
-                  });
+							// update columns
+              getProcessAttributeNames(opt.$trigger.attr("id"), function (columns) {
+                $("#samples-table").tabulator("setColumns", columns, false);
 
-                  setLastClickedNode(opt.$trigger.attr("id"));
-								} else {
-									getLastClickedProcess(function (processID) {
-										//saveTables(processID, nodeID, function () {
-	
-											// update columns
-				              getProcessAttributeNames(opt.$trigger.attr("id"), function (columns) {
-				                $("#samples-table").tabulator("setColumns", columns, false);
-	
-				                // update samples (relies on columns to be set)
-				                getNodeSamples(opt.$trigger.attr("id"), function (samples) {
-			                    $("#samples-table").tabulator("setData", samples);
-				                });
-				              });
-	
-											setLastClickedNode(opt.$trigger.attr("id"));
-										//});
-									});
-								}
-							});
+                // update samples (relies on columns to be set)
+                getNodeSamples(opt.$trigger.attr("id"), function (samples) {
+                  $("#samples-table").tabulator("setData", samples);
+                });
+              });
+
+              setLastClickedNode(opt.$trigger.attr("id"));
 
 							$("#samples-table").show();
 							$("#samples-table").tabulator("redraw");
-							$("#samples-table").tabulator("setPageSize", 5); // show 50 rows per page
+							// $("#samples-table").tabulator("setPageSize", 5); // uncomment for final version
 
 							// show table operations
 							if (opt.$trigger.attr("id") == "rootNode") {
@@ -518,66 +484,64 @@
 					}
 				}
 			});
-
-			// define table
-			$("#samples-table").tabulator({
-				fitColumns : true,
-				columns : [],
-
-				rowFormatter : function (row, data) {
-					row.css({"height":"36px"});
-				},
-
-				cellEdited : function (id, field, value, oldValue, data, cell, row) {
-
-					// prevent duplicate ids
-					if (field == "id") {
-						let data             = $("#samples-table").tabulator("getData"),
-						    duplicateIdCount = 0;
-
-						for (var key in data) {
-							
-							// make sure key is not metadata
-			        if (Object.prototype.hasOwnProperty.call(data, key) && data[key].id == value) {
-			        	duplicateIdCount++;
-			        	
-			        	if (duplicateIdCount > 1) {
-			        		  alert("This id has already been used!");
-			        	}
-			        }
-			      }
-					}
-					
-					// save table
-					//console.log("nodeID: "+nodeID);
-					saveSamplesTable();
-				}
-				//pagination : true // uncomment for final version
-			});
 		};
 		
-		// delete a column
-		//      $("#delete_col").click(function(){
-		//        var columns = $("#samples-table").tabulator('getColumns');
-		//
-		//        var delCol = $("#col_delete").val();
-		//        if (delCol > -1) {
-		//          var newcol = columns.splice(delCol, 1);
-		//        }
-		//
-		//        $('#samples-table').tabulator('setColumns', newcol);
-		//      });
+		// define table
+    $("#samples-table").tabulator({
+      fitColumns : true,
+      columns : [],
 
-		// add rows
-		$("#add_table").click(function() {
+      rowFormatter : function (row, data) {
+        row.css({"height":"36px"});
+      },
+
+      cellEdited : function (id, field, value, oldValue, data, cell, row) {
+
+        // prevent duplicate ids
+        if (field == "id") {
+          let data             = $("#samples-table").tabulator("getData"),
+              duplicateIdCount = 0;
+
+          for (var key in data) {
+            
+            // make sure key is not metadata
+            if (Object.prototype.hasOwnProperty.call(data, key) && data[key].id == value) {
+              duplicateIdCount++;
+              
+              if (duplicateIdCount > 1) {
+                  $("#samples-table").tabulator("updateData", [{ id : id, id : oldValue }]); // reset id to oldValue
+                  alert("This id has already been used!");
+              }
+            }
+          }
+        }
+        
+        saveSamplesTable();
+      }
+      //pagination : true // uncomment for final version
+    });
+		
+    // saves the current state of samples-table
+    function saveSamplesTable() {
+      getLastClickedNode(function (nodeID) {
+        if (nodeID != null) {
+          updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
+          updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
+        }
+      });
+    }
+
+		// add row
+		$("#add_table").click(function () {
 			$("#samples-table").tabulator("addRow", { id: ""+samplesTableRowCount++ });
-			$("#samples-table").tabulator("redraw",true);
+			$("#samples-table").tabulator("redraw", true);
 			
 			saveSamplesTable();
 			
 			this.clearQueue();
 		});
 
+		// add column
 		$("#add_col").on('click', function () {
 			$("#samples-table").tabulator('getColumns').push({
         title : "attr"+attriTableRowCount,
@@ -597,313 +561,117 @@
 			this.clearQueue();
 		});
 
-			// add columns
-//			$("#add_col").click(function() {
-//				var count = 1;
-//				console.log("first time"+ count);
-//				var thiscolumns = $("#samples-table").tabulator('getColumns');
-//				var temp1 = $("#samples-table").tabulator("getData");
-//
-//				var newCol = $("#col_name").val();
-//
-//				if ($("#col_name").val() == "") {
-//					newCol = prompt("Please enter the column");
-//					count++;
-//					console.log("Second time" + count);
-//				}
-//
-//				if(newCol==null){
-//					return;
-//					count++;
-//					console.log("Third time" + count);
-//
-//				}else {
-//					thiscolumns.push({
-//						title: "" + newCol,
-//						field: "" + newCol,
-//						fitColumns: true,
-//						sorter: "string",
-//						editable: true
-//					});
-//				}
-//
-//				db.update({
-//					_id : "DNA Extract"
-//				}, {
-//					$push : {
-//						attributeNames : "" + newCol
-//					}
-//				});
-//
-//				//manipulate columns definition array
-//				$('#samples-table').tabulator('setColumns', thiscolumns,false);
-//				$("#samples-table").tabulator("setData", temp1);
-//				newCol == "";
-//
-//
-//				$("#add_col").unbind('click').on('click', function() {
-//					// function body
-//				});
-//
-//			});
-
-		//delete column
-		$("#del_col").on('click',function() {
-			/*var tmp = $("#col_del").val();
-			if (tmp == "") {
-				tmp = prompt("Please enter the name of the column to delete");
-			}
-			$("#samples-table").tabulator("deleteColumn", tmp);*/
-
+		// delete column
+		$("#del_col").on('click', function () {
 			$("#samples-table").tabulator("deleteColumn", prompt("Please enter the name of the column to delete"));
-
-			/*var thiscolumns = $("#samples-table").tabulator('getColumns');
-			var temp1 = $("#samples-table").tabulator("getData");
-
-			getLastClickedNode(function(nodeID) {
-				db.remove({
-					_id : {
-						nodeID : nodeID,
-						sampleID : tmp
-					}
-				}, {
-					multi : true
-				});
-			});
-
-			$('#samples-table').tabulator('setColumns', thiscolumns);
-			var x = $("#samples-table").tabulator("getData");
-			$("#samples-table").tabulator("setData", x);
-			console.log(tosource(x));*/
+			
+			this.clearQueue();
 		});
 
-		/*// delete row
-		$("#delete_table").one('click',function() {
-			var bla = $("#txt_name").val();
-			if (bla == "") {
-				bla = prompt("Please enter the row");
-			}
-			$("#samples-table").tabulator("deleteRow", bla);
-
-			getLastClickedNode(function(nodeID) {
-				db.remove({
-					_id : {
-						nodeID : nodeID,
-						sampleID : bla
-					}
-				}, {
-					multi : true
-				});
-			});
-
-			var x = $("#samples-table").tabulator("getData");
-			$("#samples-table").tabulator("setData", x);
-			console.log(tosource(x));
-		});*/
-
 		// populate process list
-    getAllProcessIDs(function(ids) {
+    getAllProcessIDs(function (ids) {
       $(".ProcessList").empty();
 
       for (var i in ids) {
         $(".ProcessList").append('<li id='+ids[i]+'><a href="#">'+ids[i]+'</a></li>');
-		  //$("#new-ProcessList").append('<li id= new'+ids[i]+'><a href="#">'+ids[i]+'</a></li>');
       }
+    });
 
+		// add new process
+		$("#addNewProcess").click(function () {
+			var t1 = prompt("Name of the new process?");
+
+			if (t1 == null || t1 == "") {
+				// do nothing
+			} else {
+				var t2  = t1,
+				    ul  = document.getElementById("originalProcessList"),
+		        ul2 = document.getElementById("new-ProcessList"),
+				    li  = document.createElement("li"),
+				    li2 = document.createElement("li"),
+				    a   = document.createElement('a'),
+				    a2  = document.createElement('a');
+				
+				a.href = "#";
+				a2.href = "#";
+				a.appendChild(document.createTextNode(t1));
+				a2.appendChild(document.createTextNode(t2));
+				
+				li.appendChild(a);
+				li2.appendChild(a2);
+				li.setAttribute("id", t1); // added line
+				li2.setAttribute("id", t2); // added line
+				
+				ul.appendChild(li);
+				ul2.appendChild(li2);
+
+				addProcess(t1);
+			}
+			
+			this.clearQueue();
+		});
+
+		// define attri-table
+    $("#attri-table").tabulator({
+      fitColumns : true,
+      columns : [],
+      
+      rowFormatter : function (row, data) {
+        row.css({"height":"36px"});
+      },
+      
+      cellEdited : function (id, field, value, oldValue, data, cell, row) {
+        saveAttributesTable();
+      }
+    });
+		
+    // add new attribute
+    $("#addNewAttribute").click(function() {
+      $("#attri-table").tabulator("addRow", { id: attriTableRowCount, name: "attr"+attriTableRowCount++ });
+      $("#attri-table").tabulator("redraw",true);
+      
+      saveAttributesTable();
+    });
+		
+		// show attri-table
+    $(".originalProcessList").on("click", function () {
+			$(".originalProcessList a").on("click", function () {
+				
+				// set columns
+	      $("#attri-table").tabulator("setColumns", [
+	        { formatter : deleteButton, align : "center", width : 50, onClick : function (e, cell, val, data) {
+	          $("#attri-table").tabulator("deleteRow", data.id);
+	          saveAttributeTable();
+	        } },
+	        { title : ""+this.innerText, field : "name", sortable : true, sorter : "string", width : 200, editable : true }
+	      ]);
+	
+				// set data
+				getAttributeNames(this.innerText, function (attributeNames) {
+					$("#attri-table").tabulator("setData", attributeNames);
+				});
+				
+				setLastClickedProcess2(this.innerText);
+	
+				$("#attri-table").show();
+				$("#attriID").show();
+	      $("#addNewAttribute").show();
+	
+				this.clearQueue();
+			});
     });
 		
 		// saves the current state of attri-table
-		function saveAttributesTable() {
-			getLastClickedProcess2(function (processID) {
-				console.log("PROCESSID: "+processID);
-				if (processID != null) {
-					updateProcessAttributes(processID, $("#attri-table").tabulator("getData"));
-				}
-			});
-    }
-		
-		// saves the current state of samples-table
-    function saveSamplesTable() {
-    	getLastClickedNode(function (nodeID) {
-	      if (nodeID != null) {
-	        updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
-	        updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
-	      }
-    	});
-    }
-
-		//click the first list demo
-//		$("#attriID-1").one('click',function() {
-//			$("#attri-table").tabulator({
-//				columns: [
-//					{title: "Name", field: "name", sortable: true, sorter: "string", width: 200, editable: true},
-//
-//				]
-//			});
-//
-//			$("#attri-table").tabulator("setData", [
-//				{id: 1, name: "Billy Bob"}
-//			]);
-//		});
-
-		// add new attribute
-		$("#addNewAttribute").click(function() {
-			$("#attri-table").tabulator("addRow", { id: attriTableRowCount, name: "attr"+attriTableRowCount++ });
-			$("#attri-table").tabulator("redraw",true);
-			
-			saveAttributesTable();
-		});
-
-		// add new process
-		$("#addNewProcess").click(function() {
-
-			//var ul = document.getElementById("ProcessList");
-			var ul = document.getElementById("originalProcessList");
-			var ul2 = document.getElementById("new-ProcessList");
-			var t1 = prompt("Name of the new process?");
-			//li.appendChild(document.createTextNode(t1));
-
-			if (t1 == null) {
-				return;
-			} else {
-
-				var t2 = t1;
-			var li = document.createElement("li");
-			var a = document.createElement('a');
-			a.href = "#";
-
-			a.appendChild(document.createTextNode(t1));
-			li.appendChild(a);
-
-			li.setAttribute("id", t1); // added line
-
-				var li2 = document.createElement("li");
-				var a2 = document.createElement('a');
-				a2.href = "#";
-
-				a2.appendChild(document.createTextNode(t2));
-				li2.appendChild(a2);
-				li2.setAttribute("id", t2); // added line
-
-
-				ul.appendChild(li);
-				ul2.appendChild(li2);
-			//alert(li.id);
-			//$("#ProcessList").append('<li id='+t1+'><a href="#">'+t1+'</a></li>');
-			//var samplesString2 = prompt("Samples to process (enter ids as comma seperated values witout spaces):");
-
-
-			var lis = $(".ProcessList li");
-
-			//var par = ul.childNodes[lis.length-2].innerText;
-
-			//console.log(par);
-
-//			if (t1 != null && samplesString2 != null) {
-//				processSamples(t1, par+"[id]",
-//						samplesString2);
-//			}
-			console.log("adding process" + t1);
-			addProcess(t1);
-			
-			// update tree
-
-			/*getTreeConfig(function (config) {
-				$("#tree").empty();
-				new Treant(config);
-			});*/
-		}
-//			$("#attri-table").show();
-//      $("#attriID").hide();
-//      $("#addNewAttribute").show();
-//      $("#saveAttributes").show();
-		});
-
-		// click process ul
-//		$(".originalProcessList").on("click",function(){
-//			console.log("list clicked");
-
-			$(".originalProcessList a").on("click",function() {
-				console.log("list element clicked");
-
-				var listElement = this.innerText;
-
-				getLastClickedProcess2(function (processID) {
-					getLastClickedNode(function (nodeID) {
-						//saveTables(processID, nodeID, function () {
-							console.log("old process: "+processID+", new process: "+listElement)
-							setLastClickedProcess2(listElement);
-						//});
-					});
-				});
-
-				// define table
-				$("#attri-table").tabulator({
-					fitColumns : true,
-					columns : [],
-					
-					rowFormatter : function (row, data) {
-						row.css({"height":"36px"});
-					},
-					
-					cellEdited : function (id, field, value, oldValue, data, cell, row) {
-						saveAttributesTable();
-					}
-	      });
-
-				console.log(this);
-				// set columns
-
-	      $("#attri-table").tabulator("setColumns", [
-          { formatter: deleteButton, align: "center", width: 50, onClick: function(e, cell, val, data) {
-            console.log("deleting row "+data.id);
-
-			  $("#attri-table").tabulator("deleteRow", data.id);
-          } },
-          { title: ""+this.innerText, field: "name", sortable: true, sorter: "string", width: 200, editable: true }
-        ]);
-
-				// set data
-				getAttributeNames(this.innerText, function(attributeNames) {
-					$("#attri-table").tabulator("setData", attributeNames);
-				});
-
-				setLastClickedProcess(this.innerText);
-
-				$("#attri-table").show();
-				$("#attriID").show();
-        $("#addNewAttribute").show();
-
-				$("#newProcessList").clearQueue();
-			});
-
-//			$("#newProcessList").clearQueue();
-//		});
-
-		/*$("#del-attri-table").on('click',function() {
-			var bla2 = $("#txt_name").val();
-			if (bla2 == "") {
-				bla2 = prompt("Please enter the row");
-			}
-			$("#attri-table").tabulator("deleteRow", bla2);
-
-			var x = $("#attri-table").tabulator("getData");
-			$("#attri-table").tabulator("setData", x);
-			console.log(tosource(x));
-		});*/
-
-		// save list of attributes
-		/*$("#saveAttributes").on('click', function () {
-			getLastClickedProcess(function (processID) {
-        if (processID != undefined && confirm('Save data?')) {
+    function saveAttributesTable() {
+      getLastClickedProcess2(function (processID) {
+        if (processID != null) {
           updateProcessAttributes(processID, $("#attri-table").tabulator("getData"));
-          this.clearQueue();
         }
-			});
-		});*/
+      });
+    }
 
 		//Custom filter example
-		function customFilter(data){
+		/*function customFilter(data){
 			return data.car && data.rating < 3;
 		}
 
@@ -934,51 +702,35 @@
 			$("#filter-value").val("");
 
 			$("#example-table-filters").tabulator("clearFilter");
-		});
+		});*/
 
-//
-//		$("#attri-table").tabulator({
-//			rowClick:function(e, id, data, row){
-//				$("#attri-table").tabulator("redraw");
-//			},
-//		});
-
-	  var tickbox = function(value, data, cell, row, options){ //plain text value
+	  var tickbox = function (value, data, cell, row, options) {
 		  return '<input type="checkbox" id="myCheck">';
 		};
 		
 		function check() {
 		  document.getElementById("myCheck").checked = true;
-		  $('#samples-table  input:checkbox').each(function() {
+		  
+		  $('#samples-table  input:checkbox').each(function () {
 		    this.checked = true;
 		  });
 		}
 		
 		function uncheck() {
 		  document.getElementById("myCheck").checked = false;
-		  $('#samples-table  input:checkbox').each(function() {
+		  
+		  $('#samples-table  input:checkbox').each(function () {
 		    this.checked = false;
 		  });
 		}
 		
-		function selectProcess() {
-		  let x = Number($("#range1").val());
-		  let y = Number($("#range2").val());
-		
-		  let z = $('#samples-table  input:checkbox');
+		function selectRange() {
+		  let z = $('#samples-table input:checkbox');
 
-			//let rowId = $("#samples-table").tabulator("getData");
-			//console.log(rowId[1].id);
-
-		  for(let xy = x-1;xy<=y-1;xy++){
-		    z[xy].checked = true;
+		  for (let i = Number($("#range1").val())-1; i <= Number($("#range2").val())-1; i++) {
+		    z[i].checked = true;
 		  }
 		}
-
-		$(window).resize(function(){
-			$("#attri-table").tabulator("redraw",true);
-			$("#samples-table").tabulator("redraw",true);
-		});
 		
 		$("#new-ProcessList").on("click", function () {
       $("#new-ProcessList a").on("click", function () {
@@ -992,7 +744,7 @@
 			} else {
 				var allChecked = false;
 				
-				$('#samples-table  input:checkbox').each(function () {
+				$('#samples-table input:checkbox').each(function () {
 					if (this.checked) {
 						allChecked = true;
 					}
@@ -1019,24 +771,19 @@
 		});
 
 		//get the date
-		Date.prototype.ymdhm = function() {
-			var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
-			var dd = this.getDate().toString();
-			var minute = this.getMinutes().toString();
-			var hour = this.getHours().toString();
+		Date.prototype.ymdhm = function () {
+			var mm     = (this.getMonth() + 1).toString(),
+			    dd     = this.getDate().toString(),
+			    minute = this.getMinutes().toString(),
+			    hour   = this.getHours().toString();
 
 			return [this.getFullYear(), mm.length===2 ? '-' : '-0', mm, dd.length===2 ? '-' : '-0', dd,hour.length===2 ? ' ':' 0',hour,minute.length ===2 ? ':':':0',minute].join('');
 		};
 
-		var date = new Date();
-		var todayString = date.ymdhm();
-
-
 		//heightlight selected nodes
-		$('.node p').click(function(){
+		$('.node p').click(function () {
 			$('.nodeHightLight').removeClass('nodeHightLight');
 			$(this).addClass('nodeHightLight');
-
 		});
 	</script>
 </body>
