@@ -14,6 +14,10 @@ The Research Sample Management System is a quick and easy way to enter, control 
 
 The user interface contains two main components, the tree shows the process branch and the table shows the data stored in the node. The Process View will show process attributes.
 
+#### Helpers
+
+General intructions in shown in Getting Started column.
+
 
 #### Create a new project
 
