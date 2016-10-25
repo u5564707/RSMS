@@ -281,7 +281,10 @@
 				setOpenedFileLocation(null);
 				setLastClickedNode(null);
 				projectOpened = true;
-
+				
+				samplesTableRowCount = 1;
+				attriTableRowCount = 1;
+				
 				$('#new-ProcessList').empty();
 				$('#originalProcessList').empty();
 				
@@ -330,7 +333,7 @@
 						setOpenedFileLocation(this.value);
 						setLastClickedNode(null);
 						projectOpened = true;
-
+						
 						$("#new-ProcessList").hide();
 		        $("#process-samples").hide();
 		              
@@ -527,6 +530,7 @@
         if (nodeID != null) {
           updateProcess(nodeID, $("#samples-table").tabulator("getColumns"));
           updateNodeSamples(nodeID, $("#samples-table").tabulator("getData"));
+          updateCounters();
         }
       });
     }
@@ -568,22 +572,24 @@
 			this.clearQueue();
 		});
 
-		// populate process list
-    getAllProcessIDs(function (ids) {
-      $(".ProcessList").empty();
-
-      for (var i in ids) {
-        $(".ProcessList").append('<li id='+ids[i]+'><a href="#">'+ids[i]+'</a></li>');
-      }
-    });
-
+		// populate process lists
+		function loadLists() {
+	    getAllProcessIDs(function (ids) {
+	      $("#originalProcessList").empty();
+	      $("#new-ProcessList").empty();
+	      
+	      for (var i in ids) {
+	        $("#originalProcessList").append('<li id='+ids[i]+'><a href="#">'+ids[i]+'</a></li>');
+	        $("#new-ProcessList").append('<li id='+ids[i]+'><a href="#">'+ids[i]+'</a></li>');
+	      }
+	    });
+		}
+		
 		// add new process
 		$("#addNewProcess").click(function () {
 			var t1 = prompt("Name of the new process?");
 
-			if (t1 == null || t1 == "") {
-				// do nothing
-			} else {
+			if (!(t1 == null || t1 == "")) {
 				var t2  = t1,
 				    ul  = document.getElementById("originalProcessList"),
 		        ul2 = document.getElementById("new-ProcessList"),
@@ -669,6 +675,7 @@
       getLastClickedProcess2(function (processID) {
         if (processID != null) {
           updateProcessAttributes(processID, $("#attri-table").tabulator("getData"));
+          updateCounters();
         }
       });
     }
@@ -737,7 +744,7 @@
 		
 		document.getElementById('new-ProcessList').onclick = function(event) {
 	    var target = getEventTarget(event);
-	     
+	    
       lastClickedNewProcessListElement = target.innerText;
       
       this.clearQueue();

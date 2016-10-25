@@ -1,10 +1,6 @@
 {"_id":"Source samples","attributeNames":[]}
-{"_id":"rootNode","parentID":null,"processName":"Source samples","name":"Source samples","date":"2016-10-25 12:00"}
-{"_id":"fdsfdsa","attributeNames":[]}
-{"_id":"fdsa","attributeNames":[]}
-{"_id":"fdsfdsa","attributeNames":["attr1"]}
-{"_id":"fdsfdsa","attributeNames":["attr1","attr2"]}
-{"_id":"fdsfdsa","attributeNames":["attr1","attr2","attr3"]}
-{"_id":"fdsa","attributeNames":["attr4"]}
-{"_id":"fdsa","attributeNames":["attr4","attr5"]}
-{"_id":"fdsa","attributeNames":["attr4","attr5","attr6"]}
+{"_id":"rootNode","parentID":null,"processName":"Source samples","name":"Source samples","date":"2016-10-25 15:00"}
+{"attributeNames":[],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","_id":"0R5xLnej9k6ZPiOm"}
+{"_id":"samplesCount","count":2}
+{"_id":"attriCount","count":1}

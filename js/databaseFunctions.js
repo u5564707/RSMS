@@ -1,9 +1,11 @@
 // Tomasz J Kocik (u5564707) and Bo Shi, ANU Techlauncher 2016
 
 /* Datastore schema
- * Process: { _id, attributeNames: [] }
- * Node:    { _id, parentID, processName, name, date }
- * Sample:  { _id, nodeID, sampleID, attr_1, attr_2, ... , attr_n }
+ * Process:      { _id, attributeNames: [] }
+ * Node:         { _id, parentID, processName, name, date }
+ * Sample:       { _id, nodeID, sampleID, attr_1, attr_2, ... , attr_n }
+ * samplesCount: { _id, count } // used to store samplesTableRowCount
+ * attriCount:   { _id, count } // used to store attriTableRowCount
  */
 
 /* Tips:
@@ -36,8 +38,9 @@ function initialiseUserData() {
 				console.log("inserted!");
 
 				newProjectTest();
-
+				
 				updateTree();
+				loadLists();
 			});
 		});
 	});
@@ -59,6 +62,15 @@ function copyToUserData(sourceFileLocation) {
 				openProjectTest(sourceFileLocation);
 
 				updateTree();
+				loadLists();
+				
+				getSamplesCounter(function (count) {
+					samplesTableRowCount = count;
+				});
+				
+				getAttriCounter(function (count) {
+					attriTableRowCount = count;
+				});
 			});
 		});
 	});
@@ -125,8 +137,8 @@ function getTreeConfig(callback) {
 function getAllProcessIDs(callback) {
 
 	// find all process docs except "Source samples". "attributeNames : { $exists : true }" wasn't working for some reason
-	db.find({ parentID : { $exists : false }, nodeID : { $exists : false }, _id : { $ne : "Source samples" } },
-			function (err, processIDs) {
+	db.find({ parentID : { $exists : false }, nodeID : { $exists : false }, count : { $exists : false },
+			_id : { $ne : "Source samples" } }, function (err, processIDs) {
 		var processIDList = [];
 
 		for (i=0; i<processIDs.length; i++) {
@@ -255,7 +267,7 @@ function updateNodeSamples(nodeID, tableData) {
 
 	// remove all samples with nodeID
 	db.remove({ nodeID : nodeID }, { multi : true }, function (err, numRemoved) {
-
+		
 		// insert sample documents
 		for (var i = 0; i < tableData.length; i++) {
 			var sample = { nodeID : nodeID, sampleID : tableData[i].id };
@@ -288,5 +300,31 @@ function processSamples(processName, parentID, sampleIDs) {
 			
 			updateTree();
 		});
+	});
+}
+
+function getSamplesCounter(callback) {
+	db.findOne({ _id : "samplesCount" }, function (err, samplesCount) {
+		callback(samplesCount.count);
+	});
+}
+	
+function getAttriCounter(callback) {
+	db.findOne({ _id : "attriCount" }, function (err, attriCount) {
+		callback(attriCount.count);
+	});
+}
+
+function updateCounters() {
+	db.update({ _id : "samplesCount" }, { count : samplesTableRowCount }, {}, function (err, numReplaced) {
+		if (numReplaced == 0) {
+			db.insert({ _id : "samplesCount", count : samplesTableRowCount });
+		}
+	});
+	
+	db.update({ _id : "attriCount" }, { count : attriTableRowCount }, {}, function (err, numReplaced) {
+		if (numReplaced == 0) {
+			db.insert({ _id : "attriCount", count : attriTableRowCount });
+		}
 	});
 }
