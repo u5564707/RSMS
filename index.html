@@ -647,15 +647,15 @@
             $("#attri-table").tabulator("deleteRow", data.id);
             saveAttributeTable();
           } },
-          { title : ""+this.innerText, field : "name", sortable : true, sorter : "string", width : 200, editable : true }
+          { title : ""+target.innerText, field : "name", sortable : true, sorter : "string", width : 200, editable : true }
         ]);
   
         // set data
-        getAttributeNames(this.innerText, function (attributeNames) {
+        getAttributeNames(target.innerText, function (attributeNames) {
           $("#attri-table").tabulator("setData", attributeNames);
         });
         
-        setLastClickedProcess2(this.innerText);
+        setLastClickedProcess2(target.innerText);
   
         $("#attri-table").show();
         $("#attriID").show();
@@ -738,7 +738,7 @@
 		document.getElementById('new-ProcessList').onclick = function(event) {
 	    var target = getEventTarget(event);
 	    
-      lastClickedNewProcessListElement = this.innerText;
+      lastClickedNewProcessListElement = target.innerText;
       
       this.clearQueue();
     }
