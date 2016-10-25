@@ -330,7 +330,7 @@
 	      $("#addNewAttribute").hide();
 
 				helperText = document.getElementById("helpText");
-				helperText.innerText = "Click sample node to view data";
+				helperText.innerText = "To view your data, click 'Source samples' and select 'View Samples'";
 			}
 		}));
 
@@ -510,7 +510,8 @@
 							$("#table-filters").show();
 							$("#checkbox-filters").show();
 
-							helperText.innerText = "Click buttons under Table Operations edit data\n\n"+"Click Process View to add new process";
+							helperText.innerText = "Use the buttons under 'Table Operations' to edit the table\n\n"
+								  + "Select 'Process View' to add new processes";
 						}
 					}
 				}
@@ -548,6 +549,26 @@
         }
         
         saveSamplesTable();
+      },
+      colTitleChanged : function (value, col, cols) {
+    	  let tableData = $("#samples-table").tabulator("getData");
+    	  
+    	  // update field name for column for every row 
+    	  for (let i = 0; i < tableData.length; i++) {
+    		  tableData[i][col.title] = tableData[i][col.field];
+    		  tableData[i][col.field] = null;
+    	  }
+    	  
+    	  col.field = col.title;
+    	  $("#samples-table").tabulator("setData", tableData);
+    	  
+    	  saveSamplesTable();
+    	  
+    	  // temporary fix to cell rendering issue
+    	  $("#samples-table").tabulator("addColumn", { title: "qzjxqzjx", field:"qzjxqzjx"});
+    	  $("#samples-table").tabulator("deleteColumn", "qzjxqzjx");
+    	  
+    	  $("#samples-table").tabulator("redraw", true);
       }
       //pagination : true // uncomment for final version
     });
@@ -642,7 +663,7 @@
 				addProcess(t1);
 			}
 
-			helperText.innerText = "Click Process list to process samples";
+			helperText.innerText = "Select the process and the samples you wish to process and then click 'Process' to create a new sample set";
 
 			this.clearQueue();
 		});
@@ -765,11 +786,19 @@
 		}
 		
 		function selectRange() {
-		  let z = $('#samples-table input:checkbox');
+			let tableData = $("#samples-table").tabulator("getData"),
+		      selection = $('#samples-table input:checkbox');
 
-		  for (let i = Number($("#range1").val())-1; i <= Number($("#range2").val())-1; i++) {
-		    z[i].checked = true;
-		  }
+			for (let i = 0; i < tableData.length; i++) {
+				if (tableData[i].id.match(/\d/g).join("") >= $("#range1").val().match(/\d/g).join("")
+						&& tableData[i].id.match(/\d/g).join("") <= $("#range2").val().match(/\d/g).join("")) {
+					selection[i].checked = true;
+				}
+			}
+			
+		  /*for (let i = Number($("#range1").val())-1; i <= Number($("#range2").val())-1; i++) {
+		    selection[i].checked = true;
+		  }*/
 		}
 		
 		document.getElementById('new-ProcessList').onclick = function(event) {
@@ -819,7 +848,8 @@
 			    minute = this.getMinutes().toString(),
 			    hour   = this.getHours().toString();
 
-			return [this.getFullYear(), mm.length===2 ? '-' : '-0', mm, dd.length===2 ? '-' : '-0', dd,hour.length===2 ? ' ':' 0',hour,minute.length ===2 ? ':':':0',minute].join('');
+			return [this.getFullYear(), mm.length===2 ? '-' : '-0', mm, dd.length===2 ? '-' : '-0',
+					dd,hour.length===2 ? ' ':' 0',hour,minute.length ===2 ? ':':':0',minute].join('');
 		};
 
 		//heightlight selected nodes

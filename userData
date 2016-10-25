@@ -1,0 +1,26 @@
+{"_id":"Source samples","attributeNames":[]}
+{"_id":"rootNode","parentID":null,"processName":"Source samples","name":"Source samples","date":"2016-10-25 23:57"}
+{"attributeNames":[],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","_id":"EMwGInejV2NqQ7Yn"}
+{"_id":"samplesCount","count":2}
+{"_id":"attriCount","count":1}
+{"$$deleted":true,"_id":"EMwGInejV2NqQ7Yn"}
+{"count":2,"_id":"samplesCount"}
+{"count":2,"_id":"attriCount"}
+{"attributeNames":["attr1"],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","attr1":"","_id":"zsHjOriqW3msMWU6"}
+{"$$deleted":true,"_id":"zsHjOriqW3msMWU6"}
+{"count":2,"_id":"samplesCount"}
+{"count":2,"_id":"attriCount"}
+{"attributeNames":["attr1"],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","attr1":"das","_id":"rmrIqU4GDX7agezi"}
+{"$$deleted":true,"_id":"rmrIqU4GDX7agezi"}
+{"count":2,"_id":"samplesCount"}
+{"count":2,"_id":"attriCount"}
+{"attributeNames":["attr1ss"],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","attr1":null,"attr1ss":"das","_id":"jjZOeUwtPdEDl6Fa"}
+{"$$deleted":true,"_id":"jjZOeUwtPdEDl6Fa"}
+{"count":2,"_id":"samplesCount"}
+{"count":2,"_id":"attriCount"}
+{"attributeNames":["attr1ssdsa"],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","attr1":null,"attr1ss":null,"x":"","attr1ssdsa":"das","_id":"xbCBz4bNM0VDiR8G"}
