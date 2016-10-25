@@ -100,7 +100,7 @@
 	<header>
 		<div id="file-name"></div>
 
-		<ul>
+		<ul  >
 			<li><a href='#' title='Minimize' id='windowControlMinimize'></a></li>
 			<li><a href='#' title='Maximize' id='windowControlMaximize'></a></li>
 			<li><a href='#' title='Close' id='windowControlClose'></a></li>
@@ -229,7 +229,7 @@
 								</ul>
 							</div>
 
-							<div class="uk-width-large-1-3 uk-width-1-2 uk-text-right">
+							<div class="uk-width-large-1-3 uk-width-1-2 ">
 								<h4 style="font-family: 'Trebuchet MS'">Process Attributes</h4>
 								<div>
 									<button id="addNewAttribute" class="uk-button-primary" style="display: none; font-family: 'Trebuchet MS'">New Attribute</button>
@@ -704,7 +704,7 @@
             $("#attri-table").tabulator("deleteRow", data.id);
             saveAttributeTable();
           } },
-          { title : ""+target.innerText, field : "name", sortable : true, sorter : "string", width : 200, editable : true }
+          { title : ""+target.innerText, field : "name", sortable : true, sorter : "string", width : 260, editable : true }
         ]);
   
         // set data
