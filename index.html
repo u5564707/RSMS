@@ -633,32 +633,36 @@
       saveAttributesTable();
     });
 		
-		// show attri-table
-    $(".originalProcessList").on("click", function () {
-			$(".originalProcessList a").on("click", function () {
-				// set columns
-	      $("#attri-table").tabulator("setColumns", [
-	        { formatter : deleteButton, align : "center", width : 50, onClick : function (e, cell, val, data) {
-	          $("#attri-table").tabulator("deleteRow", data.id);
-	          saveAttributeTable();
-	        } },
-	        { title : ""+this.innerText, field : "name", sortable : true, sorter : "string", width : 200, editable : true }
-	      ]);
+    function getEventTarget(e) {
+        e = e || window.event;
+        return e.target || e.srcElement; 
+    }
 
-				// set data
-				getAttributeNames(this.innerText, function (attributeNames) {
-					$("#attri-table").tabulator("setData", attributeNames);
-				});
-				
-				setLastClickedProcess2(this.innerText);
-	
-				$("#attri-table").show();
-				$("#attriID").show();
-	      $("#addNewAttribute").show();
-	
-				this.clearQueue();
-			});
-    });
+    document.getElementById('originalProcessList').onclick = function(event) {
+        var target = getEventTarget(event);
+        
+        // set columns
+        $("#attri-table").tabulator("setColumns", [
+          { formatter : deleteButton, align : "center", width : 50, onClick : function (e, cell, val, data) {
+            $("#attri-table").tabulator("deleteRow", data.id);
+            saveAttributeTable();
+          } },
+          { title : ""+this.innerText, field : "name", sortable : true, sorter : "string", width : 200, editable : true }
+        ]);
+  
+        // set data
+        getAttributeNames(this.innerText, function (attributeNames) {
+          $("#attri-table").tabulator("setData", attributeNames);
+        });
+        
+        setLastClickedProcess2(this.innerText);
+  
+        $("#attri-table").show();
+        $("#attriID").show();
+        $("#addNewAttribute").show();
+  
+        this.clearQueue();
+    };
 		
 		// saves the current state of attri-table
     function saveAttributesTable() {
@@ -731,11 +735,13 @@
 		  }
 		}
 		
-		$("#new-ProcessList").on("click", function () {
-      $("#new-ProcessList a").on("click", function () {
-        lastClickedNewProcessListElement = this.innerText;
-      });
-    });
+		document.getElementById('new-ProcessList').onclick = function(event) {
+	    var target = getEventTarget(event);
+	    
+      lastClickedNewProcessListElement = this.innerText;
+      
+      this.clearQueue();
+    }
 		
 		$("#process-samples").on('click', function () {
 			if (lastClickedNewProcessListElement == null) {

@@ -1,4 +1,11 @@
 {"_id":"Source samples","attributeNames":[]}
-{"_id":"rootNode","parentID":null,"processName":"Source samples","name":"Source samples","date":"2016-10-25 11:43"}
-{"_id":"DNA","attributeNames":[]}
-{"_id":"Fol","attributeNames":[]}
+{"_id":"rootNode","parentID":null,"processName":"Source samples","name":"Source samples","date":"2016-10-25 11:49"}
+{"_id":"lnm","attributeNames":[]}
+{"attributeNames":[],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","_id":"XNnIwORKdZ0JnZ7x"}
+{"$$deleted":true,"_id":"XNnIwORKdZ0JnZ7x"}
+{"attributeNames":[],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","_id":"wpCGdNDzGc7zf76Y"}
+{"nodeID":"rootNode","sampleID":"2","undefined":"","_id":"RG9oRzAewHEp929C"}
+{"parentID":"rootNode","name":"lnm\n1","processName":"lnm\n","date":"2016-10-25 11:49","_id":"2WOQp11XoG6EROBY"}
+{"nodeID":"2WOQp11XoG6EROBY","sampleID":"1","_id":"n7Sk2bcE5XsCCjzS"}
