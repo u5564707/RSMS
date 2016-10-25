@@ -4,7 +4,6 @@
     <list default="true" id="52dc558f-77da-4891-ac9d-ec41e25c1871" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/globalVariables.js" afterPath="$PROJECT_DIR$/js/globalVariables.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/userData" afterPath="$PROJECT_DIR$/userData" />
     </list>
     <ignored path="RSMS.iws" />
@@ -28,8 +27,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="431">
-              <caret line="509" column="73" selection-start-line="509" selection-start-column="73" selection-end-line="509" selection-end-column="73" />
+            <state relative-caret-position="251">
+              <caret line="679" column="104" selection-start-line="679" selection-start-column="104" selection-end-line="679" selection-end-column="104" />
               <folding>
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#input#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -533,14 +532,7 @@
       <workItem from="1477007393927" duration="212000" />
       <workItem from="1477092542286" duration="1582000" />
       <workItem from="1477355376524" duration="960000" />
-      <workItem from="1477357672543" duration="1948000" />
-    </task>
-    <task id="LOCAL-00023" summary="one click">
-      <created>1471082270575</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1471082270575</updated>
+      <workItem from="1477357672543" duration="4002000" />
     </task>
     <task id="LOCAL-00024" summary="save as need to override">
       <created>1471083259804</created>
@@ -878,11 +870,18 @@
       <option name="project" value="LOCAL" />
       <updated>1476963096996</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="add help text">
+      <created>1477361332373</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1477361332374</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="118285000" />
+    <option name="totallyTimeSpent" value="120339000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -947,7 +946,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="change whole layout, ProcessList" />
     <MESSAGE value="fix processAttribute" />
     <MESSAGE value="fix processList" />
     <MESSAGE value="fix processList a href pointer" />
@@ -972,7 +970,8 @@
     <MESSAGE value="fix select samples" />
     <MESSAGE value="fix select samples increased order of id" />
     <MESSAGE value="fix double click" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix double click" />
+    <MESSAGE value="add help text" />
+    <option name="LAST_COMMIT_MESSAGE" value="add help text" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1587,8 +1586,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="431">
-          <caret line="509" column="73" selection-start-line="509" selection-start-column="73" selection-end-line="509" selection-end-column="73" />
+        <state relative-caret-position="251">
+          <caret line="679" column="104" selection-start-line="679" selection-start-column="104" selection-end-line="679" selection-end-column="104" />
           <folding>
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#input#0;n#body#0;n#html#0;n#!!top" expanded="true" />
