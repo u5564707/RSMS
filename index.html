@@ -636,7 +636,6 @@
 		// show attri-table
     $(".originalProcessList").on("click", function () {
 			$(".originalProcessList a").on("click", function () {
-				
 				// set columns
 	      $("#attri-table").tabulator("setColumns", [
 	        { formatter : deleteButton, align : "center", width : 50, onClick : function (e, cell, val, data) {
@@ -645,7 +644,7 @@
 	        } },
 	        { title : ""+this.innerText, field : "name", sortable : true, sorter : "string", width : 200, editable : true }
 	      ]);
-	
+
 				// set data
 				getAttributeNames(this.innerText, function (attributeNames) {
 					$("#attri-table").tabulator("setData", attributeNames);
