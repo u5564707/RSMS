@@ -12,7 +12,12 @@ The Research Sample Management System is a quick and easy way to enter, control 
 
 ## Features
 
-The user interface contains two main components, the tree shows the process branch and the table shows the data stored in the node.
+The user interface contains two main components, the tree shows the process branch and the table shows the data stored in the node. The Process View will show process attributes.
+
+
+#### Create a new project
+
+Left click the window menu, then select create new project. There will show up an empty project. The user can left click source samples to view samples,an empty table will show up. Then you can add new sample data and add attributes by clicking new columns in Table Operations.
 
 #### View samples
 
@@ -24,4 +29,8 @@ After the table is shown, data can be added and edited by creating new rows and 
 
 #### Create a new process
 
-In the current version, the user only can create new process data from the root node. This is done by right clicking on the root node, then clicking "Process samples". Select the samples to process by entering comma-separated id values in the first dialog box that appears and enter the process name in the second box. A new node will appear with the sample ids entered and new columns and data can be entered and edited as per usual. 
+For creating a process, the new process has to be created in the Process View, the attributes related to the process can be also created under Process Attributes. The newly created process will also be shown in the Process List in Main Page, there to click and process samples. Before clicking the process name, you have to select the node and samples by ticking the checkbox or click the select all button.
+
+#### Open existing project
+
+Click the open existing project from window menu, and open the saved file before, then the samples data will show up.
