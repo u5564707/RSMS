@@ -4,11 +4,13 @@ Research Sample Management System
 The Research Sample Management System is a quick and easy way to enter, control and navigate samples and processes in scientific research. Data can be viewed, created, edited, deleted and processed into new sample sets.
 
 ## Installation
-1. Click the green "Clone or download" button at the top of this page and download as a zip file.
+1. For Windows operating system, download [here](https://drive.google.com/file/d/0B3QPWVqVkHNNLU5QRnBIY3dJY2s/view?usp=sharing),just click download when open this link.
 
-2. Firstly, unzip the package, then download [the normal version of nw.js](http://nwjs.io) and copy the files inside the normal version into the RSMS folder.
+For Mac, download the folder [here](https://drive.google.com/file/d/0B3QPWVqVkHNNcnBlVEtQUVE0R1k/view?usp=sharing), just click download when open this link.
+
+2. Firstly, unzip the package and Run the application by double clicking RSMS.exe for Win, RSMS for Mac.
     
-3. Run the application by double clicking nwjs.
+
 
 ## Features
 
