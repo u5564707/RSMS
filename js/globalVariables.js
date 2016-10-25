@@ -6,7 +6,9 @@ var projectOpened                    = false,
     lastClickedNewProcessListElement = null,
     openedFileLocation,
     lastClickedNode,
-    lastClickedProcess, // for process view
+    lastClickedProcess,
+	helperText,
+	// for process view
 	lastClickedProcess2; // for main view
 
 function getOpenedFileLocation(callback) {
