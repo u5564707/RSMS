@@ -1,0 +1,20 @@
+{"attributeNames":["Equipment","Mass","Time"],"_id":"Grind"}
+{"nodeID":"rootNode","sampleID":"Wattle 1","undefined":"","attr1":null,"attr2":null,"attr3":null,"Description":"Wattle","qzjxqzjx":"","Mass":"25g","Date":"2/3/16","_id":"HSSvhQxKmbyaQW9V"}
+{"nodeID":"rHylX2bEKal6RANO","sampleID":"1","undefined":"","Mass":"2kg","Time":"10:00","_id":"O4hLZIpmhkT3fm9l"}
+{"nodeID":"rHylX2bEKal6RANO","sampleID":"2","undefined":"","Mass":"3kg","Time":"11:00","_id":"RwtRqjfyXwPEEUOl"}
+{"parentID":"VoYNLyKGZ3GkeaY8","name":"Weigh2","processName":"Weigh","date":"2016-10-26 15:23","_id":"SoRqX3N87gLBUaV2"}
+{"attributeNames":["Description","Mass","Date"],"_id":"Source samples"}
+{"parentID":"rootNode","name":"Grind1","processName":"Grind","date":"2016-10-26 15:23","_id":"VoYNLyKGZ3GkeaY8"}
+{"attributeNames":["Mass","Time"],"_id":"Weigh"}
+{"count":9,"_id":"attriCount"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","attr1":null,"attr2":null,"attr3":null,"Description":"Acacia","qzjxqzjx":"","Mass":"unkown","Date":"1/2/16","_id":"lVLwxyEgnuCti1Kt"}
+{"nodeID":"SoRqX3N87gLBUaV2","sampleID":"Wattle2","undefined":"","Mass":"10g","Time":"11:11","_id":"pMTZJRR0IB87RAUV"}
+{"nodeID":"rootNode","sampleID":"Wattle2","undefined":"","attr1":null,"attr2":null,"attr3":null,"Description":"Wattle","qzjxqzjx":"","Mass":"25g","Date":"3/4/2016","_id":"qpqbnv1k3QEqsuts"}
+{"parentID":"rootNode","name":"Weigh3","processName":"Weigh","date":"2016-10-26 15:28","_id":"rHylX2bEKal6RANO"}
+{"_id":"rootNode","parentID":null,"processName":"Source samples","name":"Source samples","date":"2016-10-26 15:15"}
+{"count":5,"_id":"samplesCount"}
+{"nodeID":"vivOijuShKD9huSM","sampleID":"Wattle 1","undefined":"","Mass":"15g","Time":"22:22","_id":"stvLr0Z8PYuCIIBW"}
+{"nodeID":"VoYNLyKGZ3GkeaY8","sampleID":"Wattle2","undefined":"","Equipment":"grinder","Mass":"10g","Time":"12:34","_id":"tZ7Jgn9JmwUTo6As"}
+{"nodeID":"rootNode","sampleID":"2","undefined":"","attr1":null,"attr2":null,"attr3":null,"Description":"Oak","qzjxqzjx":"","Mass":"unknown","Date":"1 Feb 16","_id":"vEtf5NH4V1rjT11E"}
+{"nodeID":"VoYNLyKGZ3GkeaY8","sampleID":"Wattle 1","undefined":"","Equipment":"grinder","Mass":"15g","Time":"23:56","_id":"vN96apv1J8SbDSLc"}
+{"parentID":"VoYNLyKGZ3GkeaY8","name":"Weigh1","processName":"Weigh","date":"2016-10-26 15:23","_id":"vivOijuShKD9huSM"}
