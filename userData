@@ -1,2 +1,38 @@
 {"_id":"Source samples","attributeNames":[]}
-{"_id":"rootNode","parentID":null,"processName":"Source samples","name":"Source samples","date":"2016-10-26 00:14"}
+{"_id":"rootNode","parentID":null,"processName":"Source samples","name":"Source samples","date":"2016-10-26 14:24"}
+{"attributeNames":[],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","_id":"66885Tjw43lcFj4l"}
+{"_id":"samplesCount","count":2}
+{"_id":"attriCount","count":1}
+{"$$deleted":true,"_id":"66885Tjw43lcFj4l"}
+{"count":3,"_id":"samplesCount"}
+{"count":1,"_id":"attriCount"}
+{"attributeNames":[],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","_id":"3G3DhoeGbbFXLgqC"}
+{"nodeID":"rootNode","sampleID":"2","undefined":"","_id":"VdVgPHIRfoEc7Yvv"}
+{"$$deleted":true,"_id":"3G3DhoeGbbFXLgqC"}
+{"$$deleted":true,"_id":"VdVgPHIRfoEc7Yvv"}
+{"count":4,"_id":"samplesCount"}
+{"count":1,"_id":"attriCount"}
+{"attributeNames":[],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","_id":"vVR1eua0pxkLBIpg"}
+{"nodeID":"rootNode","sampleID":"2","undefined":"","_id":"j6Hgz0amocr4cMae"}
+{"nodeID":"rootNode","sampleID":"3","undefined":"","_id":"9ZzN9flUf6okjzON"}
+{"$$deleted":true,"_id":"9ZzN9flUf6okjzON"}
+{"$$deleted":true,"_id":"j6Hgz0amocr4cMae"}
+{"$$deleted":true,"_id":"vVR1eua0pxkLBIpg"}
+{"count":4,"_id":"samplesCount"}
+{"count":2,"_id":"attriCount"}
+{"attributeNames":["attr1"],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","attr1":"","_id":"X6jygNo9vsK9KRvK"}
+{"nodeID":"rootNode","sampleID":"2","undefined":"","attr1":"","_id":"KeRVDEKnusN4lfdH"}
+{"nodeID":"rootNode","sampleID":"3","undefined":"","attr1":"","_id":"M1SBXzJwICJK7acU"}
+{"$$deleted":true,"_id":"KeRVDEKnusN4lfdH"}
+{"$$deleted":true,"_id":"M1SBXzJwICJK7acU"}
+{"$$deleted":true,"_id":"X6jygNo9vsK9KRvK"}
+{"count":4,"_id":"samplesCount"}
+{"count":2,"_id":"attriCount"}
+{"attributeNames":["attr1"],"_id":"Source samples"}
+{"nodeID":"rootNode","sampleID":"1","undefined":"","attr1":"sadasd","_id":"mfr6vOJyTOVseEWT"}
+{"nodeID":"rootNode","sampleID":"2","undefined":"","attr1":"","_id":"E6cXb1VVP3EFyl4g"}
+{"nodeID":"rootNode","sampleID":"3","undefined":"","attr1":"","_id":"BUYchJ2evDzYagG5"}

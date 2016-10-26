@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="52dc558f-77da-4891-ac9d-ec41e25c1871" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/userData" afterPath="$PROJECT_DIR$/userData" />
     </list>
     <ignored path="RSMS.iws" />
@@ -23,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="606" column="22" selection-start-line="606" selection-start-column="22" selection-end-line="606" selection-end-column="22" />
+            <state relative-caret-position="210">
+              <caret line="453" column="32" selection-start-line="453" selection-start-column="32" selection-end-line="453" selection-end-column="32" />
               <folding>
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#input#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -61,11 +62,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="userData" pinned="false" current-in-tab="true">
+      <file leaf-file-name="userData" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/userData">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+            <state relative-caret-position="516">
+              <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -141,7 +142,6 @@
       <list>
         <option value="$PROJECT_DIR$/databaseFunctions.js" />
         <option value="$PROJECT_DIR$/testData" />
-        <option value="$PROJECT_DIR$/userData" />
         <option value="$PROJECT_DIR$/css/tabulator.css" />
         <option value="$PROJECT_DIR$/js/swipe.js" />
         <option value="$PROJECT_DIR$/css/swipejs.css" />
@@ -153,6 +153,7 @@
         <option value="$PROJECT_DIR$/js/databaseFunctions.js" />
         <option value="$PROJECT_DIR$/js/tabulator.js" />
         <option value="$PROJECT_DIR$/js/globalVariables.js" />
+        <option value="$PROJECT_DIR$/userData" />
         <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
@@ -545,14 +546,7 @@
       <workItem from="1477355376524" duration="960000" />
       <workItem from="1477357672543" duration="4150000" />
       <workItem from="1477376496218" duration="358000" />
-      <workItem from="1477434826770" duration="44000" />
-    </task>
-    <task id="LOCAL-00025" summary="fix empty save">
-      <created>1471085085555</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1471085085555</updated>
+      <workItem from="1477434826770" duration="837000" />
     </task>
     <task id="LOCAL-00026" summary="update tabulator lib and EMCA6">
       <created>1471146619520</created>
@@ -890,11 +884,18 @@
       <option name="project" value="LOCAL" />
       <updated>1477368350638</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="commit">
+      <created>1477434876622</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1477434876624</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="120889000" />
+    <option name="totallyTimeSpent" value="121682000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -959,7 +960,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix processAttribute" />
     <MESSAGE value="fix processList" />
     <MESSAGE value="fix processList a href pointer" />
     <MESSAGE value="fixes on format" />
@@ -984,14 +984,15 @@
     <MESSAGE value="fix select samples increased order of id" />
     <MESSAGE value="fix double click" />
     <MESSAGE value="add help text" />
-    <option name="LAST_COMMIT_MESSAGE" value="add help text" />
+    <MESSAGE value="commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/index.html</url>
-          <line>416</line>
+          <line>437</line>
         </line-breakpoint>
       </breakpoints>
       <option name="time" value="1" />
@@ -1610,10 +1611,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/userData">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="516">
+          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="606" column="22" selection-start-line="606" selection-start-column="22" selection-end-line="606" selection-end-column="22" />
+        <state relative-caret-position="210">
+          <caret line="453" column="32" selection-start-line="453" selection-start-column="32" selection-end-line="453" selection-end-column="32" />
           <folding>
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#input#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -1643,14 +1652,6 @@
             <element signature="n#style#0;n#button#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/userData">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
