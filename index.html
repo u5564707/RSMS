@@ -247,7 +247,7 @@
 		<!--<div class="swiper-pagination"></div>-->
 	</div>
 
-	<script>
+	<script> 
 		//require('nw.gui').Window.get().showDevTools(); // open DevTools
 
 		var nw       = require('nw.gui'),
@@ -334,58 +334,91 @@
 			}
 		}));
 
-		// open project
+		// open demo project
 		fileMenu.append(new nw.MenuItem({
-			label : 'Open Project',
+			label : 'Open Demo Project',
 			click : function () {
-				var chooser = document.querySelector('#openFileDialog');
+				console.log("checking file...");
 
-				console.log("browsing files...");
-				chooser.addEventListener("change", function (evt) {
-					console.log(this.value + " selected!");
+				copyToUserData("demoData");
+				setOpenedFileLocation("demoData");
+				setLastClickedNode(null);
+				projectOpened = true;
+				
+				$("#new-ProcessList").hide();
+        $("#process-samples").hide();
+              
+        $("#table-filters").hide();
+        $("#checkbox-filters").hide();
+        $("#samples-table").hide();
 
-					document.getElementById("file-name").innerText = this.value;
-					document.title = this.value;
-
-					console.log("checking file...");
-					if (this.value == "") {
-						console.log("invalid file!");
-
-						//alert("Please load a valid project file"); // uncomment when queueing problem is fixed
-					} else {
-						console.log("valid file!");
-
-						copyToUserData(this.value);
-						setOpenedFileLocation(this.value);
-						setLastClickedNode(null);
-						projectOpened = true;
-						
-						$("#new-ProcessList").hide();
-		        $("#process-samples").hide();
-		              
-		        $("#table-filters").hide();
-		        $("#checkbox-filters").hide();
-		        $("#samples-table").hide();
-
-		        $("#add_table").hide();
-		        $("#add_col").hide();
-		        $("#del_col").hide();
-		        
-		        $("#addNewProcess").show();
-		        $("#originalProcessList").show();
-		        
-		        $("#attri-table").hide();
-		        $("#attriID").hide();
-		        $("#addNewAttribute").hide();
-					}
-					
-					this.value = null; // reset file location
-				}, false);
-
-				chooser.click();
+        $("#add_table").hide();
+        $("#add_col").hide();
+        $("#del_col").hide();
+        
+        $("#addNewProcess").show();
+        $("#originalProcessList").show();
+        
+        $("#attri-table").hide();
+        $("#attriID").hide();
+        $("#addNewAttribute").hide();
+				
+				this.value = null; // reset file location
 			}
 		}));
 
+		// open project
+    fileMenu.append(new nw.MenuItem({
+      label : 'Open Project',
+      click : function () {
+        var chooser = document.querySelector('#openFileDialog');
+
+        console.log("browsing files...");
+        chooser.addEventListener("change", function (evt) {
+          console.log(this.value + " selected!");
+
+          document.getElementById("file-name").innerText = this.value;
+          document.title = this.value;
+
+          console.log("checking file...");
+          if (this.value == "") {
+            console.log("invalid file!");
+
+            //alert("Please load a valid project file"); // uncomment when queueing problem is fixed
+          } else {
+            console.log("valid file!");
+
+            copyToUserData(this.value);
+            setOpenedFileLocation(this.value);
+            setLastClickedNode(null);
+            projectOpened = true;
+            
+            $("#new-ProcessList").hide();
+            $("#process-samples").hide();
+                  
+            $("#table-filters").hide();
+            $("#checkbox-filters").hide();
+            $("#samples-table").hide();
+
+            $("#add_table").hide();
+            $("#add_col").hide();
+            $("#del_col").hide();
+            
+            $("#addNewProcess").show();
+            $("#originalProcessList").show();
+            
+            $("#attri-table").hide();
+            $("#attriID").hide();
+            $("#addNewAttribute").hide();
+          }
+          
+          this.value = null; // reset file location
+        }, false);
+
+        chooser.click();
+      }
+    }));
+		
 		// save
 		fileMenu.append(new nw.MenuItem({
 			label : 'Save',
