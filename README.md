@@ -6,7 +6,7 @@ The Research Sample Management System is a quick and easy way to enter, control 
 Sample sets can be processed, which creates new sample sets with the samples and attributes chosen.
 
 ## Installation
-1. For Windows, download [here](https://drive.google.com/file/d/0B3QPWVqVkHNNLU5QRnBIY3dJY2s/view?usp=sharing);
+1. For Windows, download [here](https://drive.google.com/file/d/0B3QPWVqVkHNNazFmMmFLV2s1Rmc/view?usp=sharing);
 For Mac, download [here](https://drive.google.com/file/d/0B3QPWVqVkHNNcnBlVEtQUVE0R1k/view?usp=sharing), click download after opening this link.
 
 2. Then, unzip the package and run the application by double clicking RSMS.exe for Windows or RSMS for Mac.
