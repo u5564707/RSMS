@@ -17,7 +17,7 @@ The user interface contains two main components, the tree shows the process bran
 
 #### Helpers
 
-General intructions in shown in Getting Started column.
+General intructions are shown in Getting Started column.
 
 
 #### Create a new project
