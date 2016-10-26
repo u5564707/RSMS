@@ -4,10 +4,10 @@ Research Sample Management System
 The Research Sample Management System is a quick and easy way to enter, control and navigate samples and processes in scientific research. Data can be viewed, created, edited, deleted and processed into new sample sets.
 
 ## Installation
-1. For Windows operating system, download [here](https://drive.google.com/file/d/0B3QPWVqVkHNNLU5QRnBIY3dJY2s/view?usp=sharing),just click download when open this link.
-For Mac, download the folder [here](https://drive.google.com/file/d/0B3QPWVqVkHNNcnBlVEtQUVE0R1k/view?usp=sharing), just click download when open this link.
+1. For Windows operating system, download [here](https://drive.google.com/file/d/0B3QPWVqVkHNNLU5QRnBIY3dJY2s/view?usp=sharing);
+For Mac, download the folder [here](https://drive.google.com/file/d/0B3QPWVqVkHNNcnBlVEtQUVE0R1k/view?usp=sharing), click download when open this link.
 
-2. Firstly, unzip the package and Run the application by double clicking RSMS.exe for Win, RSMS for Mac.
+2. Then, unzip the package and run the application by double clicking RSMS.exe for Win, RSMS for Mac.
     
 
 
